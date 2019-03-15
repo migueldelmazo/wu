@@ -1,0 +1,29 @@
+{
+  "name": "webapp",
+  "version": "0.0.1",
+  "description": "Web application",
+  "main": "index.js",
+  "scripts": {
+    "format:js": "./node_modules/.bin/esformatter -i --config .formatrc 'src/**/*.js'",
+    "webapp-start": "react-scripts start",
+    "test": "test"
+  },
+  "author": "info@migueldelmazo.com",
+  "license": "ISC",
+  "devDependencies": {
+    "esformatter": "^0.10.0",
+    "esformatter-jsx": "^8.0.1",
+    "react-scripts": "^2.1.8"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
