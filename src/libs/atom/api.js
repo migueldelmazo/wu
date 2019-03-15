@@ -1,8 +1,9 @@
 import _ from 'lodash'
+import { atom } from './common'
 
 export default {
 
-  create: (atom, domains) => {
+  create: (domains) => {
     _.each(domains, (item, domain) => {
       _.each(item, (itemDefinition, name) => {
         name = domain + '.' + name
@@ -12,7 +13,7 @@ export default {
     })
   },
 
-  send: (atom, name) => {
+  send: (name) => {
     const endpoint = _.get(atom.api, name)
     if (_.isPlainObject(endpoint)) {
       _.consoleGroup('endpoint', 'Sending endpoint: ' + name + ' ' + endpoint.method + ':' + endpoint.path, 'Endpoint:', endpoint)

@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { atom } from './common'
 
 // url
 
@@ -12,24 +13,23 @@ const replaceUrl = (url) => {
 
 // update atom.model.set('route...')
 
-let atom
-
 const updateModel = () => {
+  const location = window.location
   atom.model.set('router', {
-    url: window.location.href,
-    pathName: window.location.pathname,
-    hash: window.location.hash.substr(1),
-    queryParams: _.queryParams2object(window.location.href)
+    url: location.href,
+    pathName: location.pathname,
+    hash: location.hash.substr(1),
+    queryParams: _.queryParams2object(location.href)
   })
 }
 
-const watchModel = (atom, name, itemDefinition) => {
-  atom.model.watch('router.url', onRouterUrlChanged.bind(null, atom, name), {
+const watchModel = (name, itemDefinition) => {
+  atom.model.watch('router.url', onRouterUrlChanged.bind(null, name), {
     type: 'ensure'
   })
 }
 
-const onRouterUrlChanged = (atom, name) => {
+const onRouterUrlChanged = (name) => {
   const itemDefinition = _.get(atom.router, name)
   const router = _.first(atom.model.getValues('router'))
   atom.model.set(itemDefinition.destination, {
@@ -57,20 +57,19 @@ const listenPushStateEvent = () => {
 
 export default {
   
-  init: (_atom) => {
-    atom = _atom
+  init: () => {
     listenPopStateEvent()
     listenPushStateEvent()
     updateModel()
   },
   
-  create: (atom, domains) => {
+  create: (domains) => {
     _.each(domains, (item, domain) => {
       _.each(item, (itemDefinition, name) => {
         name = domain + '.' + name
         _.consoleGroup('router', 'Created router: ' + name, 'Args:', itemDefinition)
         _.set(atom.router, name, itemDefinition)
-        watchModel(atom, name, itemDefinition)
+        watchModel(name, itemDefinition)
         _.consoleGroupEnd()
       })
     })

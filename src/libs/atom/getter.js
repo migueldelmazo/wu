@@ -1,6 +1,7 @@
 import _ from 'lodash'
+import { atom } from './common'
 
-const runGetter = (atom, name, itemDefinition, ...args) => {
+const runGetter = (name, itemDefinition, ...args) => {
   const modelArgs = atom.model.getValues(itemDefinition.args)
   _.each(modelArgs, (modelArg) => args.unshift(modelArg))
   const result = _.fnRun(itemDefinition.fn, ...args)
@@ -10,12 +11,12 @@ const runGetter = (atom, name, itemDefinition, ...args) => {
 
 export default {
 
-  create: (atom, domains) => {
+  create: (domains) => {
     _.each(domains, (item, domain) => {
       _.each(item, (itemDefinition, name) => {
         name = domain + '.' + name
         _.consoleLog('getter', 'Created getter: ' + name, 'Args:', itemDefinition.args)
-        _.set(atom.getter, name, runGetter.bind(null, atom, name, itemDefinition))
+        _.set(atom.getter, name, runGetter.bind(null, name, itemDefinition))
       })
     })
   }

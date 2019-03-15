@@ -1,8 +1,9 @@
 import _ from 'lodash'
+import { atom } from './common'
 
 export default {
 
-  listen: (atom, domains) => {
+  listen: (domains) => {
     _.each(domains, (item, domain) => {
       _.each(item, (fn, name) => {
         name = domain + '.' + name
@@ -12,7 +13,7 @@ export default {
     })
   },
 
-  trigger: (atom, name, ...args) => {
+  trigger: (name, ...args) => {
     const fn = _.get(atom.action, name)
     if (_.isFunction(fn)) {
       _.consoleGroup('action', 'Trigger action: ' + name, 'Args:', ...args)

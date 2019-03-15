@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { atom } from './common'
 import action from './action'
 import api from './api'
 import ensure from './ensure'
@@ -7,19 +8,6 @@ import model from './model'
 import router from './router'
 
 import './lodash'
-
-// atom public object
-const atom = {
-  action: {},
-  api: {},
-  ensure: {},
-  getter: {},
-  model: {
-    __data: {},
-    __listeners: {}
-  },
-  router: {}
-}
 
 // import libs into atom
 const libs = {
@@ -32,7 +20,7 @@ const libs = {
 }
 _.each(libs, (methods, lib) => {
   _.each(methods, (method, name) => {
-    atom[lib][name] = (...args) => method(atom, ...args)
+    atom[lib][name] = (...args) => method(...args)
   })
 })
 

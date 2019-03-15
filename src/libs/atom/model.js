@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { atom } from './common'
 
 // listeners helpers
 
@@ -39,10 +40,10 @@ const pendingPaths = {
   default: []
 }
 
-const triggerDebounced = (atom, changedPath) => {
+const triggerDebounced = (changedPath) => {
   triggerAddPendingPaths(changedPath)
   clearTimeout(onChangeTimer)
-  onChangeTimer = setTimeout(trigger.bind(null, atom), 0)
+  onChangeTimer = setTimeout(trigger.bind(null), 0)
 }
 
 const triggerAddPendingPaths = (changedPath) => {
@@ -51,23 +52,23 @@ const triggerAddPendingPaths = (changedPath) => {
   })
 }
 
-const trigger = (atom, changedPath) => {
+const trigger = (changedPath) => {
   _.each(pendingPaths, (paths, type) => {
     while (!_.isEmpty(pendingPaths[type])) {
-      triggerByType(atom, pendingPaths, type)
+      triggerByType(pendingPaths, type)
     }
   })
 }
 
-const triggerByType = (atom, pendingPaths, type) => {
+const triggerByType = (pendingPaths, type) => {
   const changedPaths = _.uniq(pendingPaths[type])
   pendingPaths[type] = []
   _.consoleGroup('model', 'Model trigger changes (' + type + ')', 'Changed paths:', changedPaths)
-  triggerInListeners(atom, changedPaths, type)
+  triggerInListeners(changedPaths, type)
   _.consoleGroupEnd()
 }
 
-const triggerInListeners = (atom, changedPaths, type) => {
+const triggerInListeners = (changedPaths, type) => {
   _.each(atom.model.__listeners, (listener) => {
     if (triggerIsValidListener(listener, type) && triggerPathsMatch(changedPaths, listener.paths)) {
       _.fnsRun(listener.fns)
@@ -97,7 +98,7 @@ const triggerPathMatch = (changedPath, listenerPath) => {
 
 export default {
 
-  watch: (atom, paths, fns, options) => {
+  watch: (paths, fns, options) => {
     paths = parsePaths(paths)
     fns = parseFns(fns)
     options = parseOptions(options)
@@ -115,28 +116,28 @@ export default {
     }
   },
 
-  off: (atom, keys) => {
+  off: (keys) => {
     _.each(_.parseArray(keys), (key) => {
       atom.model.__listeners[key] = null
     })
   },
 
-  get: (atom, key, defaultValue) => {
+  get: (key, defaultValue) => {
     return _.cloneDeep(_.get(atom.model.__data, key, defaultValue))
   },
 
-  getValues: (atom, keys) => {
+  getValues: (keys) => {
     return _.map(_.parseArray(keys), (key) => {
       return atom.model.get(key)
     })
   },
 
-  set: (atom, path, newValue) => {
+  set: (path, newValue) => {
     const currentValue = _.get(atom.model.__data, path)
     if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
       _.consoleLog('model', 'Set model', path, '=', newValue)
       _.set(atom.model.__data, path, newValue)
-      triggerDebounced(atom, path)
+      triggerDebounced(path)
     }
   }
 
