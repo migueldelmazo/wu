@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { atom, getDefinition, initItem } from './common'
+import { atom, getDefinition, initDefinition } from './common'
 
 const runEnsure = (name) => {
   const definition = getDefinition('ensure', name)
@@ -13,7 +13,7 @@ const runEnsure = (name) => {
 export default {
 
   create: (items) => {
-    initItem(items, (name, definition) => {
+    initDefinition(items, (name, definition) => {
       _.set(atom.ensure, name, definition)
       _.consoleGroup('ensure', 'Created ensure: ' + name, 'Definition:', definition)
       atom.model.watch(definition.listeners, runEnsure.bind(null, name), { type: 'ensure' })

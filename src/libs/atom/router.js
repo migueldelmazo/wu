@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { atom, getDefinition, initItem } from './common'
+import { atom, getDefinition, initDefinition } from './common'
 
 // window listeners
 
@@ -61,7 +61,7 @@ export default {
   },
   
   create: (items) => {
-    initItem(items, (name, definition) => {
+    initDefinition(items, (name, definition) => {
       _.set(atom.router, name, definition)
       _.consoleGroup('router', 'Created router: ' + name, 'Args:', definition)
       watchModel(name, definition)

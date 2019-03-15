@@ -1,10 +1,10 @@
 import _ from 'lodash'
-import { atom, getDefinition, initItem } from './common'
+import { atom, getDefinition, initDefinition } from './common'
 
 export default {
 
   listen: (items) => {
-    initItem(items, (name, definition) => {
+    initDefinition(items, (name, definition) => {
       _.set(atom.action, name, definition)
       _.consoleLog('action', 'Listening action: ' + name)
     })

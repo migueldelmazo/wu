@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { atom, initItem } from './common'
+import { atom, initDefinition } from './common'
 
 const runGetter = (name, definition, ...args) => {
   const modelArgs = atom.model.getValues(definition.args)
@@ -12,7 +12,7 @@ const runGetter = (name, definition, ...args) => {
 export default {
 
   create: (items) => {
-    initItem(items, (name, definition) => {
+    initDefinition(items, (name, definition) => {
       _.consoleLog('getter', 'Created getter: ' + name, 'Args:', definition.args)
       _.set(atom.getter, name, runGetter.bind(null, name, definition))
     })

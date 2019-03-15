@@ -28,7 +28,7 @@ const getDefinition = (type, name) => {
 
 // init item
 
-const initItem = (items, callback) => {
+const initDefinition = (items, callback) => {
   _.each(items, (item, domain) => {
     _.each(item, (itemDefinition, nameDefinition) => {
       const name = domain + '.' + nameDefinition
@@ -40,5 +40,5 @@ const initItem = (items, callback) => {
 export {
   atom,
   getDefinition,
-  initItem
+  initDefinition
 }
