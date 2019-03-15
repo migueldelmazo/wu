@@ -33,6 +33,20 @@ _.mixin({
       }
     }
     return params
+  },
+  
+  matchUrlParams: (url, expresion) => {
+    url = url.split('/')
+    expresion = expresion.split('/')
+    if (url.length !== expresion.length) {
+      return false
+    }
+    for (let idx = 1; idx < url.length; idx += 1) {
+      if (expresion[idx] !== url[idx] && expresion[idx].indexOf(':') !== 0) {
+        return false
+      }
+    }
+    return true
   }
 
 })

@@ -1,23 +1,20 @@
 import _ from 'lodash'
-import { atom } from './common'
+import { atom, initItem } from './common'
 
-const runGetter = (name, itemDefinition, ...args) => {
-  const modelArgs = atom.model.getValues(itemDefinition.args)
-  _.each(modelArgs, (modelArg) => args.unshift(modelArg))
-  const result = _.fnRun(itemDefinition.fn, ...args)
+const runGetter = (name, definition, ...args) => {
+  const modelArgs = atom.model.getValues(definition.args)
+  args = _.concatArgs(args, modelArgs)
+  const result = _.fnRun(definition.fn, ...args)
   _.consoleLog('getter', 'Run getter: ' + name, 'Args: ', args, 'Result', result)
   return result
 }
 
 export default {
 
-  create: (domains) => {
-    _.each(domains, (item, domain) => {
-      _.each(item, (itemDefinition, name) => {
-        name = domain + '.' + name
-        _.consoleLog('getter', 'Created getter: ' + name, 'Args:', itemDefinition.args)
-        _.set(atom.getter, name, runGetter.bind(null, name, itemDefinition))
-      })
+  create: (items) => {
+    initItem(items, (name, definition) => {
+      _.consoleLog('getter', 'Created getter: ' + name, 'Args:', definition.args)
+      _.set(atom.getter, name, runGetter.bind(null, name, definition))
     })
   }
 
