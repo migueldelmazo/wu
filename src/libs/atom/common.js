@@ -4,7 +4,9 @@ import _ from 'lodash'
 
 const atom = {
   action: {},
-  api: {},
+  api: {
+    __cache: {}
+  },
   ensure: {},
   getter: {},
   model: {
@@ -37,8 +39,4 @@ const initDefinition = (items, callback) => {
   })
 }
 
-export {
-  atom,
-  getDefinition,
-  initDefinition
-}
+export { atom, getDefinition, initDefinition }

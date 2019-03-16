@@ -17,7 +17,7 @@ _.mixin({
     }
     return {}
   },
-  
+
   getUrlParams: (url, expresion) => {
     url = url.split('/')
     expresion = expresion.split('/')
@@ -34,7 +34,7 @@ _.mixin({
     }
     return params
   },
-  
+
   matchUrlParams: (url, expresion) => {
     url = url.split('/')
     expresion = expresion.split('/')

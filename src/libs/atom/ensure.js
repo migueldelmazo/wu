@@ -16,7 +16,9 @@ export default {
     initDefinition(items, (name, definition) => {
       _.set(atom.ensure, name, definition)
       _.consoleGroup('ensure', 'Created ensure: ' + name, 'Definition:', definition)
-      atom.model.watch(definition.listeners, runEnsure.bind(null, name), { type: 'ensure' })
+      atom.model.watch(definition.listeners, runEnsure.bind(null, name), {
+        type: 'ensure'
+      })
       _.consoleGroupEnd()
     })
   }

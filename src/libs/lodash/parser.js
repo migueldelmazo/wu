@@ -5,7 +5,7 @@ _.mixin({
   parseArray: (arr) => {
     return _.isArray(arr) ? arr : [arr]
   },
-  
+
   parseDeepValues: (value, parser) => {
     if (_.isNumber(value) || _.isString(value) || _.isBoolean(value)) {
       return parser(value)

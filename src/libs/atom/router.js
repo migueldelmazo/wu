@@ -6,7 +6,7 @@ import { atom, getDefinition, initDefinition } from './common'
 const listenPopStateEvent = () => {
   window.addEventListener('popstate', () => updateModel())
 }
-  
+
 const listenPushStateEvent = () => {
   window.addEventListener('click', (ev) => {
     if (isAnchorWithHref(ev)) {
@@ -40,7 +40,9 @@ const updateModel = () => {
 }
 
 const watchModel = (name, itemDefinition) => {
-  atom.model.watch('router.url', onRouterUrlChanged.bind(null, name), { type: 'ensure' })
+  atom.model.watch('router.url', onRouterUrlChanged.bind(null, name), {
+    type: 'ensure'
+  })
 }
 
 const onRouterUrlChanged = (name) => {
@@ -53,13 +55,13 @@ const onRouterUrlChanged = (name) => {
 }
 
 export default {
-  
+
   init: () => {
     listenPopStateEvent()
     listenPushStateEvent()
     updateModel()
   },
-  
+
   create: (items) => {
     initDefinition(items, (name, definition) => {
       _.set(atom.router, name, definition)
@@ -68,5 +70,5 @@ export default {
       _.consoleGroupEnd()
     })
   }
-  
+
 }

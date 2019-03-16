@@ -2,8 +2,8 @@ import _ from 'lodash'
 import React from 'react'
 import atom from '../atom'
 
-const wrapSetStateMethod = function () {
-  this.setState = _.wrap(this.setState, function (setStateMethod, path, value) {
+const wrapSetStateMethod = function() {
+  this.setState = _.wrap(this.setState, function(setStateMethod, path, value) {
     const obj = _.isPlainObject(path) ? path : _.set({}, path, value),
       newState = _.extend({}, this.state, obj)
     if (!_.isEqual(this.state, newState)) {
@@ -13,73 +13,73 @@ const wrapSetStateMethod = function () {
 }
 
 export default class Component extends React.Component {
-  
-  constructor (props) {
+
+  constructor(props) {
     super(props)
     wrapSetStateMethod.call(this)
     this.state = this._getInitialState()
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this._watchAtomListeners()
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this._offAtomListeners()
   }
-  
+
   // config
-  
-  _getConfigItem (name, defaultValue = undefined) {
+
+  _getConfigItem(name, defaultValue = undefined) {
     const config = this.getConfig() || {}
     return config[name] === undefined ? defaultValue : config[name]
   }
 
   // atom listeners
 
-  _watchAtomListeners () {
+  _watchAtomListeners() {
     const listeners = _.parseArray(this._getConfigItem('listeners'))
     this.atomListenerKey = atom.model.watch(listeners, this.forceRender.bind(this, listeners))
   }
 
-  _offAtomListeners () {
+  _offAtomListeners() {
     atom.model.off(this.atomListenerKey)
   }
 
   // render
 
-  render () {
+  render() {
     return this.rndr()
   }
 
-  rndr () {
+  rndr() {
     _.consoleError('React: have to define rndr method in ' + this._getConfigItem('listeners') + ' view')
     return <div />
   }
 
-  forceRender (listeners) {
+  forceRender(listeners) {
     _.consoleLog('react', 'Render ' + this._getConfigItem('name'), 'On listen: ', listeners)
     this.forceUpdate()
   }
 
   // actions
-  
-  onTrigger (...args) {
-    return function () {
+
+  onTrigger(...args) {
+    return function() {
       this.trigger(...args)
     }.bind(this)
   }
 
-  trigger (...args) {
+  trigger(...args) {
     const parsedArgs = _.parseDeepValues(args, this._parser.bind(this))
     _.consoleGroup('react', 'Trigger action from ' + this._getConfigItem('name'), 'Args:', ...parsedArgs)
     atom.action.trigger(...parsedArgs)
     _.consoleGroupEnd()
   }
-  
+
   // events
 
-  onEvent (method, ...args) {
+  onEvent(method, ...args) {
     return function(ev) {
       const parsedArgs = _.parseDeepValues(args, this._parser.bind(this))
       _.consoleGroup('react', 'View ' + this._getConfigItem('name') + ': run onEvent with method ' + method, 'Args:', ...parsedArgs)
@@ -87,31 +87,31 @@ export default class Component extends React.Component {
       _.consoleGroupEnd()
     }.bind(this)
   }
-  
-  stopEvent (ev) {
+
+  stopEvent(ev) {
     if (ev) {
       ev.preventDefault()
       ev.stopPropagation()
     }
   }
-  
+
   // state
-  
-  _getInitialState () {
+
+  _getInitialState() {
     return this._getConfigItem('state', {})
   }
-  
-  getState (path, defaultValue) {
+
+  getState(path, defaultValue) {
     return _.get(this.state, path, defaultValue)
   }
-  
-  toggleState (path, value) {
+
+  toggleState(path, value) {
     this.setState(path, value === undefined ? !this.getState(path) : value)
   }
-  
+
   // parser
-  
-  _parser (value) {
+
+  _parser(value) {
     if (_.isString(value)) {
       if (value.indexOf('#this.props.') === 0) {
         value = value.replace('#this.props.', '')
@@ -126,7 +126,7 @@ export default class Component extends React.Component {
 
   // class name
 
-  getClassName (status, trueClass = '', falseClass = '', prefixClass = '', sufixClass = '') {
+  getClassName(status, trueClass = '', falseClass = '', prefixClass = '', sufixClass = '') {
     return prefixClass + (status ? trueClass : falseClass) + sufixClass
   }
 

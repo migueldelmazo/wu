@@ -4,12 +4,11 @@ export default {
 
   user: {
     login: {
-      path: '/user/login',
-      method: 'post',
-      data: (data) => data,
+      path: '/data.json',
+      method: 'get',
       on: {
-        code200: (data) => {
-          atom.model.set('user.id', data.response.userId)
+        code200: (response) => {
+          atom.model.set('user.id', response.response.body.userId)
         }
       }
     }
