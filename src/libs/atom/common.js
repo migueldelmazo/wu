@@ -4,9 +4,7 @@ import _ from 'lodash'
 
 const atom = {
   action: {},
-  api: {
-    __cache: {}
-  },
+  api: {},
   ensure: {},
   getter: {},
   model: {

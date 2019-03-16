@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import { atom } from './common'
-import action from './action'
 import api from './api'
 import ensure from './ensure'
 import getter from './getter'
@@ -11,7 +10,6 @@ import './lodash'
 
 // import libs into atom
 const libs = {
-  action,
   api,
   ensure,
   getter,
@@ -24,6 +22,7 @@ _.each(libs, (methods, lib) => {
   })
 })
 
+api.init(atom)
 router.init(atom)
 
 export default atom

@@ -62,21 +62,6 @@ export default class Component extends React.Component {
     this.forceUpdate()
   }
 
-  // actions
-
-  onTrigger(...args) {
-    return function() {
-      this.trigger(...args)
-    }.bind(this)
-  }
-
-  trigger(...args) {
-    const parsedArgs = _.parseDeepValues(args, this._parser.bind(this))
-    _.consoleGroup('react', 'Trigger action from ' + this._getConfigItem('name'), 'Args:', ...parsedArgs)
-    atom.action.trigger(...parsedArgs)
-    _.consoleGroupEnd()
-  }
-
   // events
 
   onEvent(method, ...args) {

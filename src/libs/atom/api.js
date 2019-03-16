@@ -3,143 +3,147 @@ import { atom, getDefinition, initDefinition } from './common'
 
 // handler
 
-const handleRequest = () => {
-  setTimeout(() => {
-    _.each(endpoints, (endpoint) => {
-      if (isLoading(endpoint)) {
-        setLoading(endpoint, true)
-        if (isInCache(endpoint)) {
-          handleResponseFromCache(endpoint)
-        } else {
-          sendRequest(endpoint)
-        }
+const handleRequests = () => {
+  _.each(atom.model.get('api.__requests'), (request) => {
+    if (!getModelProp(request, 'sent')) {
+      updateModelProp(request, 'sent', true)
+      if (isInCache(request)) {
+        handleResponseFromCache(request)
+      } else {
+        sendRequest(request)
       }
-    })
+    }
   })
 }
 
 // request
 
-const sendRequest = (endpoint) => {
-  fetch(endpoint.request.path, getRequestOptions(endpoint))
-    .then((response) => getResponseData(endpoint, response))
-    .then((response) => handleResponse(endpoint, response))
+const getRequest = (endpoint, name, body, query) => {
+  return {
+    name,
+    id: _.uniqueId('req'),
+    flags: endpoint.flags || {},
+    on: endpoint.on || {},
+    response: {},
+    request: {
+      body: _.isPlainObject(body) ? body : {},
+      query: _.isPlainObject(query) ? query : {},
+      method: (endpoint.method || 'get').toUpperCase(),
+      path: endpoint.path || '',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  }
 }
 
-const getRequestOptions = (endpoint) => {
-  const options = {
-    method: endpoint.request.method,
-    headers: endpoint.request.headers
-  }
+const sendRequest = (request) => {
+  setFlag(request, 'sending', true)
+  fetch(request.request.path, getRequestOptions(request))
+    .then((response) => getResponseData(request, response))
+    .then(() => setFlag(request, 'sending', false))
+    .then(() => handleResponse(request))
+}
+
+const getRequestOptions = (request) => {
+  const options = _.pick(request, ['headers', 'method'])
   if (options.method !== 'GET' && options.method === 'HEAD') {
-    options.body = endpoint.body
+    options.body = request.body
   }
   return options
 }
 
 // response
 
-const getResponseData = (endpoint, response) => {
+const getResponseData = (request, response) => {
   return response.json()
     .then((body) => {
-      return {
+      request.response = {
         body: body,
         ok: response.ok,
         status: response.status
       }
     })
+    .catch((body) => {
+      request.response = {
+        body: {},
+        ok: false,
+        status: 400
+      }
+    })
 }
 
-const handleResponse = (endpoint, response) => {
-  _.consoleGroup('endpoint', 'On response: ' + endpoint.request.method + endpoint.request.path + ' (' + endpoint.responseStatus + ')', 'Endpoint:', endpoint)
-  endpoint.response = response
-  setInCache(endpoint)
-  runEndpointCallbacks(endpoint)
-  removeRequest(endpoint)
+const handleResponse = (request) => {
+  _.consoleGroup('endpoint', 'On response: ' + request.request.method + request.request.path + ' (' + request.response.status + ')', 'Request:', request)
+  setInCache(request)
+  runCallbacks(request)
+  updateModelProp(request, 'response', request.response)
   _.consoleGroupEnd()
-  endpoint.resolve(endpoint)
-}
-
-// callbacks
-
-const runEndpointCallbacks = (endpoint) => {
-  const callbacks = endpoint.on || {}
-  const callbackName = 'code' + endpoint.response.status
-  const callback = callbacks[callbackName]
-  if (_.isFunction(callback)) {
-    callback(endpoint)
-  }
 }
 
 // cache
 
-const isInCache = (endpoint) => {
-  const endpointKey = getEndpointKey(endpoint)
-  return _.cacheExistsItem(atom.api.__cache, endpointKey)
+const isInCache = (request) => {
+  return !!atom.model.get('api.__cache.' + getCacheKey(request))
 }
 
-const handleResponseFromCache = (endpoint) => {
-  const endpointKey = getEndpointKey(endpoint)
-  const response = _.cacheGetItem(atom.api.__cache, endpointKey)
-  handleResponse(endpoint, response)
-}
-
-const setInCache = (endpoint) => {
-  if (endpoint.request.method === 'GET') {
-    const endpointKey = getEndpointKey(endpoint)
-    _.cacheSetItem(atom.api.__cache, endpointKey, endpoint.response)
+const setInCache = (request) => {
+  if (isValidResponse(request)) {
+    atom.model.set('api.__cache.' + getCacheKey(request), request.response)
   }
 }
 
-// key
-
-const getEndpointKey = (endpoint) => {
-  return endpoint.request.method + endpoint.request.path +
-    JSON.stringify(endpoint.request.body) +
-    JSON.stringify(endpoint.request.headers) +
-    JSON.stringify(endpoint.request.query)
+const handleResponseFromCache = (request) => {
+  request.response = atom.model.get('api.__cache.' + getCacheKey(request))
+  handleResponse(request)
 }
 
-// loading
-
-const setLoading = (endpoint, status) => {
-  endpoint.loading = !!status
+const isValidResponse = (request) => {
+  return request.request.method === 'GET' &&
+    request.response.status === 200 &&
+    !request.response.ok
 }
 
-const isLoading = (endpoint) => {
-  return endpoint.loading
+const getCacheKey = (request) => {
+  return request.request.method + request.request.path +
+    JSON.stringify(request.request.body) +
+    JSON.stringify(request.request.headers) +
+    JSON.stringify(request.request.query)
 }
 
-// parser
+// callbacks
 
-const parseEndpoint = (endpoint, body, query, resolve, reject) => {
-  return {
-    reject: reject,
-    resolve: resolve,
-    on: endpoint.on,
-    response: {},
-    request: {
-      body: _.isPlainObject(endpoint.body) ? endpoint.body : {},
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: (endpoint.method || 'get').toUpperCase(),
-      path: endpoint.path || '',
-      query: _.isPlainObject(endpoint.query) ? endpoint.query : {},
-    }
+const runCallbacks = (request) => {
+  const callbackName = 'code' + request.response.status
+  const callback = request.on[callbackName]
+  if (_.isFunction(callback)) {
+    _.consoleGroup('endpoint', 'Run endpoint callback: ' + callbackName, 'Request:', request)
+    callback(request)
+    _.consoleGroupEnd()
   }
 }
 
-// endpoint list
+// flags
 
-const endpoints = []
-
-const addRequest = (endpoint) => {
-  endpoints.push(endpoint)
+const setFlag = (request, name, value) => {
+  const flag = request.flags[name]
+  if (flag) {
+    atom.model.set(flag, value)
+  }
 }
 
-const removeRequest = (endpoint) => {
-  _.remove(endpoints, endpoint)
+// model
+
+const getModelProp = (request, prop, defaultValue) => {
+  return atom.model.get('api.__requests.' + request.id + '.' + prop, defaultValue)
+}
+
+const updateModelProp = (request, prop, value) => {
+  return atom.model.set('api.__requests.' + request.id + '.' + prop, value)
+}
+
+const setModel = (request) => {
+  return atom.model.set('api.__requests.' + request.id, request)
 }
 
 export default {
@@ -150,15 +154,19 @@ export default {
       _.consoleLog('endpoint', 'Created endpoint: ' + name, 'Definition:', definition)
     })
   },
-
-  send: (name, body, query) => {
-    return new Promise((resolve, reject) => {
-      const definition = getDefinition('api', name)
-      const endpoint = parseEndpoint(definition, body, query, resolve, reject)
-      _.consoleLog('endpoint', 'Sending endpoint: ' + name + ' ' + endpoint.request.method + endpoint.request.path, 'Endpoint:', endpoint)
-      addRequest(endpoint)
-      handleRequest()
-    })
+  
+  init: () => {
+    atom.model.set('api.__cache', {})
+    atom.model.set('api.__requests', {})
+    atom.model.watch('api.__requests', handleRequests, { type: 'api' })
+  },
+  
+  addApi: (name, body = {}, query = {}) => {
+    const definition = getDefinition('api', name)
+    const request = getRequest(definition, name, body, query)
+    _.consoleGroup('endpoint', 'Send request: ' + request.name + ' ' + request.request.method + request.request.path, 'Request:', request)
+    setModel(request)
+    _.consoleGroupEnd()
   }
 
 }

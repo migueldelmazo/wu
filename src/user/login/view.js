@@ -14,6 +14,13 @@ export default class UserLoginView extends Component {
       }
     }
   }
+  
+  send () {
+    atom.api.addApi('user.login', {
+      email: '#this.state.email',
+      password: '#this.props.foo'
+    })
+  }
 
   rndr() {
     return (
@@ -44,21 +51,12 @@ export default class UserLoginView extends Component {
           <div className='col-6'>
             <button
               className='btn btn-primary'
-              onClick={ this.onTrigger('user.login', {
-                          email: 'info@migueldelmazo.com',
-                          password: '1234567890'
-                        }) }
-            >
-              Trigger
-            </button>
-            <button
-              className='btn btn-primary'
-              onClick={ this.onEvent('trigger', 'user.login', {
+              onClick={ this.onEvent('send', 'user.login', {
                           email: '#this.state.email',
                           password: '#this.props.foo'
                         }) }
             >
-              onEv
+              Send
             </button>
             <button
               className='btn btn-primary'

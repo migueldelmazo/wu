@@ -36,6 +36,7 @@ const getListernerKey = () => {
 
 let onChangeTimer
 const pendingPaths = {
+  api: [],
   ensure: [],
   default: []
 }
@@ -96,7 +97,24 @@ const triggerPathMatch = (changedPath, listenerPath) => {
     listenerPath.indexOf(changedPath + '[') === 0
 }
 
+// get/set
+
+const get = (key, defaultValue) => {
+  return _.cloneDeep(_.get(atom.model.__data, key, defaultValue))
+}
+
+const set = (path, newValue) => {
+  const currentValue = _.get(atom.model.__data, path)
+  if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
+    _.consoleLog('model', 'Set model', path, '=', newValue)
+    _.set(atom.model.__data, path, newValue)
+    triggerDebounced(path)
+  }
+}
+
 export default {
+  
+  // listeners
 
   watch: (paths, fns, options) => {
     paths = parsePaths(paths)
@@ -122,23 +140,18 @@ export default {
     })
   },
 
-  get: (key, defaultValue) => {
-    return _.cloneDeep(_.get(atom.model.__data, key, defaultValue))
-  },
+  // getters
+  
+  get,
 
   getValues: (keys) => {
     return _.map(_.parseArray(keys), (key) => {
       return atom.model.get(key)
     })
   },
+  
+  // setters
 
-  set: (path, newValue) => {
-    const currentValue = _.get(atom.model.__data, path)
-    if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
-      _.consoleLog('model', 'Set model', path, '=', newValue)
-      _.set(atom.model.__data, path, newValue)
-      triggerDebounced(path)
-    }
-  }
+  set
 
 }
