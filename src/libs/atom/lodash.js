@@ -3,12 +3,12 @@ import '../lodash'
 
 _.consoleConfig({
   colors: {
-    action: '00a1f1',
-    endpoint: '7cbb00',
+    endpoint: '00a1f1',
     ensure: 'db4437',
-    fn: '4285f4',
+    fn: 'AAA',
     getter: 'db4437',
     model: 'db4437',
-    react: 'FFBF00'
+    react: 'FFBF00',
+    router: '7cbb00'
   }
 })

@@ -3,7 +3,6 @@ import _ from 'lodash'
 // atom
 
 const atom = {
-  action: {},
   api: {},
   ensure: {},
   getter: {},
