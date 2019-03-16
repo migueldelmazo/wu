@@ -89,7 +89,9 @@ const isInCache = (request) => {
 
 const setInCache = (request) => {
   if (isValidResponse(request)) {
-    atom.model.set('api.__cache.' + getCacheKey(request), request.response, { silent: true })
+    atom.model.set('api.__cache.' + getCacheKey(request), request.response, {
+      silent: true
+    })
   }
 }
 
@@ -139,7 +141,9 @@ const getModelProp = (request, prop, defaultValue) => {
 }
 
 const updateModelProp = (request, prop, value) => {
-  return atom.model.set('api.__requests.' + request.id + '.' + prop, value, { silent: true })
+  return atom.model.set('api.__requests.' + request.id + '.' + prop, value, {
+    silent: true
+  })
 }
 
 const setModel = (request) => {
@@ -154,13 +158,19 @@ export default {
       _.consoleLog('endpoint', 'Created endpoint: ' + name, 'Definition:', definition)
     })
   },
-  
+
   init: () => {
-    atom.model.set('api.__cache', {}, { silent: true })
-    atom.model.set('api.__requests', {}, { silent: true })
-    atom.model.watch('api.__requests', handleRequests, { type: 'api' })
+    atom.model.set('api.__cache', {}, {
+      silent: true
+    })
+    atom.model.set('api.__requests', {}, {
+      silent: true
+    })
+    atom.model.watch('api.__requests', handleRequests, {
+      type: 'api'
+    })
   },
-  
+
   addApi: (name, body = {}, query = {}) => {
     const definition = getDefinition('api', name)
     const request = getRequest(definition, name, body, query)
