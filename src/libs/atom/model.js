@@ -41,12 +41,10 @@ const pendingPaths = {
   default: []
 }
 
-const triggerDebounced = (changedPath, options = {}) => {
-  if (options.silent !== true) {
-    triggerAddPendingPaths(changedPath)
-    clearTimeout(onChangeTimer)
-    onChangeTimer = setTimeout(trigger.bind(null), 0)
-  }
+const triggerDebounced = (changedPath, options) => {
+  triggerAddPendingPaths(changedPath)
+  clearTimeout(onChangeTimer)
+  onChangeTimer = setTimeout(trigger.bind(null), 0)
 }
 
 const triggerAddPendingPaths = (changedPath) => {
@@ -105,12 +103,14 @@ const get = (key, defaultValue) => {
   return _.cloneDeep(_.get(atom.model.__data, key, defaultValue))
 }
 
-const set = (path, newValue, options) => {
+const set = (path, newValue, options = {}) => {
   const currentValue = _.get(atom.model.__data, path)
   if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
-    _.consoleLog('model', 'Set model', path, '=', newValue)
     _.set(atom.model.__data, path, newValue)
-    triggerDebounced(path, options)
+    if (options.silent !== true) {
+      _.consoleLog('model', 'Set model', path, '=', newValue)
+      triggerDebounced(path, options)
+    }
   }
 }
 
