@@ -47,6 +47,11 @@ _.mixin({
       }
     }
     return true
+  },
+  
+  object2query: (obj) => {
+    const queryParams = _.map(obj, (value, key) => key + '=' + value)
+    return _.isEmpty(queryParams) ? '' : '?' + queryParams.join('&')
   }
 
 })

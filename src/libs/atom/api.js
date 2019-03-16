@@ -29,7 +29,7 @@ const getRequest = (endpoint, name, body, query) => {
       body: _.isPlainObject(body) ? body : {},
       query: _.isPlainObject(query) ? query : {},
       method: (endpoint.method || 'get').toUpperCase(),
-      path: endpoint.path || '',
+      path: (endpoint.path || '') + _.object2query(query),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -109,8 +109,7 @@ const isValidResponse = (request) => {
 const getCacheKey = (request) => {
   return request.request.method + request.request.path +
     JSON.stringify(request.request.body) +
-    JSON.stringify(request.request.headers) +
-    JSON.stringify(request.request.query)
+    JSON.stringify(request.request.headers)
 }
 
 // callbacks
@@ -171,7 +170,7 @@ export default {
     })
   },
 
-  addApi: (name, body = {}, query = {}) => {
+  addEnpoint: (name, body = {}, query = {}) => {
     const definition = getDefinition('api', name)
     const request = getRequest(definition, name, body, query)
     _.consoleGroup('endpoint', 'Send request: ' + request.name + ' ' + request.request.method + request.request.path, 'Request:', request)
