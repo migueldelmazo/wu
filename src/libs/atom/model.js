@@ -115,7 +115,7 @@ const set = (path, newValue, options = {}) => {
 }
 
 export default {
-  
+
   // listeners
 
   watch: (paths, fns, options) => {
@@ -143,7 +143,7 @@ export default {
   },
 
   // getters
-  
+
   get,
 
   getValues: (keys) => {
@@ -151,9 +151,8 @@ export default {
       return atom.model.get(key)
     })
   },
-  
+
   // setters
 
   set
-
 }

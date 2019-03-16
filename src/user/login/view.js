@@ -14,8 +14,8 @@ export default class UserLoginView extends Component {
       }
     }
   }
-  
-  send () {
+
+  send() {
     atom.api.addApi('user.login', {
       email: '#this.state.email',
       password: '#this.props.foo'
