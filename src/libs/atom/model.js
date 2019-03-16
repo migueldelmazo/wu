@@ -41,10 +41,12 @@ const pendingPaths = {
   default: []
 }
 
-const triggerDebounced = (changedPath) => {
-  triggerAddPendingPaths(changedPath)
-  clearTimeout(onChangeTimer)
-  onChangeTimer = setTimeout(trigger.bind(null), 0)
+const triggerDebounced = (changedPath, options = {}) => {
+  if (options.silent !== true) {
+    triggerAddPendingPaths(changedPath)
+    clearTimeout(onChangeTimer)
+    onChangeTimer = setTimeout(trigger.bind(null), 0)
+  }
 }
 
 const triggerAddPendingPaths = (changedPath) => {
@@ -53,20 +55,20 @@ const triggerAddPendingPaths = (changedPath) => {
   })
 }
 
-const trigger = (changedPath) => {
+const trigger = () => {
+  _.consoleGroup('model', 'Trigger model changes', pendingPaths)
   _.each(pendingPaths, (paths, type) => {
     while (!_.isEmpty(pendingPaths[type])) {
       triggerByType(pendingPaths, type)
     }
   })
+  _.consoleGroupEnd()
 }
 
 const triggerByType = (pendingPaths, type) => {
   const changedPaths = _.uniq(pendingPaths[type])
   pendingPaths[type] = []
-  _.consoleGroup('model', 'Model trigger changes (' + type + ')', 'Changed paths:', changedPaths)
   triggerInListeners(changedPaths, type)
-  _.consoleGroupEnd()
 }
 
 const triggerInListeners = (changedPaths, type) => {
@@ -103,12 +105,12 @@ const get = (key, defaultValue) => {
   return _.cloneDeep(_.get(atom.model.__data, key, defaultValue))
 }
 
-const set = (path, newValue) => {
+const set = (path, newValue, options) => {
   const currentValue = _.get(atom.model.__data, path)
   if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
     _.consoleLog('model', 'Set model', path, '=', newValue)
     _.set(atom.model.__data, path, newValue)
-    triggerDebounced(path)
+    triggerDebounced(path, options)
   }
 }
 

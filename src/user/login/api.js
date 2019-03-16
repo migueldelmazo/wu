@@ -4,7 +4,7 @@ export default {
 
   user: {
     login: {
-      path: '/data1.json',
+      path: '/data.json',
       method: 'get',
       flags: {
         sending: 'user.login.sending'
