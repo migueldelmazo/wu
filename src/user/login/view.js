@@ -41,7 +41,7 @@ export default class UserLoginView extends Component {
             </p>
             <p>
               user.model.router:
-              { atom.model.get('user.login.route.isValidPathName') + '' }
+              { atom.model.get('user.login.route.isValid') + '' }
             </p>
             <p>
               Time:
