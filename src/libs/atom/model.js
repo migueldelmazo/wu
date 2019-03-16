@@ -70,7 +70,7 @@ const triggerByType = (pendingPaths, type) => {
 }
 
 const triggerInListeners = (changedPaths, type) => {
-  _.each(atom.model.__listeners, (listener) => {
+  _.each(atom.model._listeners, (listener) => {
     if (triggerIsValidListener(listener, type) && triggerPathsMatch(changedPaths, listener.paths)) {
       _.fnsRun(listener.fns)
     }
@@ -100,13 +100,13 @@ const triggerPathMatch = (changedPath, listenerPath) => {
 // get/set
 
 const get = (key, defaultValue) => {
-  return _.cloneDeep(_.get(atom.model.__data, key, defaultValue))
+  return _.cloneDeep(_.get(atom.model._data, key, defaultValue))
 }
 
 const set = (path, newValue, options = {}) => {
-  const currentValue = _.get(atom.model.__data, path)
+  const currentValue = _.get(atom.model._data, path)
   if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
-    _.set(atom.model.__data, path, newValue)
+    _.set(atom.model._data, path, newValue)
     if (options.silent !== true) {
       _.consoleLog('model', 'Set model', path, '=', newValue)
       triggerDebounced(path, options)
@@ -125,7 +125,7 @@ export default {
     if (areValidPaths(paths) && areValidFns(fns)) {
       _.consoleLog('model', 'Listening atom paths: ' + paths)
       const key = getListernerKey()
-      atom.model.__listeners[key] = {
+      atom.model._listeners[key] = {
         paths,
         fns,
         options
@@ -138,7 +138,7 @@ export default {
 
   off: (keys) => {
     _.each(_.parseArray(keys), (key) => {
-      atom.model.__listeners[key] = null
+      atom.model._listeners[key] = null
     })
   },
 

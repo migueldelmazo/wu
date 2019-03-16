@@ -4,7 +4,7 @@ import { atom, getDefinition, initDefinition } from './common'
 // handler
 
 const handleRequests = () => {
-  _.each(atom.model.get('api.__requests'), (request) => {
+  _.each(atom.model.get('_api.requests'), (request) => {
     if (!getModelProp(request, 'sent')) {
       updateModelProp(request, 'sent', true)
       if (isInCache(request)) {
@@ -84,32 +84,33 @@ const handleResponse = (request) => {
 // cache
 
 const isInCache = (request) => {
-  return !!atom.model.get('api.__cache.' + getCacheKey(request))
+  return !!atom.model.get('_api.cache.' + getCacheKey(request))
 }
 
 const setInCache = (request) => {
   if (isValidResponse(request)) {
-    atom.model.set('api.__cache.' + getCacheKey(request), request.response, {
+    atom.model.set('_api.cache.' + getCacheKey(request), request.response, {
       silent: true
     })
   }
 }
 
 const handleResponseFromCache = (request) => {
-  request.response = atom.model.get('api.__cache.' + getCacheKey(request))
+  request.response = atom.model.get('_api.cache.' + getCacheKey(request))
   handleResponse(request)
 }
 
 const isValidResponse = (request) => {
   return request.request.method === 'GET' &&
     request.response.status === 200 &&
-    !request.response.ok
+    request.response.ok
 }
 
 const getCacheKey = (request) => {
-  return request.request.method + request.request.path +
+  const key = request.request.method + request.request.path +
     JSON.stringify(request.request.body) +
     JSON.stringify(request.request.headers)
+  return key.replace(/\./g, '-')
 }
 
 // callbacks
@@ -136,17 +137,17 @@ const setFlag = (request, name, value) => {
 // model
 
 const getModelProp = (request, prop, defaultValue) => {
-  return atom.model.get('api.__requests.' + request.id + '.' + prop, defaultValue)
+  return atom.model.get('_api.requests.' + request.id + '.' + prop, defaultValue)
 }
 
 const updateModelProp = (request, prop, value) => {
-  return atom.model.set('api.__requests.' + request.id + '.' + prop, value, {
+  return atom.model.set('_api.requests.' + request.id + '.' + prop, value, {
     silent: true
   })
 }
 
 const setModel = (request) => {
-  return atom.model.set('api.__requests.' + request.id, request)
+  return atom.model.set('_api.requests.' + request.id, request)
 }
 
 export default {
@@ -159,13 +160,13 @@ export default {
   },
 
   init: () => {
-    atom.model.set('api.__cache', {}, {
+    atom.model.set('_api.cache', {}, {
       silent: true
     })
-    atom.model.set('api.__requests', {}, {
+    atom.model.set('_api.requests', {}, {
       silent: true
     })
-    atom.model.watch('api.__requests', handleRequests, {
+    atom.model.watch('_api.requests', handleRequests, {
       type: 'api'
     })
   },

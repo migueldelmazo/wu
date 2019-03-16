@@ -7,8 +7,8 @@ const atom = {
   ensure: {},
   getter: {},
   model: {
-    __data: {},
-    __listeners: {}
+    _data: {},
+    _listeners: {}
   },
   router: {}
 }
