@@ -5,12 +5,12 @@ import _ from 'lodash'
 const atom = {
   api: {},
   ensure: {},
-  getter: {},
   model: {
     _data: {},
     _listeners: {}
   },
-  router: {}
+  router: {},
+  view: {}
 }
 
 window.atom = atom

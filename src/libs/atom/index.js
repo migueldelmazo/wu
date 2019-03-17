@@ -2,9 +2,9 @@ import _ from 'lodash'
 import { atom } from './common'
 import api from './api'
 import ensure from './ensure'
-import getter from './getter'
 import model from './model'
 import router from './router'
+import view from './view'
 
 import './lodash'
 
@@ -12,9 +12,9 @@ import './lodash'
 const libs = {
   api,
   ensure,
-  getter,
   model,
-  router
+  router,
+  view
 }
 _.each(libs, (methods, lib) => {
   _.each(methods, (method, name) => {
