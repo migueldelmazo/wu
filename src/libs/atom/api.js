@@ -171,7 +171,7 @@ export default {
     })
   },
 
-  addEnpoint: (name, body = {}, query = {}) => {
+  addEndpoint: (name, body = {}, query = {}) => {
     const definition = getDefinition('api', name)
     const request = getRequest(definition, name, body, query)
     _.consoleGroup('endpoint', 'Send request: ' + request.name + ' ' + request.request.method + request.request.path, 'Request:', request)
