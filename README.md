@@ -1,3 +1,3 @@
 # Atom app
 
-![Pattern](./docs/pattern.jpg)
+![Pattern](./docs/pattern.svg)
