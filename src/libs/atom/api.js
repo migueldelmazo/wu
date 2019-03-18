@@ -88,7 +88,7 @@ const isInCache = (request) => {
 }
 
 const setInCache = (request) => {
-  if (isValidResponse(request)) {
+  if (!request.fromCache && isValidResponse(request)) {
     atom.model.set('_api.cache.' + getCacheKey(request), request.response, {
       silent: true
     })
@@ -97,6 +97,7 @@ const setInCache = (request) => {
 
 const handleResponseFromCache = (request) => {
   request.response = atom.model.get('_api.cache.' + getCacheKey(request))
+  request.fromCache = true
   handleResponse(request)
 }
 
