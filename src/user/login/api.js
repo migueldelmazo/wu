@@ -13,7 +13,7 @@ export default {
         code200: (response) => {
           console.log(response)
           atom.model.set('user.id', response.response.body.userId)
-          // ToDo: return an object { modelPath: value }
+        // ToDo: return an object { modelPath: value }
         }
       }
     }

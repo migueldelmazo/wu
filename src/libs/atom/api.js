@@ -109,8 +109,8 @@ const isValidResponse = (request) => {
 
 const getCacheKey = (request) => {
   const key = request.request.method + request.request.path +
-    JSON.stringify(request.request.body) +
-    JSON.stringify(request.request.headers)
+  JSON.stringify(request.request.body) +
+  JSON.stringify(request.request.headers)
   return key.replace(/\./g, '-')
 }
 

@@ -7,7 +7,7 @@ export default {
       args: 'user.isLogged',
       fn: (isLogged) => isLogged
     },
-    
+
     sendLogin: {
       fn: (data) => {
         atom.api.addEnpoint('user.login', {}, data)
