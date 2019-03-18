@@ -121,7 +121,7 @@ const runCallbacks = (request) => {
   const callback = request.on[callbackName]
   if (_.isFunction(callback)) {
     _.consoleGroup('endpoint', 'Run endpoint callback: ' + callbackName, 'Request:', request)
-    callback(request)
+    _.each(callback(request), (value, path) => atom.model.set(path, value))
     _.consoleGroupEnd()
   }
 }

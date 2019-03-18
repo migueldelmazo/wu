@@ -11,7 +11,9 @@ export default {
       },
       on: {
         code200: (response) => {
-          atom.model.set('user.id', response.response.body.userId)
+          return {
+            'user.id': response.response.body.userId
+          }
         }
       }
     }
