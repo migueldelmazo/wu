@@ -39,19 +39,31 @@ const updateModel = () => {
   })
 }
 
-const watchModel = (name, itemDefinition) => {
+const watchModel = (name) => {
   atom.model.watch('router.url', onRouterUrlChanged.bind(null, name), {
     type: 'ensure'
   })
 }
 
 const onRouterUrlChanged = (name) => {
-  const itemDefinition = getDefinition('router', name)
+  const definition = getDefinition('router', name)
   const router = _.first(atom.model.getValues('router'))
-  atom.model.set(itemDefinition.destination, {
-    isValid: _.matchUrlParams(router.pathName, itemDefinition.urlPathName),
-    params: _.getUrlParams(router.pathName, itemDefinition.urlPathName)
-  })
+  const isValid = _.matchUrlParams(router.pathName, definition.urlPathName)
+  setItemModel(definition, router, isValid)
+  runFn(definition, isValid)
+}
+
+const setItemModel = (definition, router, isValid) => {
+  const params = isValid
+    ? _.getUrlParams(router.pathName, definition.urlPathName)
+    : {}
+  atom.model.set(definition.destination, { isValid, params })
+}
+
+const runFn = (definition, isValid) => {
+  if (isValid && _.isFunction(definition.fn)) {
+    _.fnRun(definition.fn)
+  }
 }
 
 export default {
@@ -66,7 +78,7 @@ export default {
     initDefinition(items, (name, definition) => {
       _.set(atom.router, name, definition)
       _.consoleGroup('router', 'Created router: ' + name, 'Args:', definition)
-      watchModel(name, definition)
+      watchModel(name)
       _.consoleGroupEnd()
     })
   }
