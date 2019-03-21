@@ -1,5 +1,3 @@
-import atom from '../../libs/atom'
-
 export default {
 
   user: {
