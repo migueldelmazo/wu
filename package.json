@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "format:js": "./node_modules/.bin/esformatter -i --config .formatrc 'src/**/*.js'",
-    "webapp-start": "react-scripts start",
+    "webapp-start": "HTTPS=true react-scripts start",
     "webapp-build": "react-scripts build",
     "test": "test"
   },

@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { atom, getDefinition, initDefinition } from './common'
+import cache from './api-cache'
 
 // handler
 
@@ -7,8 +8,8 @@ const handleRequests = () => {
   _.each(atom.model.get('_api.requests'), (request) => {
     if (!getModelProp(request, 'sent')) {
       updateModelProp(request, 'sent', true)
-      if (isInCache(request)) {
-        handleResponseFromCache(request)
+      if (cache.exists(request)) {
+        handleResponse(cache.get(request))
       } else {
         sendRequest(request)
       }
@@ -75,43 +76,10 @@ const getResponseData = (request, response) => {
 
 const handleResponse = (request) => {
   _.consoleGroup('endpoint', 'On response: ' + request.request.method + request.request.path + ' (' + request.response.status + ')', 'Request:', request)
-  setInCache(request)
+  cache.set(request)
   runCallbacks(request)
   updateModelProp(request, 'response', request.response)
   _.consoleGroupEnd()
-}
-
-// cache
-
-const isInCache = (request) => {
-  return !!atom.model.get('_api.cache.' + getCacheKey(request))
-}
-
-const setInCache = (request) => {
-  if (!request.fromCache && isValidResponse(request)) {
-    atom.model.set('_api.cache.' + getCacheKey(request), request.response, {
-      silent: true
-    })
-  }
-}
-
-const handleResponseFromCache = (request) => {
-  request.response = atom.model.get('_api.cache.' + getCacheKey(request))
-  request.fromCache = true
-  handleResponse(request)
-}
-
-const isValidResponse = (request) => {
-  return request.request.method === 'GET' &&
-    request.response.status === 200 &&
-    request.response.ok
-}
-
-const getCacheKey = (request) => {
-  const key = request.request.method + request.request.path +
-  JSON.stringify(request.request.body) +
-  JSON.stringify(request.request.headers)
-  return key.replace(/\./g, '-')
 }
 
 // callbacks
@@ -161,9 +129,7 @@ export default {
   },
 
   init: () => {
-    atom.model.set('_api.cache', {}, {
-      silent: true
-    })
+    cache.init()
     atom.model.set('_api.requests', {}, {
       silent: true
     })
