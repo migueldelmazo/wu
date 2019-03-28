@@ -1,5 +1,6 @@
 import './console'
 import './functions'
+import './iterators'
 import './parser'
 import './url'
 import './utils'
