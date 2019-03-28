@@ -106,7 +106,7 @@ const get = (key, defaultValue) => {
 const set = (path, newValue, options = {}) => {
   const currentValue = _.get(atom.model._data, path)
   if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
-    _.set(atom.model._data, path, newValue)
+    _.set(atom.model._data, path, _.cloneDeep(newValue))
     if (options.silent !== true) {
       _.consoleLog('model', 'Set model', path, '=', newValue)
       triggerDebounced(path, options)
