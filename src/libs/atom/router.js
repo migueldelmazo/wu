@@ -57,7 +57,10 @@ const setItemModel = (definition, router, isValid) => {
   const params = isValid
     ? _.getUrlParams(router.pathName, definition.urlPathName)
     : {}
-  atom.model.set(definition.destination, { isValid, params })
+  atom.model.set(definition.destination, {
+    isValid,
+    params
+  })
 }
 
 const runFn = (definition, isValid) => {

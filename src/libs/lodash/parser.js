@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
 _.mixin({
-  
+
   parseCamelCaseDeep: (data) => {
     return _.mapDeep(data, _.camelCase)
   },

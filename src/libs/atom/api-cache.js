@@ -14,13 +14,13 @@ const getCacheKey = (request) => {
 }
 
 export default {
-  
+
   init: () => {
     atom.model.set('_api.cache', {}, {
       silent: true
     })
   },
-  
+
   exists: (request) => {
     return !!atom.model.get('_api.cache.' + getCacheKey(request))
   },
