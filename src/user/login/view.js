@@ -4,8 +4,8 @@ export default {
 
   user: {
     sendLogin: {
-      fn: (data) => {
-        atom.api.addEndpoint('user.login', data)
+      fn: (body, query) => {
+        atom.api.addEndpoint('user.login', body, query)
       }
     }
   }

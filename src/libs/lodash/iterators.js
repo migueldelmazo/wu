@@ -2,41 +2,46 @@ import _ from 'lodash'
 
 _.mixin({
 
-  mapDeep (data, keyMapper, valueMapper, _dotNotationPath = '', _dotNotationPathPattern = '') {
-    // remove first dot in paths
-    if (_dotNotationPath.charAt(0) === '.') {
-      _dotNotationPath = _dotNotationPath.substr(1)
-    }
-    if (_dotNotationPathPattern.charAt(0) === '.') {
-      _dotNotationPathPattern = _dotNotationPathPattern.substr(1)
-    }
-    
+  mapDeep(data, keyMapper, valueMapper) {
     // iterate the array
     if (_.isArray(data)) {
       return _.map(data, (value, idx) => {
-        return _.mapDeep(value, keyMapper, valueMapper, _dotNotationPath + '.' + idx, _dotNotationPathPattern + '[]')
+        return _.mapDeep(value, keyMapper, valueMapper)
       })
-    }
-    
+    } else
     // iterate the object
     if (_.isPlainObject(data)) {
       return _.reduce(data, (accumulator, value, key) => {
-        const info = {
-          path: _dotNotationPath + '.' + key,
-          pattern: _dotNotationPathPattern + '.' + key
-        }
-        key = _.isFunction(keyMapper) ? keyMapper(key, info) : key
-        accumulator[key] = _.mapDeep(value, keyMapper, valueMapper, _dotNotationPath + '.' + key, _dotNotationPathPattern + '.' + key)
+        key = _.isFunction(keyMapper) ? keyMapper(key) : key
+        accumulator[key] = _.mapDeep(value, keyMapper, valueMapper)
         return accumulator
       }, {})
-    }
-    
+    } else
     // map the value
-    const info = {
-      path: _dotNotationPath,
-      pattern: _dotNotationPathPattern
+    {
+      return _.isFunction(valueMapper) ? valueMapper(data) : data
     }
-    return _.isFunction(valueMapper) ? valueMapper(data, info) : data
+  },
+
+  getObjectPaths(data, _info = [], _path = '', _pathPattern = '') {
+    // iterate the array
+    if (_.isArray(data)) {
+      _.map(data, (value, idx) => {
+        _.getObjectPaths(value, _info, _path + '.' + idx, _pathPattern + '[]')
+      })
+    } else
+
+    // iterate the object
+    if (_.isPlainObject(data)) {
+      _.map(data, (value, key) => {
+        _info.push({
+          path: _.trimStart(_path + '.' + key, '.'),
+          pattern: _.trimStart(_pathPattern + '.' + key, '.')
+        })
+        _.getObjectPaths(value, _info, _path + '.' + key, _pathPattern + '.' + key)
+      })
+    }
+    return _info
   }
 
 })

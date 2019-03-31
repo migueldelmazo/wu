@@ -1,58 +1,62 @@
 import _ from 'lodash'
 import { atom, getDefinition, initDefinition } from './common'
 import cache from './api-cache'
-import callbacks from './api-callbacks'
 import flags from './api-flags'
 import model from './api-model'
+import online from './api-online'
+import handlers from './api-handlers'
 
 // handler
 
 const handleRequests = () => {
-  _.each(model.getRequests(), (request) => {
-    if (!model.getProp(request, 'sent')) {
-      model.updateProp(request, 'sent', true)
-      if (cache.exists(request)) {
-        handleResponse(cache.get(request))
-      } else {
-        sendRequest(request)
-      }
+  if (atom.model.get('api.online')) {
+    _.each(model.getRequests(), handleRequest)
+  }
+}
+
+const handleRequest = (request) => {
+  if (!model.getProp(request, 'sent')) {
+    model.setProp(request, 'sent', true)
+    flags.set(request, 'sending', true)
+    if (cache.exists(request)) {
+      handleResponse(cache.get(request))
+    } else {
+      sendRequest(request)
     }
-  })
+  }
 }
 
 // request
 
-const parseRequest = (endpoint, name, body, query) => {
+const parseRequest = (definition, name, body, query, headers) => {
   return {
     name,
-    id: _.uniqueId('req'),
-    flags: endpoint.flags || {},
-    on: endpoint.on || {},
-    response: {},
+    id: _.uniqueId('api'),
+    flags: definition.flags || {},
+    handlers: definition.handlers || {},
     request: {
-      body: _.isPlainObject(body) ? body : {},
-      query: _.isPlainObject(query) ? query : {},
-      method: (endpoint.method || 'get').toUpperCase(),
-      path: (endpoint.path || '') + _.object2query(query),
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      body: _.defaults({}, body, definition.body),
+      query: _.defaults({}, query, definition.query),
+      headers: _.defaults({}, headers, definition.headers),
+      method: (definition.method || 'get').toUpperCase(),
+      path: (definition.path || '') + _.object2query(query)
+    },
+    response: {
+      fromCache: false
     }
   }
 }
 
 const sendRequest = (request) => {
-  flags.set(request, 'sending', true)
   fetch(request.request.path, getRequestOptions(request))
     .then((response) => getResponseData(request, response))
     .then(() => handleResponse(request))
-    .then(() => flags.set(request, 'sending', false))
 }
 
 const getRequestOptions = (request) => {
-  const options = _.pick(request, ['headers', 'method'])
-  if (options.method !== 'GET' && options.method === 'HEAD') {
-    options.body = request.body
+  const options = {
+    headers: request.request.headers,
+    method: request.request.method
   }
   return options
 }
@@ -78,10 +82,12 @@ const getResponseData = (request, response) => {
 }
 
 const handleResponse = (request) => {
-  _.consoleGroup('endpoint', 'On response: ' + request.request.method + request.request.path + ' (' + request.response.status + ')', 'Request:', request)
-  cache.set(request)
-  callbacks.run(request)
-  model.updateProp(request, 'response', request.response)
+  _.consoleGroup('api', 'On response: ' + request.request.method + request.request.path + ' (' + request.response.status + ')', 'Request:', request)
+  request.response.isValid = handlers.isValid(request)
+  handlers.parser(request)
+  handlers.mapper(request)
+  model.setProp(request, 'response', request.response)
+  flags.set(request, 'sending', false)
   _.consoleGroupEnd()
 }
 
@@ -90,19 +96,20 @@ export default {
   init: () => {
     cache.init()
     model.init(handleRequests)
+    online.init(handleRequests)
   },
 
   create: (items) => {
     initDefinition(items, (name, definition) => {
       _.set(atom.api, name, definition)
-      _.consoleLog('endpoint', 'Created endpoint: ' + name, 'Definition:', definition)
+      _.consoleLog('api', 'Created api: ' + name, 'Definition:', definition)
     })
   },
 
-  addEndpoint: (name, body = {}, query = {}) => {
+  addEndpoint: (name, body = {}, query = {}, headers = {}) => {
     const definition = getDefinition('api', name)
-    const request = parseRequest(definition, name, body, query)
-    _.consoleGroup('endpoint', 'Send request: ' + request.name + ' ' + request.request.method + request.request.path, 'Request:', request)
+    const request = parseRequest(definition, name, body, query, headers)
+    _.consoleGroup('api', 'Init request: ' + request.name + ' ' + request.request.method + request.request.path, 'Request:', request)
     model.setRequest(request)
     _.consoleGroupEnd()
   }
