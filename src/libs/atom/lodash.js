@@ -3,7 +3,7 @@ import '../lodash'
 
 _.consoleConfig({
   colors: {
-    endpoint: '00a1f1',
+    api: '00a1f1',
     ensure: 'db4437',
     fn: 'AAA',
     model: 'db4437',
