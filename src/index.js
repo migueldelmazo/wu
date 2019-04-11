@@ -1,19 +1,14 @@
-import _ from 'lodash'
 import React from 'react'
 import ReactDom from 'react-dom'
 import atom from './libs/atom'
 
-import userLoginApi from './user/login/api'
-import userLoginEnsures from './user/login/ensures'
-import userLoginRouter from './user/login/router'
-import userLoginView from './user/login/view'
-import UserLoginView from './user/login/UserLoginView'
+import './user/login'
+import './user/profile'
 
-atom.api.create(userLoginApi)
-atom.ensure.create(userLoginEnsures)
-atom.router.create(userLoginRouter)
-atom.view.create(userLoginView)
+import UserLoginView from './user/UserLoginView'
 
-_.consoleLog('atom', 'Atom', atom)
+atom.init()
 
 ReactDom.render(<UserLoginView />, document.getElementById('root'))
+
+_.consoleLog('atom', 'Atom', atom)
