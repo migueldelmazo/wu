@@ -1,29 +1,36 @@
 import _ from 'lodash'
-import { atom } from './common'
-import api from './api'
+import { atom, setDefinition, checkDefinitionType, checkDefinitionName } from './common'
 import ensure from './ensure'
 import model from './model'
 import router from './router'
-import view from './view'
-
+import watcher from './watcher'
 import './lodash'
 
-// import libs into atom
-const libs = {
-  api,
-  ensure,
-  model,
-  router,
-  view
-}
-_.each(libs, (methods, lib) => {
-  _.each(methods, (method, name) => {
-    atom[lib][name] = (...args) => method(...args)
-  })
-})
+atom.model = model
 
-api.init(atom)
-router.init(atom)
+atom.create = (type, name, definition) => {
+  _.consoleGroup(type, 'Creating ' + type + ': ' + name, 'Definition:', definition)
+  checkDefinitionType(type)
+  checkDefinitionName(name)
+  setDefinition(type, name, definition)
+  switch (type) {
+    case 'ensure':
+      ensure.watch(name)
+      break;
+    case 'router':
+      router.watch(name)
+      break;
+    case 'watcher':
+      watcher.watch(name)
+      break;
+    default:
+  }
+  _.consoleGroupEnd()
+}
+
+atom.init = () => {
+  router.init()
+}
 
 export default atom
 

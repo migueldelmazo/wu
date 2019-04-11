@@ -1,7 +1,38 @@
 import _ from 'lodash'
 import { atom } from './common'
 
-// listeners helpers
+// private info
+
+atom._private.model = {
+
+  data: {},
+  watchers: {},
+
+  // watchers
+
+  watch: (paths, fns, options) => {
+    paths = parsePaths(paths)
+    fns = parseFns(fns)
+    options = parseOptions(options)
+    if (areValidPaths(paths) && areValidFns(fns)) {
+      _.consoleLog('model', 'Listening atom paths: ' + paths)
+      const key = getWatcherKey()
+      atom._private.model.watchers[key] = parseWatcher(paths, fns, options)
+      return key
+    } else {
+      _.consoleError('Atom: model watch definition is invalid', paths, fns)
+    }
+  },
+
+  stopWatching: (keys) => {
+    _.each(_.parseArray(keys), (key) => {
+      atom._private.model.watchers[key] = null
+    })
+  }
+
+}
+
+// watchers helpers
 
 const parsePaths = (paths) => {
   return _.isArray(paths) ? _.flattenDeep(paths) : [paths]
@@ -18,6 +49,14 @@ const parseOptions = (options) => {
   }
 }
 
+const parseWatcher = (paths, fns, options) => {
+  return {
+    paths,
+    fns,
+    options
+  }
+}
+
 const areValidPaths = (paths) => {
   return _.every(paths, _.isString)
 }
@@ -26,10 +65,10 @@ const areValidFns = (fns) => {
   return _.every(fns, _.isFunction)
 }
 
-// listeners keys
+// watchers keys
 
-const getListernerKey = () => {
-  return _.uniqueId('atomModelKey-')
+const getWatcherKey = () => {
+  return _.uniqueId('atom-model-key-')
 }
 
 // trigger
@@ -54,7 +93,7 @@ const triggerAddPendingPaths = (changedPath) => {
 }
 
 const trigger = () => {
-  _.consoleGroup('model', 'Trigger model changes', pendingPaths)
+  _.consoleGroup('model', 'Trigger model changes', 'Paths:', pendingPaths)
   _.each(pendingPaths, (paths, type) => {
     while (!_.isEmpty(pendingPaths[type])) {
       triggerByType(pendingPaths, type)
@@ -66,47 +105,47 @@ const trigger = () => {
 const triggerByType = (pendingPaths, type) => {
   const changedPaths = _.uniq(pendingPaths[type])
   pendingPaths[type] = []
-  triggerInListeners(changedPaths, type)
+  triggerInWatchers(changedPaths, type)
 }
 
-const triggerInListeners = (changedPaths, type) => {
-  _.each(atom.model._listeners, (listener) => {
-    if (triggerIsValidListener(listener, type) && triggerPathsMatch(changedPaths, listener.paths)) {
-      _.fnsRun(listener.fns)
+const triggerInWatchers = (changedPaths, type) => {
+  _.each(atom._private.model.watchers, (watcher) => {
+    if (triggerIsValidWatcher(watcher, type) && triggerPathsMatch(changedPaths, watcher.paths)) {
+      _.fnsRun(watcher.fns)
     }
   })
 }
 
-const triggerIsValidListener = (listener, type) => {
-  return listener && listener.options.type === type
+const triggerIsValidWatcher = (watcher, type) => {
+  return watcher && watcher.options.type === type
 }
 
-const triggerPathsMatch = (changedPaths, listenerPaths) => {
+const triggerPathsMatch = (changedPaths, watcherPaths) => {
   return _.some(changedPaths, (changedPath) => {
-    return _.some(listenerPaths, (listenerPath) => {
-      return triggerPathMatch(changedPath, listenerPath)
+    return _.some(watcherPaths, (watcherPath) => {
+      return triggerPathMatch(changedPath, watcherPath)
     })
   })
 }
 
-const triggerPathMatch = (changedPath, listenerPath) => {
-  return changedPath === listenerPath ||
-    changedPath.indexOf(listenerPath + '.') === 0 ||
-    listenerPath.indexOf(changedPath + '.') === 0 ||
-    changedPath.indexOf(listenerPath + '[') === 0 ||
-    listenerPath.indexOf(changedPath + '[') === 0
+const triggerPathMatch = (changedPath, watcherPath) => {
+  return changedPath === watcherPath ||
+    changedPath.indexOf(watcherPath + '.') === 0 ||
+    watcherPath.indexOf(changedPath + '.') === 0 ||
+    changedPath.indexOf(watcherPath + '[') === 0 ||
+    watcherPath.indexOf(changedPath + '[') === 0
 }
 
 // get/set
 
 const get = (key, defaultValue) => {
-  return _.cloneDeep(_.get(atom.model._data, key, defaultValue))
+  return _.cloneDeep(_.get(atom._private.model.data, key, defaultValue))
 }
 
 const set = (path, newValue, options = {}) => {
-  const currentValue = _.get(atom.model._data, path)
+  const currentValue = _.get(atom._private.model.data, path)
   if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
-    _.set(atom.model._data, path, _.cloneDeep(newValue))
+    _.set(atom._private.model.data, path, _.cloneDeep(newValue))
     if (options.silent !== true) {
       _.consoleLog('model', 'Set model', path, '=', newValue)
       triggerDebounced(path, options)
@@ -116,34 +155,6 @@ const set = (path, newValue, options = {}) => {
 
 export default {
 
-  // listeners
-
-  watch: (paths, fns, options) => {
-    paths = parsePaths(paths)
-    fns = parseFns(fns)
-    options = parseOptions(options)
-    if (areValidPaths(paths) && areValidFns(fns)) {
-      _.consoleLog('model', 'Listening atom paths: ' + paths)
-      const key = getListernerKey()
-      atom.model._listeners[key] = {
-        paths,
-        fns,
-        options
-      }
-      return key
-    } else {
-      _.consoleWarning('Atom: model watch definition is invalid', paths, fns)
-    }
-  },
-
-  off: (keys) => {
-    _.each(_.parseArray(keys), (key) => {
-      atom.model._listeners[key] = null
-    })
-  },
-
-  // getters
-
   get,
 
   getValues: (keys) => {
@@ -151,8 +162,6 @@ export default {
       return atom.model.get(key)
     })
   },
-
-  // setters
 
   set
 }
