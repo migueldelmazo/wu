@@ -1,12 +1,10 @@
 import _ from 'lodash'
 import { atom, setDefinition, checkDefinitionType, checkDefinitionName } from './common'
 import ensure from './ensure'
-import model from './model'
 import router from './router'
 import watcher from './watcher'
+import './model'
 import './lodash'
-
-atom.model = model
 
 atom.create = (type, name, definition) => {
   _.consoleGroup(type, 'Creating ' + type + ': ' + name, 'Definition:', definition)
