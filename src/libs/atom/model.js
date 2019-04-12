@@ -1,6 +1,37 @@
 import _ from 'lodash'
 import { atom } from './common'
 
+// atom private items
+
+atom._private.model = {
+
+  data: {},
+  watchers: {},
+
+  // watchers
+
+  watch: (paths, fns, options) => {
+    paths = parsePaths(paths)
+    fns = parseFns(fns)
+    options = parseOptions(options)
+    if (areValidPaths(paths) && areValidFns(fns)) {
+      _.consoleLog('model', 'Listening atom paths: ' + paths)
+      const key = getWatcherKey()
+      atom._private.model.watchers[key] = parseWatcher(paths, fns, options)
+      return key
+    } else {
+      _.consoleError('Atom: model watch definition is invalid', paths, fns)
+    }
+  },
+
+  stopWatching: (keys) => {
+    _.each(_.parseArray(keys), (key) => {
+      atom._private.model.watchers[key] = null
+    })
+  }
+
+}
+
 // watchers helpers
 
 const parsePaths = (paths) => {
@@ -44,7 +75,6 @@ const getWatcherKey = () => {
 
 let onChangeTimer
 const pendingPaths = {
-  api: [],
   ensure: [],
   default: []
 }
@@ -124,7 +154,7 @@ const set = (path, newValue, options = {}) => {
 
 // atom public methods
 
-atom.model = {
+export default {
 
   get,
 
@@ -135,35 +165,4 @@ atom.model = {
   },
 
   set
-}
-
-// atom private items
-
-atom._private.model = {
-
-  data: {},
-  watchers: {},
-
-  // watchers
-
-  watch: (paths, fns, options) => {
-    paths = parsePaths(paths)
-    fns = parseFns(fns)
-    options = parseOptions(options)
-    if (areValidPaths(paths) && areValidFns(fns)) {
-      _.consoleLog('model', 'Listening atom paths: ' + paths)
-      const key = getWatcherKey()
-      atom._private.model.watchers[key] = parseWatcher(paths, fns, options)
-      return key
-    } else {
-      _.consoleError('Atom: model watch definition is invalid', paths, fns)
-    }
-  },
-
-  stopWatching: (keys) => {
-    _.each(_.parseArray(keys), (key) => {
-      atom._private.model.watchers[key] = null
-    })
-  }
-
 }

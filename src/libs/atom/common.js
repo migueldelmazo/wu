@@ -5,7 +5,11 @@ const atom = {
 }
 
 const getDefinition = (type, name) => {
-  return _.get(atom._private, 'items.' + type + '.' + name)
+  const definition = _.get(atom._private, 'items.' + type + '.' + name)
+  if (!definition) {
+    _.consoleError('atom.getDefinition invalid definition, type: ' + type + ', name: ' + name)
+  }
+  return definition
 }
 
 const setDefinition = (type, name, definition) => {
@@ -15,13 +19,13 @@ const setDefinition = (type, name, definition) => {
 const checkDefinitionType = (type) => {
   const validTypes = ['api', 'ensure', 'router', 'watcher']
   if (validTypes.indexOf(type) < 0) {
-    _.consoleError('atom.create invalid type', type)
+    _.consoleError('atom.create invalid type:', type)
   }
 }
 
 const checkDefinitionName = (name) => {
   if (_.isEmpty(name) || !_.isString(name)) {
-    _.consoleError('atom.create invalid name', name)
+    _.consoleError('atom.create invalid name:', name)
   }
 }
 

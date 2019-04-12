@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { atom } from './common'
 
 const isValidResponseToSetInCache = (request) => {
@@ -16,26 +17,22 @@ const getCacheKey = (request) => {
 export default {
 
   init: () => {
-    atom.model.set('_api.cache', {}, {
-      silent: true
-    })
+    atom._private.api.cache = {}
   },
 
   exists: (request) => {
-    return !!atom.model.get('_api.cache.' + getCacheKey(request))
+    return !!_.get(atom._private.api.cache, getCacheKey(request))
   },
 
   get: (request) => {
-    request.response = atom.model.get('_api.cache.' + getCacheKey(request))
+    request.response = _.get(atom._private.api.cache, getCacheKey(request))
     request.fromCache = true
     return request
   },
 
   set: (request) => {
-    if (!request.fromCache && isValidResponseToSetInCache(request)) {
-      atom.model.set('_api.cache.' + getCacheKey(request), request.response, {
-        silent: true
-      })
+    if (isValidResponseToSetInCache(request)) {
+      _.set(atom._private.api.cache, getCacheKey(request), _.cloneDeep(request.response))
     }
   }
 
