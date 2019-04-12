@@ -9,7 +9,7 @@ export default {
     atom._private.api.requests = {}
   },
 
-  // props
+  // requests props
 
   getProp: (request, prop) => {
     return _.get(atom._private.api.requests, request.id + '.' + prop)
@@ -27,6 +27,16 @@ export default {
 
   setRequest: (request) => {
     _.set(atom._private.api.requests, request.id, request)
+  },
+  
+  // model
+  
+  set: (request) => {
+    const destination = _.get(request.handlers, request.response.handler + '.destination')
+    _.each(destination, (from, to) => {
+      const value = _.get(request.response.parsed, from)
+      atom.model.set(to, value)
+    })
   }
 
 }

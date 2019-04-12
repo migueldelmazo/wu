@@ -3,8 +3,9 @@ import { atom } from './common'
 
 const isValidResponseToSetInCache = (request) => {
   return request.request.method === 'GET' &&
-    request.response.status === 200 &&
-    request.response.ok
+    request.response.raw.status === 200 &&
+    request.response.error === false &&
+    request.response.isValid === true
 }
 
 const getCacheKey = (request) => {
@@ -32,7 +33,10 @@ export default {
 
   set: (request) => {
     if (isValidResponseToSetInCache(request)) {
-      _.set(atom._private.api.cache, getCacheKey(request), _.cloneDeep(request.response))
+      _.set(atom._private.api.cache, getCacheKey(request), _.cloneDeep(request.response.raw))
+      request.response.toCache = true
+    } else {
+      request.response.toCache = false
     }
   }
 

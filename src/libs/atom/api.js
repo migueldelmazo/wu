@@ -39,7 +39,7 @@ const parseRequest = (definition, name) => {
     id: _.uniqueId('api'),
     sent: false,
     flags: definition.flags || {},
-    responses: definition.responses || {},
+    handlers: definition.handlers || {},
     request: {
       headers,
       body,
@@ -54,15 +54,16 @@ const parseRequest = (definition, name) => {
 const sendRequest = (request) => {
   fetch(request.request.path, getRequestOptions(request))
     .then((response) => getResponseData(request, response))
-    .then(() => cache.set(request))
     .then(() => handleResponse(request))
 }
 
 const getRequestOptions = (request) => {
-  //ToDo: add body in POST, PUT, PATCH... endpoints
   const options = {
     headers: request.request.headers,
     method: request.request.method
+  }
+  if (['PATCH', 'POST', 'PATCH'].indexOf(options.method) >= 0) {
+    options.body = JSON.stringify(request.request.body)
   }
   return options
 }
@@ -74,27 +75,40 @@ const getResponseData = (request, response) => {
   return response.json()
     .then((body) => {
       request.response = {
-        body,
-        headers,
-        ok: response.ok,
-        status: response.status
+        error: false,
+        errorMessage: '',
+        handler: 'onCode' + response.status,
+        isValid: true,
+        raw: {
+          headers: headers,
+          body: body,
+          status: response.status
+        }
       }
     })
-    .catch((body) => {
+    .catch((err) => {
       request.response = {
-        body: {},
-        headers,
-        ok: false,
-        status: 400
+        error: true,
+        errorMessage: err.message,
+        handler: 'onError',
+        isValid: false,
+        raw: {
+          headers: headers,
+          body: {},
+          status: 500
+        }
       }
     })
 }
 
 const handleResponse = (request) => {
-  _.consoleGroup('api', 'On response: ' + request.request.method + request.request.path + ' (' + request.response.status + ')', 'Request:', request)
-  // request.response.isValid = handlers.isValid(request)
-  // handlers.parser(request)
-  // handlers.mapper(request)
+  _.consoleGroup('api', 'On response: ' + request.request.method + request.request.path + ' (status: ' + request.response.status + ')', 'Request:', request)
+  handlers.runValidator(request)
+  cache.set(request)
+  handlers.ensureHandler(request)
+  handlers.runMapper(request)
+  handlers.runParser(request)
+  model.set(request)
   model.setProp(request, 'response', request.response)
   flags.set(request, 'sending', false)
   _.consoleGroupEnd()
