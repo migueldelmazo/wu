@@ -13,7 +13,7 @@ atom.getter = getter
 atom.model = model
 
 atom.create = (type, name, definition) => {
-  _.consoleGroup(type, 'Creating ' + type + ': ' + name, 'Definition:', definition)
+  _.consoleGroup(type, _.capitalize(type) + ': create ' + name, 'Definition:', definition)
   checkDefinitionType(type)
   checkDefinitionName(name)
   setDefinition(type, name, definition)

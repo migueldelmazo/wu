@@ -47,6 +47,7 @@ const handleRequests = () => {
 }
 
 const handleRequest = (request) => {
+  _.consoleGroup('api', 'API: send ' + request.name, 'Request:', request)
   queue.start(request)
   flags.set(request, 'sending', true)
   if (cache.exists(request)) {
@@ -57,6 +58,7 @@ const handleRequest = (request) => {
       .then((response) => setRawResponse(request, response))
       .then(() => handleResponse(request))
   }
+  _.consoleGroupEnd()
 }
 
 const getRequestOptions = (request) => {
@@ -99,7 +101,7 @@ const setRawResponse = (request, response) => {
 }
 
 const handleResponse = (request) => {
-  _.consoleGroup('api', 'On API response: ' + request.request.method + ' ' + request.request.path + ' (status: ' + request.response.raw.status + ')', 'Request:', request)
+  _.consoleGroup('api', 'API: response ' + request.name + ' with status ' + request.response.raw.status, 'Request:', request)
   handlers.runValidator(request)
   handlers.selectHandler(request)
   handlers.runMapper(request)
@@ -122,7 +124,7 @@ export default {
 
   send: (name, data = {}) => {
     const request = parseRequest(name, data)
-    _.consoleGroup('api', 'Added request to API queue: ' + request.name + ' ' + request.request.method + request.request.path, 'Request:', request)
+    _.consoleGroup('api', 'API: added ' + request.name, 'Request:', request)
     queue.add(request)
     _.consoleGroupEnd()
     handleRequests()

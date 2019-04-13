@@ -9,7 +9,7 @@ const wrapSetStateMethod = function() {
     const obj = _.isPlainObject(path) ? path : _.set({}, path, value),
       newState = _.extend({}, this.state, obj)
     if (!_.isEqual(this.state, newState)) {
-      _.consoleLog('react', 'Set state in ' + this.getName('name'), 'Data: ', obj)
+      _.consoleLog('react', 'React: run ' + this.getName('name') + '.setState', 'Data:', obj)
       setStateMethod.call(this, obj)
     }
   })
@@ -35,7 +35,7 @@ const parser = function (value) {
 const watchAtom = function () {
   const watchers = this.watchers()
   this.atomWatcherKey = atom._private.model.watch(watchers, function () {
-    _.consoleLog('react', 'Render ' + this.getName('name'), 'Watchers: ', watchers)
+    _.consoleLog('react', 'React: render ' + this.getName('name'), 'Watchers:', watchers)
     this.forceUpdate()
   }.bind(this))
 }
@@ -48,7 +48,7 @@ const stopWatchingAtom = function () {
 
 const runMethod = function (method, ...args) {
   const parsedArgs = _.mapDeep(args, null, parser.bind(this))
-  _.consoleGroup('react', 'Run ' + this.getName() + '.' + method + ' method', 'Args:', ...parsedArgs)
+  _.consoleGroup('react', 'React: run ' + this.getName() + '.' + method, 'Args:', ...parsedArgs)
   this[method](...parsedArgs)
   _.consoleGroupEnd()
 }

@@ -5,7 +5,7 @@ const runEnsure = (name) => {
   const definition = getDefinition('ensure', name)
   const modelArgs = atom.model.getValues(definition.args)
   const result = definition.fn(modelArgs)
-  _.consoleGroup('ensure', 'Run ensure: ' + name, 'Result:', result, 'Args:', modelArgs, 'Definition:', definition)
+  _.consoleGroup('ensure', 'Ensure: run ' + name, 'Result:', result, 'Args:', modelArgs, 'Definition:', definition)
   atom.model.set(definition.destination, result)
   _.consoleGroupEnd()
 }

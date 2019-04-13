@@ -1,21 +1,15 @@
 import _ from 'lodash'
 
-let colors = {}
+let config = {}
 
 const getStyles = (type) => {
-  return 'background: #' + getStylesColor(type) + ';' +
-    'color: white;' +
-    'padding: 2px 0px 2px 6px;'
-}
-
-const getStylesColor = (type) => {
-  return colors[type] || '000'
+  return config && config.styles ? config.styles[type] : ''
 }
 
 _.mixin({
 
-  consoleConfig: (config) => {
-    colors = config.colors
+  consoleConfig: (_config) => {
+    config = _config
   },
 
   consoleGroup: (type, name, ...args) => {

@@ -15,7 +15,6 @@ atom._private.model = {
     fns = parseFns(fns)
     options = parseOptions(options)
     if (areValidPaths(paths) && areValidFns(fns)) {
-      _.consoleLog('model', 'Listening atom paths: ' + paths)
       const key = getWatcherKey()
       atom._private.model.watchers[key] = parseWatcher(paths, fns, options)
       return key
@@ -92,7 +91,7 @@ const triggerAddPendingPaths = (changedPath) => {
 }
 
 const trigger = () => {
-  _.consoleGroup('model', 'Trigger model changes', 'Paths:', pendingPaths)
+  _.consoleGroup('reacting', 'Reacting to model changes', 'Paths:', pendingPaths)
   _.each(pendingPaths, (paths, type) => {
     while (!_.isEmpty(pendingPaths[type])) {
       triggerByType(pendingPaths, type)
@@ -146,7 +145,7 @@ const set = (path, newValue, options = {}) => {
   if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
     _.set(atom._private.model.data, path, _.cloneDeep(newValue))
     if (options.silent !== true) {
-      _.consoleLog('model', 'Set model', path, '=', newValue)
+      _.consoleLog('model', 'Model: set', path, '=', newValue)
       triggerDebounced(path, options)
     }
   }

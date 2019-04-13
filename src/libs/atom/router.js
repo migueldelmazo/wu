@@ -8,10 +8,12 @@ const updateModel = () => {
 const ensureModelRoute = (name) => {
   const definition = getDefinition('router', name)
   const router = _.first(atom.model.getValues('router'))
+  _.consoleGroup('router', 'Router: set ' + name)
   atom.model.set(definition.destination, {
     isValid: _.matchRouteParams(router.pathName, definition.urlPathName),
     params: _.getRouteParams(router.pathName, definition.urlPathName)
   })
+  _.consoleGroupEnd()
 }
 
 export default {
