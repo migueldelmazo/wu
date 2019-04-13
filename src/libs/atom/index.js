@@ -2,12 +2,14 @@ import _ from 'lodash'
 import { atom, setDefinition, checkDefinitionType, checkDefinitionName } from './common'
 import api from './api'
 import ensure from './ensure'
+import getter from './getter'
 import model from './model'
 import router from './router'
 import watcher from './watcher'
 import './lodash'
 
 atom.api = api
+atom.getter = getter
 atom.model = model
 
 atom.create = (type, name, definition) => {

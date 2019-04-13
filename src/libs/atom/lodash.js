@@ -8,7 +8,8 @@ _.consoleConfig({
     fn: 'AAA',
     model: 'db4437',
     react: 'FFBF00',
-    router: '7cbb00',
-    view: 'db4437'
+    router: 'ffc107',
+    setter: '7cbb00',
+    watcher: 'db4437'
   }
 })
