@@ -8,13 +8,13 @@ import queue from './api-queue'
 
 // parse
 
-const parseRequest = (name) => {
+const parseRequest = (name, data) => {
   const definition = getDefinition('api', name)
-  const body = _.get(definition, 'request.body', {})
-  const headers = _.get(definition, 'request.headers', {})
-  const query = _.get(definition, 'request.query', {})
-  const method = _.get(definition, 'request.method', 'get').toUpperCase()
-  const path = _.get(definition, 'request.path', '') + _.objectToQuery(query)
+  const query = getRequestData(definition, data, 'query')
+  const body = getRequestData(definition, data, 'body')
+  const headers = getRequestData(definition, data, 'headers')
+  const method = _.result(definition, 'request.method', 'get').toUpperCase()
+  const path = _.result(definition, 'request.path', '') + _.objectToQuery(query)
   return {
     name,
     config: {
@@ -22,9 +22,14 @@ const parseRequest = (name) => {
     },
     flags: definition.flags || {},
     handlers: definition.handlers || {},
-    request: { body, headers, query, method, path },
+    request: { body, headers, method, path, query },
     response: {}
   }
+}
+
+const getRequestData = (definition, data, dataKey) => {
+  const definitionData = _.result(definition, 'request.' + dataKey, {})
+  return _.defaultsDeep({}, data[dataKey], definitionData)
 }
 
 // handler requests
@@ -94,7 +99,7 @@ const setRawResponse = (request, response) => {
 }
 
 const handleResponse = (request) => {
-  _.consoleGroup('api', 'On response: ' + request.request.method + request.request.path + ' (status: ' + request.response.raw.status + ')', 'Request:', request)
+  _.consoleGroup('api', 'On API response: ' + request.request.method + ' ' + request.request.path + ' (status: ' + request.response.raw.status + ')', 'Request:', request)
   handlers.runValidator(request)
   handlers.selectHandler(request)
   handlers.runMapper(request)
@@ -115,8 +120,8 @@ export default {
     online.init(handleRequests)
   },
 
-  send: (name) => {
-    const request = parseRequest(name)
+  send: (name, data = {}) => {
+    const request = parseRequest(name, data)
     _.consoleGroup('api', 'Added request to API queue: ' + request.name + ' ' + request.request.method + request.request.path, 'Request:', request)
     queue.add(request)
     _.consoleGroupEnd()
