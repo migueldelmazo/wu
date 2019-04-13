@@ -3,56 +3,54 @@ import { atom, getDefinition } from './common'
 import cache from './api-cache'
 import flags from './api-flags'
 import handlers from './api-handlers'
-import model from './api-model'
 import online from './api-online'
 import queue from './api-queue'
+
+// parse
+
+const parseRequest = (name) => {
+  const definition = getDefinition('api', name)
+  const body = _.get(definition, 'request.body', {})
+  const headers = _.get(definition, 'request.headers', {})
+  const query = _.get(definition, 'request.query', {})
+  const method = _.get(definition, 'request.method', 'get').toUpperCase()
+  const path = _.get(definition, 'request.path', '') + _.objectToQuery(query)
+  return {
+    name,
+    config: {
+      cacheable: _.get(definition, 'config.cacheable', true)
+    },
+    flags: definition.flags || {},
+    handlers: definition.handlers || {},
+    request: { body, headers, query, method, path },
+    response: {}
+  }
+}
 
 // handler requests
 
 const handleRequests = () => {
   setTimeout(() => {
     if (atom.model.get('api.online')) {
-      const nextRequest = queue.getNextRequest()
+      const nextRequest = queue.getNext()
       if (!_.isEmpty(nextRequest)) {
         handleRequest(nextRequest)
       }
     }
+    handleRequests()
   })
 }
 
 const handleRequest = (request) => {
+  queue.start(request)
   flags.set(request, 'sending', true)
   if (cache.exists(request)) {
-    handleResponse(cache.get(request))
+    cache.import(request)
+    handleResponse(request)
   } else {
     fetch(request.request.path, getRequestOptions(request))
-      .then((response) => getResponseData(request, response))
+      .then((response) => setRawResponse(request, response))
       .then(() => handleResponse(request))
-  }
-}
-
-// request
-
-const parseRequest = (definition, name) => {
-  const headers = _.defaults({}, definition.request.headers)
-  const body = _.defaults({}, definition.request.body)
-  const query = _.defaults({}, definition.request.query)
-  return {
-    name,
-    id: _.uniqueId('api'),
-    config: {
-      cacheable: _.get(definition, 'config.cacheable', true)
-    },
-    flags: definition.flags || {},
-    handlers: definition.handlers || {},
-    request: {
-      headers,
-      body,
-      query,
-      method: (definition.request.method || 'get').toUpperCase(),
-      path: (definition.request.path || '') + _.objectToQuery(query)
-    },
-    response: {}
   }
 }
 
@@ -69,30 +67,26 @@ const getRequestOptions = (request) => {
 
 // response
 
-const getResponseData = (request, response) => {
+const setRawResponse = (request, response) => {
   return response.json()
     .then((body) => {
       request.response = {
-        error: false,
-        errorMessage: '',
-        handler: 'onCode' + response.status,
-        isValid: true,
         raw: {
-          headers: _.clone(response.headers),
           body: body,
+          error: false,
+          errorMessage: '',
+          headers: _.clone(response.headers),
           status: response.status
         }
       }
     })
     .catch((err) => {
       request.response = {
-        error: true,
-        errorMessage: err.message,
-        handler: 'onError',
-        isValid: false,
         raw: {
-          headers: {},
           body: {},
+          error: true,
+          errorMessage: err.message,
+          headers: {},
           status: 500
         }
       }
@@ -102,12 +96,13 @@ const getResponseData = (request, response) => {
 const handleResponse = (request) => {
   _.consoleGroup('api', 'On response: ' + request.request.method + request.request.path + ' (status: ' + request.response.raw.status + ')', 'Request:', request)
   handlers.runValidator(request)
-  cache.set(request)
-  handlers.ensureHandler(request)
+  handlers.selectHandler(request)
   handlers.runMapper(request)
   handlers.runParser(request)
-  model.set(request)
+  handlers.setInModel(request)
   flags.set(request, 'sending', false)
+  cache.set(request)
+  queue.close(request)
   _.consoleGroupEnd()
 }
 
@@ -119,11 +114,10 @@ export default {
     queue.init()
     online.init(handleRequests)
   },
-  
+
   send: (name) => {
-    const definition = getDefinition('api', name)
-    const request = parseRequest(definition, name)
-    _.consoleGroup('api', 'Init request: ' + request.name + ' ' + request.request.method + request.request.path, 'Request:', request)
+    const request = parseRequest(name)
+    _.consoleGroup('api', 'Added request to API queue: ' + request.name + ' ' + request.request.method + request.request.path, 'Request:', request)
     queue.add(request)
     _.consoleGroupEnd()
     handleRequests()

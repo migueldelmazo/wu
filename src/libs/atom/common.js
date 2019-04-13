@@ -29,12 +29,6 @@ const checkDefinitionName = (name) => {
   }
 }
 
-export {
-  atom,
-  getDefinition,
-  setDefinition,
-  checkDefinitionType,
-  checkDefinitionName
-}
+export { atom, getDefinition, setDefinition, checkDefinitionType, checkDefinitionName }
 
 window.atom = atom
