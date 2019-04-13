@@ -2,115 +2,128 @@ import _ from 'lodash'
 import React from 'react'
 import atom from '../atom'
 
+// state
+
 const wrapSetStateMethod = function() {
   this.setState = _.wrap(this.setState, function(setStateMethod, path, value) {
     const obj = _.isPlainObject(path) ? path : _.set({}, path, value),
       newState = _.extend({}, this.state, obj)
     if (!_.isEqual(this.state, newState)) {
+      _.consoleLog('react', 'Set state in ' + this.getName('name'), 'Data: ', obj)
       setStateMethod.call(this, obj)
     }
   })
+}
+
+// state and props parser
+
+const parser = function (value) {
+  if (_.isString(value)) {
+    if (_.startsWith(value, '#this.props.')) {
+      value = value.replace('#this.props.', '')
+      return _.get(this.props, value)
+    } else if (_.startsWith(value, '#this.state.')) {
+      value = value.replace('#this.state.', '')
+      return this.getState(value)
+    }
+  }
+  return value
+}
+
+// atom Watchers
+
+const watchAtom = function () {
+  const watchers = this.watchers()
+  this.atomWatcherKey = atom._private.model.watch(watchers, function () {
+    _.consoleLog('react', 'Render ' + this.getName('name'), 'Watchers: ', watchers)
+    this.forceUpdate()
+  }.bind(this))
+}
+
+const stopWatchingAtom = function () {
+  atom.model.stopWatching(this.atomWatcherKey)
+}
+
+// run methods
+
+const runMethod = function (method, ...args) {
+  const parsedArgs = _.mapDeep(args, null, parser.bind(this))
+  _.consoleGroup('react', 'Run ' + this.getName() + '.' + method + ' method', 'Args:', ...parsedArgs)
+  this[method](...parsedArgs)
+  _.consoleGroupEnd()
+}
+
+// input
+
+const getInputValue = (ev) => {
+  const target = ev.target
+  if (target.tagName === 'INPUT') {
+    if (target.type === 'checkbox' || target.type === 'radio') {
+      return target.checked
+    }
+    if (target.type !== 'button' && target.type !== 'submit') {
+      return target.value
+    }
+  }
 }
 
 export default class Component extends React.Component {
 
   constructor(props) {
     super(props)
+    this.state = this.initialState()
     wrapSetStateMethod.call(this)
-    this.state = this._getInitialState()
   }
 
   componentDidMount() {
-    this._watchAtomListeners()
+    watchAtom.call(this)
   }
 
   componentWillUnmount() {
-    this._offAtomListeners()
+    stopWatchingAtom.call(this)
+  }
+  
+  getName() {
+    return this.constructor.name
+  }
+  
+  watchers() {
+    return []
   }
 
-  // config
-
-  _getConfigItem(name, defaultValue = undefined) {
-    const config = this.getConfig() || {}
-    return config[name] === undefined ? defaultValue : config[name]
+  // state
+  
+  initialState() {
+    return {}
   }
-
-  // atom listeners
-
-  _watchAtomListeners() {
-    const listeners = _.parseArray(this._getConfigItem('listeners'))
-    this.atomListenerKey = atom.model.watch(listeners, this.forceRender.bind(this, listeners))
+  
+  getState(path, defaultValue) {
+    return _.get(this.state, path, defaultValue)
   }
-
-  _offAtomListeners() {
-    atom.model.off(this.atomListenerKey)
-  }
-
-  // render
-
-  render() {
-    return this.rndr()
-  }
-
-  rndr() {
-    _.consoleError('React: have to define rndr method in ' + this._getConfigItem('listeners') + ' view')
-    return <div />
-  }
-
-  forceRender(listeners) {
-    _.consoleLog('react', 'Render ' + this._getConfigItem('name'), 'On listen: ', listeners)
-    this.forceUpdate()
+  
+  toggleState(path, value) {
+    value = value === undefined ? !this.getState(path) : !!value
+    this.setState(path, value)
   }
 
   // events
 
-  onEvent(method, ...args) {
+  onEv(...args) {
     return function(ev) {
-      const parsedArgs = _.parseDeepValues(args, this._parser.bind(this))
-      _.consoleGroup('react', 'View ' + this._getConfigItem('name') + ': run onEvent with method ' + method, 'Args:', ...parsedArgs)
-      this[method](...parsedArgs)
-      _.consoleGroupEnd()
+      const eventValue = getInputValue(ev)
+      const methodsArgs = _.isString(args[0]) ? [args] : args
+      _.each(methodsArgs, (methodsArgs) => {
+        if (eventValue === undefined) {
+          runMethod.apply(this, methodsArgs)
+        } else {
+          runMethod.apply(this, methodsArgs.concat(eventValue))
+        }
+      })
     }.bind(this)
   }
-
-  stopEvent(ev) {
-    if (ev) {
-      ev.preventDefault()
-      ev.stopPropagation()
-    }
-  }
-
-  // state
-
-  _getInitialState() {
-    return this._getConfigItem('state', {})
-  }
-
-  getState(path, defaultValue) {
-    return _.get(this.state, path, defaultValue)
-  }
-
-  toggleState(path, value) {
-    this.setState(path, value === undefined ? !this.getState(path) : value)
-  }
-
-  // parser
-
-  _parser(value) {
-    if (_.isString(value)) {
-      if (value.indexOf('#this.props.') === 0) {
-        value = value.replace('#this.props.', '')
-        return _.get(this.props, value)
-      } else if (value.indexOf('#this.state.') === 0) {
-        value = value.replace('#this.state.', '')
-        return this.getState(value)
-      }
-    }
-    return value
-  }
-
+  
   // class name
-
+  
   getClassName(status, trueClass = '', falseClass = '', prefixClass = '', sufixClass = '') {
     return prefixClass + (status ? trueClass : falseClass) + sufixClass
   }
