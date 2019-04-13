@@ -4,27 +4,30 @@ import cache from './api-cache'
 import flags from './api-flags'
 import model from './api-model'
 import online from './api-online'
+import queue from './api-queue'
 import handlers from './api-handlers'
 
-// handler
+// handler requests
 
 const handleRequests = () => {
   setTimeout(() => {
     if (atom.model.get('api.online')) {
-      _.each(model.getRequests(), handleRequest)
+      const nextRequest = queue.getNextRequest()
+      if (!_.isEmpty(nextRequest)) {
+        handleRequest(nextRequest)
+      }
     }
-  }, 0)
+  })
 }
 
 const handleRequest = (request) => {
-  if (!model.getProp(request, 'sent')) {
-    model.setProp(request, 'sent', true)
-    flags.set(request, 'sending', true)
-    if (cache.exists(request)) {
-      handleResponse(cache.get(request))
-    } else {
-      sendRequest(request)
-    }
+  flags.set(request, 'sending', true)
+  if (cache.exists(request)) {
+    handleResponse(cache.get(request))
+  } else {
+    fetch(request.request.path, getRequestOptions(request))
+      .then((response) => getResponseData(request, response))
+      .then(() => handleResponse(request))
   }
 }
 
@@ -49,12 +52,6 @@ const parseRequest = (definition, name) => {
     },
     response: {}
   }
-}
-
-const sendRequest = (request) => {
-  fetch(request.request.path, getRequestOptions(request))
-    .then((response) => getResponseData(request, response))
-    .then(() => handleResponse(request))
 }
 
 const getRequestOptions = (request) => {
@@ -102,14 +99,13 @@ const getResponseData = (request, response) => {
 }
 
 const handleResponse = (request) => {
-  _.consoleGroup('api', 'On response: ' + request.request.method + request.request.path + ' (status: ' + request.response.status + ')', 'Request:', request)
+  _.consoleGroup('api', 'On response: ' + request.request.method + request.request.path + ' (status: ' + request.response.raw.status + ')', 'Request:', request)
   handlers.runValidator(request)
   cache.set(request)
   handlers.ensureHandler(request)
   handlers.runMapper(request)
   handlers.runParser(request)
   model.set(request)
-  model.setProp(request, 'response', request.response)
   flags.set(request, 'sending', false)
   _.consoleGroupEnd()
 }
@@ -119,7 +115,7 @@ export default {
   init: () => {
     atom._private.api = atom._private.api || {}
     cache.init()
-    model.init()
+    queue.init()
     online.init(handleRequests)
   },
   
@@ -127,7 +123,7 @@ export default {
     const definition = getDefinition('api', name)
     const request = parseRequest(definition, name)
     _.consoleGroup('api', 'Init request: ' + request.name + ' ' + request.request.method + request.request.path, 'Request:', request)
-    model.setRequest(request)
+    queue.add(request)
     _.consoleGroupEnd()
     handleRequests()
   }
