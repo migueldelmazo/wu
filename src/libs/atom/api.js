@@ -29,7 +29,7 @@ const parseRequest = (name, data) => {
 
 const getRequestData = (definition, data, dataKey) => {
   const definitionData = _.result(definition, 'request.' + dataKey, {})
-  return _.defaultsDeep({}, data[dataKey], definitionData)
+  return _.extend({}, definitionData, data[dataKey])
 }
 
 // handler requests
