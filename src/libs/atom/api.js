@@ -2,10 +2,10 @@ import _ from 'lodash'
 import { atom, getDefinition } from './common'
 import cache from './api-cache'
 import flags from './api-flags'
+import handlers from './api-handlers'
 import model from './api-model'
 import online from './api-online'
 import queue from './api-queue'
-import handlers from './api-handlers'
 
 // handler requests
 
@@ -68,7 +68,6 @@ const getRequestOptions = (request) => {
 // response
 
 const getResponseData = (request, response) => {
-  const headers = _.clone(response.headers)
   return response.json()
     .then((body) => {
       request.response = {
@@ -77,7 +76,7 @@ const getResponseData = (request, response) => {
         handler: 'onCode' + response.status,
         isValid: true,
         raw: {
-          headers: headers,
+          headers: _.clone(response.headers),
           body: body,
           status: response.status
         }
@@ -90,7 +89,7 @@ const getResponseData = (request, response) => {
         handler: 'onError',
         isValid: false,
         raw: {
-          headers: headers,
+          headers: {},
           body: {},
           status: 500
         }
