@@ -40,7 +40,9 @@ const parseRequest = (definition, name) => {
   return {
     name,
     id: _.uniqueId('api'),
-    sent: false,
+    config: {
+      cacheable: _.get(definition, 'config.cacheable', true)
+    },
     flags: definition.flags || {},
     handlers: definition.handlers || {},
     request: {

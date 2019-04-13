@@ -2,7 +2,8 @@ import _ from 'lodash'
 import { atom } from './common'
 
 const isValidResponseToSetInCache = (request) => {
-  return request.request.method === 'GET' &&
+  return request.config.cacheable &&
+    request.request.method === 'GET' &&
     request.response.raw.status === 200 &&
     request.response.error === false &&
     request.response.isValid === true
