@@ -10,13 +10,13 @@ atom._private.model = {
 
   // watchers
 
-  watch: (paths, fns, options) => {
+  watch: (paths, fns, validator, options) => {
     paths = parsePaths(paths)
     fns = parseFns(fns)
     options = parseOptions(options)
     if (areValidPaths(paths) && areValidFns(fns)) {
       const key = getWatcherKey()
-      atom._private.model.watchers[key] = parseWatcher(paths, fns, options)
+      atom._private.model.watchers[key] = parseWatcher(paths, fns, validator, options)
       return key
     } else {
       _.consoleError('Atom: model watch definition is invalid', paths, fns)
@@ -48,11 +48,12 @@ const parseOptions = (options) => {
   }
 }
 
-const parseWatcher = (paths, fns, options) => {
+const parseWatcher = (paths, fns, validator, options) => {
   return {
     paths,
     fns,
-    options
+    options,
+    validator
   }
 }
 
@@ -107,7 +108,9 @@ const triggerByType = (pendingPaths, type) => {
 
 const triggerInWatchers = (changedPaths, type) => {
   _.each(atom._private.model.watchers, (watcher) => {
-    if (triggerIsValidWatcher(watcher, type) && triggerPathsMatch(changedPaths, watcher.paths)) {
+    if (triggerIsValidWatcher(watcher, type) &&
+      triggerPathsMatch(changedPaths, watcher.paths) &&
+      triggerValidatorMatch(watcher.validator)) {
       _.consoleGroup('reacting', 'Reacting to model changes', 'Type:', type, 'Paths:', watcher.paths)
       _.fnsRun(watcher.fns)
       _.consoleGroupEnd()
@@ -127,6 +130,18 @@ const triggerPathsMatch = (changedPaths, watcherPaths) => {
   })
 }
 
+const triggerValidatorMatch = (validator) => {
+  if (validator) {
+    return _.every(validator, (fns, path) => {
+      const value = get(path)
+      return _.every(_.parseArray(fns), (fn) => {
+        return fn(value)
+      })
+    })
+  }
+  return true
+}
+
 const triggerPathMatch = (changedPath, watcherPath) => {
   return changedPath === watcherPath ||
     changedPath.indexOf(watcherPath + '.') === 0 ||
@@ -138,25 +153,17 @@ const triggerPathMatch = (changedPath, watcherPath) => {
 // get/set
 
 const get = (key, defaultValue) => {
-  return _.cloneDeep(_.get(atom._private.model.data, key, defaultValue))
+  return _.get(atom._private.model.data, key, defaultValue)
 }
 
-const set = (path, newValue, options = {}) => {
-  const currentValue = _.get(atom._private.model.data, path)
-  if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
-    _.set(atom._private.model.data, path, _.cloneDeep(newValue))
-    if (options.silent !== true) {
-      _.consoleLog('model', 'Model: set', path, '=', newValue)
-      triggerDebounced(path, options)
-    }
-  }
-}
 
 // atom public methods
 
 export default {
 
-  get,
+  get: (key, defaultValue) => {
+    return _.cloneDeep(get(key, defaultValue))
+  },
 
   getValues: (keys) => {
     return _.map(_.parseArray(keys), (key) => {
@@ -164,5 +171,14 @@ export default {
     })
   },
 
-  set
+  set: (path, newValue, options = {}) => {
+    const currentValue = _.get(atom._private.model.data, path)
+    if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
+      _.set(atom._private.model.data, path, _.cloneDeep(newValue))
+      if (options.silent !== true) {
+        _.consoleLog('model', 'Model: set', path, '=', newValue)
+        triggerDebounced(path, options)
+      }
+    }
+  }
 }
