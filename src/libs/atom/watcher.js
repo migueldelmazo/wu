@@ -13,7 +13,7 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('watcher', name)
-    atom._private.model.watch(definition.watcher, runWatcher.bind(null, name), {
+    atom._private.model.watch(definition.watcher, runWatcher.bind(null, name), undefined, {
       type: 'watcher'
     })
   }

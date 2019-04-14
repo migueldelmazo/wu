@@ -14,7 +14,7 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('ensure', name)
-    atom._private.model.watch(definition.watcher, runEnsure.bind(null, name), {
+    atom._private.model.watch(definition.watcher, runEnsure.bind(null, name), undefined, {
       type: 'ensure'
     })
   }

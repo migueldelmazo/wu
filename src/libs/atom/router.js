@@ -24,7 +24,7 @@ export default {
   },
 
   watch: (name) => {
-    atom._private.model.watch('router.url', ensureModelRoute.bind(null, name), {
+    atom._private.model.watch('router.url', ensureModelRoute.bind(null, name), undefined, {
       type: 'ensure'
     })
   }
