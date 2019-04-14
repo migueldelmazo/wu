@@ -53,15 +53,10 @@ atom.create('ensure', 'user.isLogged', {
   destination: 'user.isLogged'
 })
 
-
 atom.create('watcher', 'user.api.login', {
   watcher: 'app.init',
   fn: () => {
-    atom.api.send('user.login', {
-      query: {
-        email: 'fua'
-      }
-    })
+    atom.api.send('user.login')
   }
 })
 
@@ -69,9 +64,5 @@ atom.create('watcher', 'user.api.login', {
 
 atom.create('getter', 'app.status', {
   args: 'app.init',
-  fn: (appInit) => {
-    return {
-      appInit
-    }
-  }
+  fn: (appInit) => appInit
 })

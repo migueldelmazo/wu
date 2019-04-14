@@ -109,6 +109,8 @@ export default class UserLoginView extends Component {
               this.state.item: {this.state.item + ''}
               <br />
               this.state.item2: {this.state.item2 + ''}
+              <br />
+              app.status: {this.get('appStatus') + ''}
             </code>
           </div>
         </div>
