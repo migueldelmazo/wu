@@ -46,10 +46,14 @@ const stopWatchingAtom = function () {
 
 // run methods
 
-const runMethod = function (method, ...args) {
+const runMethod = function (methodName, ...args) {
   const parsedArgs = _.mapDeep(args, null, parser.bind(this))
-  _.consoleGroup('react', 'React: run ' + this.getName() + '.' + method, 'Args:', ...parsedArgs)
-  this[method](...parsedArgs)
+  _.consoleGroup('react', 'React: run ' + this.getName() + '.' + methodName, 'Args:', ...parsedArgs)
+  if (_.isFunction(this[methodName])) {
+    this[methodName].call(this, ...parsedArgs)
+  } else {
+    atom.setter(methodName, ...parsedArgs)
+  }
   _.consoleGroupEnd()
 }
 
@@ -71,6 +75,7 @@ export default class Component extends React.Component {
 
   constructor(props) {
     super(props)
+    this.get = atom.getter
     this.state = this.initialState()
     wrapSetStateMethod.call(this)
   }

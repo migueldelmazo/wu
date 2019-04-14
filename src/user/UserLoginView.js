@@ -39,6 +39,7 @@ export default class UserLoginView extends Component {
               </label>
               <input
                 className='form-control'
+                onKeyUp={this.onEv('setLogin', '#this.state.email')}
               />
             </div>
             
@@ -110,7 +111,7 @@ export default class UserLoginView extends Component {
               <br />
               this.state.item2: {this.state.item2 + ''}
               <br />
-              app.status: {this.get('appStatus') + ''}
+              this.getter.item2: {this.get('appStatus', 123)}
             </code>
           </div>
         </div>

@@ -62,7 +62,15 @@ atom.create('watcher', 'user.api.login', {
 
 // view
 
-atom.create('getter', 'app.status', {
-  args: 'app.init',
-  fn: (appInit) => appInit
+atom.create('getter', 'appStatus', {
+  args: ['app.init', 'user.id'],
+  fn: (appInit, userId, fuu) => appInit + ' ' + userId + ' ' + fuu
+})
+
+atom.create('setter', 'setLogin', {
+  args: 'user.id',
+  fn: (userId, email, password) => {
+    return { userId, email, password }
+  },
+  destination: 'user.login.data'
 })

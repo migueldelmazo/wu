@@ -17,7 +17,7 @@ const setDefinition = (type, name, definition) => {
 }
 
 const checkDefinitionType = (type) => {
-  const validTypes = ['api', 'ensure', 'getter', 'router', 'watcher']
+  const validTypes = ['api', 'ensure', 'getter', 'router', 'setter', 'watcher']
   if (validTypes.indexOf(type) < 0) {
     _.consoleError('atom.create invalid type:', type)
   }
