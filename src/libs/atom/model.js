@@ -75,6 +75,7 @@ const getWatcherKey = () => {
 let onChangeTimer
 const pendingPaths = {
   ensure: [],
+  watcher: [],
   default: []
 }
 
@@ -91,13 +92,11 @@ const triggerAddPendingPaths = (changedPath) => {
 }
 
 const trigger = () => {
-  _.consoleGroup('reacting', 'Reacting to model changes', 'Paths:', pendingPaths)
   _.each(pendingPaths, (paths, type) => {
     while (!_.isEmpty(pendingPaths[type])) {
       triggerByType(pendingPaths, type)
     }
   })
-  _.consoleGroupEnd()
 }
 
 const triggerByType = (pendingPaths, type) => {
@@ -109,7 +108,9 @@ const triggerByType = (pendingPaths, type) => {
 const triggerInWatchers = (changedPaths, type) => {
   _.each(atom._private.model.watchers, (watcher) => {
     if (triggerIsValidWatcher(watcher, type) && triggerPathsMatch(changedPaths, watcher.paths)) {
+      _.consoleGroup('reacting', 'Reacting to model changes', 'Type:', type, 'Paths:', watcher.paths)
       _.fnsRun(watcher.fns)
+      _.consoleGroupEnd()
     }
   })
 }
