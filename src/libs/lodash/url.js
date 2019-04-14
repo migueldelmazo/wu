@@ -3,7 +3,7 @@ import _ from 'lodash'
 // router helpers
 
 const listenPopStateEvent = (callback) => {
-  window.addEventListener('popstate', () => callback)
+  window.addEventListener('popstate', callback)
 }
 
 const listenPushStateEvent = (callback) => {
