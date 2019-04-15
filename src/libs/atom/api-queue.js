@@ -17,11 +17,11 @@ export default {
       state: 'added'
     })
   },
-  
+
   start: (request) => {
     request.state = 'sending'
   },
-  
+
   close: (request) => {
     request.state = 'sent'
   }
