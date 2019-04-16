@@ -17,7 +17,7 @@ const wrapSetStateMethod = function() {
 
 // state and props parser
 
-const parser = function (value) {
+const parser = function(value) {
   if (_.isString(value)) {
     if (_.startsWith(value, '#this.props.')) {
       value = value.replace('#this.props.', '')
@@ -32,21 +32,21 @@ const parser = function (value) {
 
 // atom Watchers
 
-const watchAtom = function () {
+const watchAtom = function() {
   const watchers = this.watchers()
-  this.atomWatcherKey = atom._private.model.watch(watchers, function () {
+  this.atomWatcherKey = atom._private.model.watch(watchers, function() {
     _.consoleLog('react', 'React: render ' + this.getName('name'), 'Watchers:', watchers)
     this.forceUpdate()
   }.bind(this))
 }
 
-const stopWatchingAtom = function () {
-  atom.model.stopWatching(this.atomWatcherKey)
+const stopWatchingAtom = function() {
+  atom._private.model.stopWatching(this.atomWatcherKey)
 }
 
 // run methods
 
-const runMethod = function (methodName, ...args) {
+const runMethod = function(methodName, ...args) {
   const parsedArgs = _.mapDeep(args, null, parser.bind(this))
   _.consoleGroup('react', 'React: run ' + this.getName() + '.' + methodName, 'Args:', ...parsedArgs)
   if (_.isFunction(this[methodName])) {
@@ -87,25 +87,25 @@ export default class Component extends React.Component {
   componentWillUnmount() {
     stopWatchingAtom.call(this)
   }
-  
+
   getName() {
     return this.constructor.name
   }
-  
+
   watchers() {
     return []
   }
 
   // state
-  
+
   initialState() {
     return {}
   }
-  
+
   getState(path, defaultValue) {
     return _.get(this.state, path, defaultValue)
   }
-  
+
   toggleState(path, value) {
     value = value === undefined ? !this.getState(path) : !!value
     this.setState(path, value)
@@ -126,9 +126,9 @@ export default class Component extends React.Component {
       })
     }.bind(this)
   }
-  
+
   // class name
-  
+
   getClassName(status, trueClass = '', falseClass = '', prefixClass = '', sufixClass = '') {
     return prefixClass + (status ? trueClass : falseClass) + sufixClass
   }

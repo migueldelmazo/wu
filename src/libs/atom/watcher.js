@@ -5,7 +5,7 @@ const runWatcher = (name) => {
   const definition = getDefinition('watcher', name)
   const modelArgs = atom.model.getValues(definition.args)
   _.consoleGroup('watcher', 'Watcher: run ' + name, 'Args:', modelArgs, 'Definition:', definition)
-  definition.fn(modelArgs)
+  definition.fn(...modelArgs)
   _.consoleGroupEnd()
 }
 

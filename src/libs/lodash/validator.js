@@ -13,6 +13,8 @@ _.mixin({
         return _.every(_.parseArray(validatorFns), (fn) => (fn(value)))
       })
     })
-  }
+  },
+
+  isNotEmpty: (value) => !_.isEmpty(value)
 
 })

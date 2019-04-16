@@ -6,13 +6,21 @@ import handlers from './api-handlers'
 import online from './api-online'
 import queue from './api-queue'
 
-// parse
+// send
 
-const parseRequest = (name, data) => {
+const send = (name) => {
+  const request = parseRequest(name)
+  _.consoleGroup('api', 'API: added ' + request.name, 'Request:', request)
+  queue.add(request)
+  _.consoleGroupEnd()
+  handleRequests()
+}
+
+const parseRequest = (name) => {
   const definition = getDefinition('api', name)
-  const query = getRequestData(definition, data, 'query')
-  const body = getRequestData(definition, data, 'body')
-  const headers = getRequestData(definition, data, 'headers')
+  const query = getRequestData(definition, 'query')
+  const body = getRequestData(definition, 'body')
+  const headers = getRequestData(definition, 'headers')
   const method = _.result(definition, 'request.method', 'get').toUpperCase()
   const path = _.result(definition, 'request.path', '') + _.objectToQuery(query)
   return {
@@ -22,21 +30,29 @@ const parseRequest = (name, data) => {
     },
     flags: definition.flags || {},
     handlers: definition.handlers || {},
-    request: { body, headers, method, path, query },
+    request: {
+      body,
+      headers,
+      method,
+      path,
+      query
+    },
     response: {}
   }
 }
 
-const getRequestData = (definition, data, dataKey) => {
-  const definitionData = _.result(definition, 'request.' + dataKey, {})
-  return _.extend({}, definitionData, data[dataKey])
+const getRequestData = (definition, key) => {
+  const data = _.result(definition, 'request.' + key, {})
+  return _.mapDeep(data, null, (path) => {
+    return atom.model.get(path)
+  })
 }
 
 // handler requests
 
 const handleRequests = () => {
   setTimeout(() => {
-    if (atom.model.get('api.online')) {
+    if (atom.model.get('app.online')) {
       const nextRequest = queue.getNext()
       if (!_.isEmpty(nextRequest)) {
         handleRequest(nextRequest)
@@ -102,11 +118,7 @@ const setRawResponse = (request, response) => {
 
 const handleResponse = (request) => {
   _.consoleGroup('api', 'API: response ' + request.name + ' with status ' + request.response.raw.status, 'Request:', request)
-  handlers.runValidator(request)
-  handlers.selectHandler(request)
-  handlers.runMapper(request)
-  handlers.runParser(request)
-  handlers.setInModel(request)
+  handlers.runActions(request)
   flags.set(request, 'sending', false)
   cache.set(request)
   queue.close(request)
@@ -122,12 +134,11 @@ export default {
     online.init(handleRequests)
   },
 
-  send: (name, data = {}) => {
-    const request = parseRequest(name, data)
-    _.consoleGroup('api', 'API: added ' + request.name, 'Request:', request)
-    queue.add(request)
-    _.consoleGroupEnd()
-    handleRequests()
+  watch: (name) => {
+    const definition = getDefinition('api', name)
+    if (definition.watcher) {
+      atom._private.model.watch(definition.watcher.paths, send.bind(null, name), definition.watcher.validator)
+    }
   }
 
 }

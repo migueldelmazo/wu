@@ -2,17 +2,17 @@ import _ from 'lodash'
 
 // router helpers
 
-const listenPopStateEvent = (callback) => {
-  window.addEventListener('popstate', callback)
+const listenPopStateEvent = () => {
+  window.addEventListener('popstate', runCallback)
 }
 
-const listenPushStateEvent = (callback) => {
+const listenPushStateEvent = () => {
   window.addEventListener('click', (ev) => {
     if (isAnchorDomElementWithHref(ev)) {
       ev.stopPropagation()
       ev.preventDefault()
-      replaceWindowLocation(ev.srcElement.href)
-      callback()
+      _.navigate(ev.srcElement.href)
+      runCallback()
     }
   })
 }
@@ -21,8 +21,14 @@ const isAnchorDomElementWithHref = (ev) => {
   return ev.srcElement.tagName === 'A' && _.isString(ev.srcElement.href)
 }
 
-const replaceWindowLocation = (url) => {
-  window.history.pushState({}, '', url)
+// callback
+
+let callback
+
+const runCallback = () => {
+  if (_.isFunction(callback)) {
+    callback()
+  }
 }
 
 _.mixin({
@@ -31,9 +37,10 @@ _.mixin({
    * Init router: run callback on window location changes and on click anchors
    * @param {function} Callback to run
    */
-  initRouter: (callback) => {
-    listenPopStateEvent(callback)
-    listenPushStateEvent(callback)
+  initRouter: (_callback) => {
+    callback = _callback
+    listenPopStateEvent()
+    listenPushStateEvent()
   },
 
   /**
@@ -122,6 +129,11 @@ _.mixin({
   objectToQuery: (obj) => {
     const queryParams = _.map(obj, (value, key) => key + '=' + value)
     return _.isEmpty(queryParams) ? '' : '?' + queryParams.join('&')
+  },
+
+  navigate: (url) => {
+    window.history.pushState({}, '', url)
+    runCallback()
   }
 
 })

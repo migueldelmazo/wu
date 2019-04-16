@@ -4,7 +4,7 @@ import { atom } from './common'
 const ensureModel = () => {
   let online = _.get(window, 'navigator.onLine')
   online = online === undefined ? true : online
-  atom.model.set('api.online', online)
+  atom.model.set('app.online', online)
 }
 
 export default {
@@ -12,7 +12,7 @@ export default {
   init: (requestsHandler) => {
     window.addEventListener('online', ensureModel)
     window.addEventListener('offline', ensureModel)
-    atom._private.model.watch('api.online', requestsHandler)
+    atom._private.model.watch('app.online', requestsHandler)
     ensureModel()
   }
 

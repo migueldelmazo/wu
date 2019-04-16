@@ -156,6 +156,16 @@ const get = (key, defaultValue) => {
   return _.get(atom._private.model.data, key, defaultValue)
 }
 
+const set = (path, newValue, options = {}) => {
+  const currentValue = _.get(atom._private.model.data, path)
+  if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
+    _.set(atom._private.model.data, path, _.cloneDeep(newValue))
+    if (options.silent !== true) {
+      _.consoleLog('model', 'Model: set', path, '=', newValue)
+      triggerDebounced(path, options)
+    }
+  }
+}
 
 // atom public methods
 
@@ -166,19 +176,10 @@ export default {
   },
 
   getValues: (keys) => {
-    return _.map(_.parseArray(keys), (key) => {
+    return _.map(_.compact(_.parseArray(keys)), (key) => {
       return atom.model.get(key)
     })
   },
 
-  set: (path, newValue, options = {}) => {
-    const currentValue = _.get(atom._private.model.data, path)
-    if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
-      _.set(atom._private.model.data, path, _.cloneDeep(newValue))
-      if (options.silent !== true) {
-        _.consoleLog('model', 'Model: set', path, '=', newValue)
-        triggerDebounced(path, options)
-      }
-    }
-  }
+  set
 }

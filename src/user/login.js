@@ -1,76 +1,72 @@
 import _ from 'lodash'
 import atom from '../libs/atom'
 
-// routers
-
-atom.create('router', 'user.login', {
+atom.create('router', 'userLogin', {
   urlPathName: '/login',
-  destination: 'user.route.login'
+  destination: 'user.login.route'
 })
 
-atom.create('router', 'user.page', {
-  urlPathName: '/page/:id',
-  destination: 'user.route.page'
+atom.create('ensure', 'userLogin', {
+  watcher: 'app.ready',
+  fn: () => ({
+    email: '',
+    password: ''
+  }),
+  destination: 'user.login.data'
 })
 
-// apis
+atom.create('watcher', 'userLoginNavigate', {
+  watcher: ['user.jwt', 'user.login.route'],
+  args: ['user.jwt', 'user.login.route'],
+  fn: (userJwt, loginRoute) => {
+    if (_.isNotEmpty(userJwt) && loginRoute.isValid) {
+      _.navigate('/profile/' + userJwt)
+    }
+  }
+})
 
-atom.create('api', 'user.login', {
+atom.create('getter', 'userLoginRoute', {
+  args: 'user.login.route.isValid'
+})
+
+atom.create('getter', 'userLoginSending', {
+  args: 'user.login.api.sending'
+})
+
+atom.create('setter', 'userLoginSend', {
+  fn: (email, password) => ({
+    email,
+    password
+  }),
+  destination: 'user.login.data'
+})
+
+atom.create('api', 'userLogin', {
+  watcher: {
+    paths: 'user.login.data',
+    validator: {
+      'user.login.data.email': [_.negate(_.isEmpty), _.isString],
+      'user.login.data.password': [_.negate(_.isEmpty), _.isString]
+    }
+  },
   request: {
     method: 'get',
-    path: 'login.json',
+    path: '/login.json',
     query: {
-      email: 'info@migueldelmazo.com'
+      email: 'user.login.data.email',
+      password: 'user.login.data.password'
     }
   },
   handlers: {
-    onCode200: {
-      validator: {
-        'body.json-web-token': [_.negate(_.isEmpty), _.isString]
-      },
-      mapper: {
-        'body.json-web-token': 'body.jwt'
-      },
-      parser: {
-        'body.jwt': _.trim
-      },
-      destination: {
-        'user.jwt': 'body.jwt'
+    onCode200: [
+      {
+        fn: 'set',
+        from: 'body.json-web-token',
+        to: 'user.jwt'
       }
-    }
+    ]
   },
   flags: {
-    sending: 'user.login.sending'
+    sending: 'user.login.api.sending'
   }
-})
-
-// ensure
-
-atom.create('ensure', 'user.isLogged', {
-  watcher: 'user.id',
-  args: 'user.id',
-  fn: (id) => !_.isEmpty(id),
-  destination: 'user.isLogged'
-})
-
-atom.create('watcher', 'user.api.login', {
-  watcher: 'app.init',
-  fn: () => {
-    atom.api.send('user.login')
-  }
-})
-
-// view
-
-atom.create('getter', 'appStatus', {
-  args: ['app.init', 'user.id'],
-  fn: (appInit, userId, fuu) => appInit + ' ' + userId + ' ' + fuu
-})
-
-atom.create('setter', 'setLogin', {
-  args: 'user.id',
-  fn: (userId, email, password) => {
-    return { userId, email, password }
-  },
-  destination: 'user.login.data'
 })

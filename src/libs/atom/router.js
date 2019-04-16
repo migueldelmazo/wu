@@ -2,12 +2,12 @@ import _ from 'lodash'
 import { atom, getDefinition } from './common'
 
 const updateModel = () => {
-  atom.model.set('router', _.getWindowLocationData())
+  atom.model.set('app.router', _.getWindowLocationData())
 }
 
 const ensureModelRoute = (name) => {
   const definition = getDefinition('router', name)
-  const router = _.first(atom.model.getValues('router'))
+  const router = _.first(atom.model.getValues('app.router'))
   _.consoleGroup('router', 'Router: set ' + name, 'Definition:', definition)
   atom.model.set(definition.destination, {
     isValid: _.matchRouteParams(router.pathName, definition.urlPathName),
@@ -24,7 +24,7 @@ export default {
   },
 
   watch: (name) => {
-    atom._private.model.watch('router.url', ensureModelRoute.bind(null, name), undefined, {
+    atom._private.model.watch('app.router.url', ensureModelRoute.bind(null, name), undefined, {
       type: 'ensure'
     })
   }

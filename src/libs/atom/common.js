@@ -1,11 +1,13 @@
 import _ from 'lodash'
 
 const atom = {
-  _private: {}
+  _private: {
+    items: {}
+  }
 }
 
 const getDefinition = (type, name) => {
-  const definition = _.get(atom._private, 'items.' + type + '.' + name)
+  const definition = atom._private.items[type][name]
   if (!definition) {
     _.consoleError('atom.getDefinition invalid definition, type: ' + type + ', name: ' + name)
   }
@@ -13,7 +15,8 @@ const getDefinition = (type, name) => {
 }
 
 const setDefinition = (type, name, definition) => {
-  _.set(atom._private, 'items.' + type + '.' + name, definition)
+  atom._private.items[type] = atom._private.items[type] || {}
+  atom._private.items[type][name] = definition
 }
 
 const checkDefinitionType = (type) => {

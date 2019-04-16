@@ -12,6 +12,7 @@ _.consoleConfig({
     reacting: 'border: solid 1px #666; color: #666;' + common,
     react: 'background: #00a1f1; color: white;' + common,
     router: 'background: #ffc107; color: white;' + common,
+    setter: 'background: #34ab53; color: white;' + common,
     watcher: 'background: #e83e8c; color: white;' + common
   }
 })

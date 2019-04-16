@@ -20,6 +20,9 @@ atom.create = (type, name, definition) => {
   checkDefinitionName(name)
   setDefinition(type, name, definition)
   switch (type) {
+    case 'api':
+      api.watch(name)
+      break;
     case 'ensure':
       ensure.watch(name)
       break;
@@ -37,6 +40,7 @@ atom.create = (type, name, definition) => {
 atom.init = () => {
   api.init()
   router.init()
+  atom.model.set('app.ready', true)
 }
 
 export default atom
