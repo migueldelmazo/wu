@@ -1,13 +1,13 @@
 import _ from 'lodash'
-import { atom, getDefinition, setInModel } from './common'
+import { wu, getDefinition, setInModel } from './common'
 
 const updateModel = () => {
-  atom.model.set('app.router', _.getWindowLocationData())
+  wu.model.set('app.router', _.getWindowLocationData())
 }
 
 const run = (name) => {
   const definition = getDefinition('router', name)
-  const router = atom.model.get('app.router')
+  const router = wu.model.get('app.router')
   const result = {
     isValid: _.matchRouteParams(router.pathName, definition.urlPathName),
     params: _.getRouteParams(router.pathName, definition.urlPathName)
@@ -25,7 +25,7 @@ export default {
   },
 
   watch: (name) => {
-    atom.model.watch('app.router.url', undefined, run.bind(null, name), {
+    wu.model.watch('app.router.url', undefined, run.bind(null, name), {
       type: 'ensure'
     })
   }

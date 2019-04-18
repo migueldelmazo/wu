@@ -1,9 +1,9 @@
 import _ from 'lodash'
-import { atom } from './common'
+import { wu } from './common'
 
-// atom private items
+// wu private items
 
-atom._private.model = {
+wu._private.model = {
   data: {},
   watchers: {}
 }
@@ -72,7 +72,7 @@ const parseWatcher = (paths, validators, fns, options) => {
 // watchers keys
 
 const getWatcherKey = () => {
-  return _.uniqueId('atom-model-key-')
+  return _.uniqueId('wu-model-key-')
 }
 
 // trigger
@@ -111,7 +111,7 @@ const triggerByType = (pendingPaths, type) => {
 
 const triggerInWatchers = (changedPaths, type) => {
   _.consoleGroup('reacting', 'Reacting to model changes', 'Type: ' + type + ', paths:', changedPaths)
-  _.each(atom._private.model.watchers, (watcher) => {
+  _.each(wu._private.model.watchers, (watcher) => {
     if (triggerIsValidWatcher(watcher, type) &&
       triggerPathsMatch(changedPaths, watcher.paths) &&
       triggerValidatorMatch(watcher.validators)) {
@@ -154,13 +154,13 @@ const triggerPathMatch = (changedPath, watcherPath) => {
 // get/set
 
 const get = (key, defaultValue) => {
-  return _.get(atom._private.model.data, key, defaultValue)
+  return _.get(wu._private.model.data, key, defaultValue)
 }
 
 const set = (path, newValue, options = {}) => {
-  const currentValue = _.get(atom._private.model.data, path)
+  const currentValue = _.get(wu._private.model.data, path)
   if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
-    _.set(atom._private.model.data, path, _.cloneDeep(newValue))
+    _.set(wu._private.model.data, path, _.cloneDeep(newValue))
     if (options.silent !== true) {
       _.consoleLog('model', 'Model: set', path, '=', newValue)
       triggerDebounced(path, options)
@@ -168,7 +168,7 @@ const set = (path, newValue, options = {}) => {
   }
 }
 
-// atom public methods
+// wu public methods
 
 export default {
 
@@ -183,15 +183,15 @@ export default {
       _.consoleError('Invalid fns in Wu model watch call: ' + fns + '. Functions should be a function or an arrays of functions.')
     } else {
       const key = getWatcherKey()
-      atom._private.model.watchers[key] = parseWatcher(paths, validators, fns, options)
+      wu._private.model.watchers[key] = parseWatcher(paths, validators, fns, options)
       return key
     }
   },
 
   stopWatching: (keys) => {
     _.each(_.parseArray(keys), (key) => {
-      if (atom._private.model.watchers[key]) {
-        atom._private.model.watchers[key] = null
+      if (wu._private.model.watchers[key]) {
+        wu._private.model.watchers[key] = null
       }
     })
   },

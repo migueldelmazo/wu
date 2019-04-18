@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { atom, getDefinition, runFn, setInModel } from './common'
+import { wu, getDefinition, runFn, setInModel } from './common'
 
 const run = (name) => {
   const definition = getDefinition('ensure', name)
@@ -13,7 +13,7 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('ensure', name)
-    atom.model.watch(definition.onChange.paths, definition.onChange.check, run.bind(null, name), {
+    wu.model.watch(definition.onChange.paths, definition.onChange.check, run.bind(null, name), {
       type: 'ensure'
     })
   }

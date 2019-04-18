@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { atom, checkDefinitionType, setDefinition } from './common'
+import { wu, checkDefinitionType, setDefinition } from './common'
 import api from './api'
 import ensure from './ensure'
 import getter from './getter'
@@ -9,11 +9,11 @@ import setter from './setter'
 import watcher from './watcher'
 import './lodash'
 
-atom.getter = getter
-atom.setter = setter
-atom.model = model
+wu.getter = getter
+wu.setter = setter
+wu.model = model
 
-atom.create = (type, name, definition) => {
+wu.create = (type, name, definition) => {
   switch (type) {
     case 'api':
       setDefinition(type, name, definition, {
@@ -66,14 +66,14 @@ atom.create = (type, name, definition) => {
   }
 }
 
-atom.start = () => {
+wu.start = () => {
   _.consoleGroup('wu', 'Starting Wu')
   api.start()
   router.start()
-  atom.model.set('app.ready', true)
+  wu.model.set('app.ready', true)
   _.consoleGroupEnd()
 }
 
-export default atom
+export default wu
 
-window.atom = atom
+window.wu = wu

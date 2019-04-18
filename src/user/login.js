@@ -1,12 +1,12 @@
 import _ from 'lodash'
-import atom from '../libs/atom'
+import wu from '../libs/wu'
 
-atom.create('router', 'userLogin', {
+wu.create('router', 'userLogin', {
   urlPathName: '/',
   to: 'user.login.route'
 })
 
-atom.create('ensure', 'userLogin', {
+wu.create('ensure', 'userLogin', {
   onChange: {
     paths: 'app.ready'
   },
@@ -17,7 +17,7 @@ atom.create('ensure', 'userLogin', {
   to: 'user.login.data'
 })
 
-atom.create('watcher', 'userLoginNavigate', {
+wu.create('watcher', 'userLoginNavigate', {
   onChange: {
     paths: ['user.jwt', 'user.login.route']
   },
@@ -29,15 +29,15 @@ atom.create('watcher', 'userLoginNavigate', {
   }
 })
 
-atom.create('getter', 'userLoginRoute', {
+wu.create('getter', 'userLoginRoute', {
   from: '#user.login.route.isValid'
 })
 
-atom.create('getter', 'userLoginSending', {
+wu.create('getter', 'userLoginSending', {
   from: '#user.login.api.sending'
 })
 
-atom.create('setter', 'userLoginSend', {
+wu.create('setter', 'userLoginSend', {
   fn: (email, password) => ({
     email,
     password
@@ -45,7 +45,7 @@ atom.create('setter', 'userLoginSend', {
   to: 'user.login.data'
 })
 
-atom.create('api', 'userLogin', {
+wu.create('api', 'userLogin', {
   onChange: {
     paths: 'user.login.data',
     check: {

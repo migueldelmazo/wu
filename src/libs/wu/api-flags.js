@@ -1,11 +1,11 @@
-import { atom } from './common'
+import { wu } from './common'
 
 export default {
 
   set: (request, name, value) => {
     const flag = request.flags[name]
     if (flag) {
-      atom.model.set(flag, value)
+      wu.model.set(flag, value)
     }
   }
 

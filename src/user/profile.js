@@ -1,12 +1,12 @@
 import _ from 'lodash'
-import atom from '../libs/atom'
+import wu from '../libs/wu'
 
-atom.create('router', 'user.profile', {
+wu.create('router', 'user.profile', {
   urlPathName: '/profile/:userId',
   to: 'user.profile.route'
 })
 
-atom.create('watcher', 'user.profile.navigate', {
+wu.create('watcher', 'user.profile.navigate', {
   onChange: {
     paths: ['user.jwt', 'user.profile.route']
   },
@@ -18,16 +18,16 @@ atom.create('watcher', 'user.profile.navigate', {
   }
 })
 
-atom.create('getter', 'user.profile.route', {
+wu.create('getter', 'user.profile.route', {
   from: '#user.profile.route.isValid'
 })
 
-atom.create('getter', 'user.profile', {
+wu.create('getter', 'user.profile', {
   from: '#user.profile.data',
   fn: (profile, prop) => (profile && profile[prop]) || ''
 })
 
-atom.create('api', 'user.profile', {
+wu.create('api', 'user.profile', {
   onChange: {
     paths: 'user.jwt',
     check: {

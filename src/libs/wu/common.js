@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-const atom = {
+const wu = {
   _private: {
     items: {}
   }
@@ -9,7 +9,7 @@ const atom = {
 // run function
 
 const runFn = (definition, ...fnArgs) => {
-  let modelArgs = definition.from ? atom.model.populate(definition.from) : []
+  let modelArgs = definition.from ? wu.model.populate(definition.from) : []
   modelArgs = _.parseArray(modelArgs)
   return _.isFunction(definition.fn) ? definition.fn(...modelArgs, ...fnArgs) : modelArgs[0]
 }
@@ -17,13 +17,13 @@ const runFn = (definition, ...fnArgs) => {
 // set in model
 
 const setInModel = (definition, value) => {
-  atom.model.set(definition.to, value)
+  wu.model.set(definition.to, value)
 }
 
 // get definition
 
 const getDefinition = (type, name) => {
-  return atom._private.items[type][name]
+  return wu._private.items[type][name]
 }
 
 // set definition
@@ -32,8 +32,8 @@ const setDefinition = (type, name, definition, props) => {
   checkDefinitionName(type, name)
   checkDefinition(type, name, definition)
   checkDefinitionProps(type, name, definition, props)
-  atom._private.items[type] = atom._private.items[type] || {}
-  atom._private.items[type][name] = parseDefinition(definition, props)
+  wu._private.items[type] = wu._private.items[type] || {}
+  wu._private.items[type][name] = parseDefinition(definition, props)
   _.consoleLog(type, _.capitalize(type) + ': create ' + name, 'Definition:', getDefinition(type, name))
 }
 
@@ -86,7 +86,7 @@ const parseDefinition = (definition, props) => {
 }
 
 export {
-  atom,
+  wu,
   checkDefinitionType,
   getDefinition,
   setDefinition,
@@ -94,4 +94,4 @@ export {
   setInModel
 }
 
-window.atom = atom
+window.wu = wu

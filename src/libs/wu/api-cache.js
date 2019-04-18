@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { atom } from './common'
+import { wu } from './common'
 
 const isValidResponseToSetInCache = (request) => {
   return request.config.cacheable === true &&
@@ -21,21 +21,21 @@ const getCacheKey = (request) => {
 export default {
 
   init: () => {
-    atom._private.api.cache = {}
+    wu._private.api.cache = {}
   },
 
   exists: (request) => {
-    return !!_.get(atom._private.api.cache, getCacheKey(request))
+    return !!_.get(wu._private.api.cache, getCacheKey(request))
   },
 
   import: (request) => {
-    request.response.raw = _.get(atom._private.api.cache, getCacheKey(request))
+    request.response.raw = _.get(wu._private.api.cache, getCacheKey(request))
     request.config.fromCache = true
   },
 
   set: (request) => {
     if (isValidResponseToSetInCache(request)) {
-      _.set(atom._private.api.cache, getCacheKey(request), _.cloneDeep(request.response.raw))
+      _.set(wu._private.api.cache, getCacheKey(request), _.cloneDeep(request.response.raw))
       request.config.setInCache = true
     } else {
       request.config.setInCache = false

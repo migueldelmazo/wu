@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { atom, getDefinition, runFn } from './common'
+import { wu, getDefinition, runFn } from './common'
 import cache from './api-cache'
 import flags from './api-flags'
 import handlers from './api-handlers'
@@ -50,7 +50,7 @@ const getRequestData = (definition, key) => {
 
 const handleRequests = () => {
   setTimeout(() => {
-    if (atom.model.get('app.online')) {
+    if (wu.model.get('app.online')) {
       const nextRequest = queue.getNext()
       if (!_.isEmpty(nextRequest)) {
         handleRequest(nextRequest)
@@ -126,7 +126,7 @@ const handleResponse = (request) => {
 export default {
 
   start: () => {
-    atom._private.api = atom._private.api || {}
+    wu._private.api = wu._private.api || {}
     cache.init()
     queue.init()
     online.init(handleRequests)
@@ -134,7 +134,7 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('api', name)
-    atom.model.watch(definition.onChange.paths, definition.onChange.check, send.bind(null, name))
+    wu.model.watch(definition.onChange.paths, definition.onChange.check, send.bind(null, name))
   }
 
 }

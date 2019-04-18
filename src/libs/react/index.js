@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React from 'react'
-import atom from '../atom'
+import wu from '../wu'
 
 // state
 
@@ -30,12 +30,12 @@ const parser = function(value) {
   return value
 }
 
-// atom Watchers
+// wu Watchers
 
-const watchAtom = function() {
+const watch = function() {
   const watchers = this.watchers()
   if (watchers) {
-    this.atomWatcherKey = atom.model.watch(watchers, undefined, function() {
+    this.watcherKey = wu.model.watch(watchers, undefined, function() {
       _.consoleGroup('react', 'React: render ' + this.getName('name'), 'Watchers:', watchers)
       this.forceUpdate()
       _.consoleGroupEnd()
@@ -43,8 +43,8 @@ const watchAtom = function() {
   }
 }
 
-const stopWatchingAtom = function() {
-  atom._private.model.stopWatching(this.atomWatcherKey)
+const stopWatching = function() {
+  wu._private.model.stopWatching(this.watcherKey)
 }
 
 // run methods
@@ -55,7 +55,7 @@ const runMethod = function(methodName, ...args) {
   if (_.isFunction(this[methodName])) {
     this[methodName].call(this, ...parsedArgs)
   } else {
-    atom.setter(methodName, ...parsedArgs)
+    wu.setter(methodName, ...parsedArgs)
   }
   _.consoleGroupEnd()
 }
@@ -78,17 +78,17 @@ export default class Component extends React.Component {
 
   constructor(props) {
     super(props)
-    this.get = atom.getter
+    this.get = wu.getter
     this.state = this.initialState()
     wrapSetStateMethod.call(this)
   }
 
   componentDidMount() {
-    watchAtom.call(this)
+    watch.call(this)
   }
 
   componentWillUnmount() {
-    stopWatchingAtom.call(this)
+    stopWatching.call(this)
   }
 
   getName() {
