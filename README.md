@@ -1,3 +1,3 @@
-# Atom app
+# Wu app
 
 ![Pattern](./docs/pattern.svg)
