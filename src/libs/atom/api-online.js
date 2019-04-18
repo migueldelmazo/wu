@@ -12,7 +12,7 @@ export default {
   init: (requestsHandler) => {
     window.addEventListener('online', ensureModel)
     window.addEventListener('offline', ensureModel)
-    atom._private.model.watch('app.online', requestsHandler)
+    atom.model.watch('app.online', undefined, requestsHandler)
     ensureModel()
   }
 

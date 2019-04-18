@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { atom, getDefinition } from './common'
+import { atom, getDefinition, runFn } from './common'
 import cache from './api-cache'
 import flags from './api-flags'
 import handlers from './api-handlers'
@@ -42,10 +42,8 @@ const parseRequest = (name) => {
 }
 
 const getRequestData = (definition, key) => {
-  const data = _.result(definition, 'request.' + key, {})
-  return _.mapDeep(data, null, (path) => {
-    return atom.model.get(path)
-  })
+  const data = _.get(definition, 'request.' + key)
+  return data ? runFn(data) : {}
 }
 
 // handler requests
@@ -127,7 +125,7 @@ const handleResponse = (request) => {
 
 export default {
 
-  init: () => {
+  start: () => {
     atom._private.api = atom._private.api || {}
     cache.init()
     queue.init()
@@ -136,9 +134,7 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('api', name)
-    if (definition.watcher) {
-      atom._private.model.watch(definition.watcher.paths, send.bind(null, name), definition.watcher.validator)
-    }
+    atom.model.watch(definition.onChange.paths, definition.onChange.check, send.bind(null, name))
   }
 
 }

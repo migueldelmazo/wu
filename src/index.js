@@ -5,6 +5,6 @@ import AppView from './app/AppView'
 import './user/login'
 import './user/profile'
 
-atom.init()
+atom.start()
 
 ReactDom.render(<AppView />, document.getElementById('root'))

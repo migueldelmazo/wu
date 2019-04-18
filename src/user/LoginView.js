@@ -49,7 +49,7 @@ export default class LoginView extends Component {
             </div>
             <button
               className='btn btn-primary'
-              onClick={ this.onEv('userLoginSend', '#this.state.email', '#this.state.password') }
+              onClick={ this.onEv('userLoginSend', '#state.email', '#state.password') }
             >
               { this.get('userLoginSending') ? 'Enviando...' : 'Login' }
             </button>

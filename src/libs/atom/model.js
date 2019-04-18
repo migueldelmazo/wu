@@ -4,37 +4,49 @@ import { atom } from './common'
 // atom private items
 
 atom._private.model = {
-
   data: {},
-  watchers: {},
-
-  // watchers
-
-  watch: (paths, fns, validator, options) => {
-    paths = parsePaths(paths)
-    fns = parseFns(fns)
-    options = parseOptions(options)
-    if (areValidPaths(paths) && areValidFns(fns)) {
-      const key = getWatcherKey()
-      atom._private.model.watchers[key] = parseWatcher(paths, fns, validator, options)
-      return key
-    } else {
-      _.consoleError('Atom: model watch definition is invalid', paths, fns)
-    }
-  },
-
-  stopWatching: (keys) => {
-    _.each(_.parseArray(keys), (key) => {
-      atom._private.model.watchers[key] = null
-    })
-  }
-
+  watchers: {}
 }
 
-// watchers helpers
+// watchers validators
+
+const areValidPaths = (paths) => {
+  paths = _.parseArray(paths)
+  return !_.isEmpty(paths) && _.every(paths, _.isString)
+}
+
+const areValidValidators = (validators) => {
+  return (
+    _.isPlainObject(validators) &&
+    _.every(validators, (fns) => _.every(_.parseArray(fns), _.isFunction))
+  ) ||
+    validators === undefined
+}
+
+const areValidFns = (fns) => {
+  fns = _.parseArray(fns)
+  return !_.isEmpty(fns) && _.every(fns, _.isFunction)
+}
+
+// watchers parsers
 
 const parsePaths = (paths) => {
-  return _.isArray(paths) ? _.flattenDeep(paths) : [paths]
+  const result = []
+  _.mapDeep(paths, parsePathsHelper.bind(null, result), parsePathsHelper.bind(null, result))
+  return result
+}
+
+const parsePathsHelper = (pathsArray, path) => {
+  if (_.isString(path)) {
+    pathsArray.push(path)
+  }
+}
+
+const parseValidators = (validators) => {
+  return _.reduce(validators, (result, fns, path) => {
+    result[path] = _.parseArray(fns)
+    return result
+  }, {})
 }
 
 const parseFns = (fns) => {
@@ -48,21 +60,13 @@ const parseOptions = (options) => {
   }
 }
 
-const parseWatcher = (paths, fns, validator, options) => {
+const parseWatcher = (paths, validators, fns, options) => {
   return {
-    paths,
-    fns,
-    options,
-    validator
+    paths: parsePaths(paths),
+    validators: parseValidators(validators),
+    fns: parseFns(fns),
+    options: parseOptions(options)
   }
-}
-
-const areValidPaths = (paths) => {
-  return _.every(paths, _.isString)
-}
-
-const areValidFns = (fns) => {
-  return _.every(fns, _.isFunction)
 }
 
 // watchers keys
@@ -76,7 +80,6 @@ const getWatcherKey = () => {
 let onChangeTimer
 const pendingPaths = {
   ensure: [],
-  watcher: [],
   default: []
 }
 
@@ -107,15 +110,15 @@ const triggerByType = (pendingPaths, type) => {
 }
 
 const triggerInWatchers = (changedPaths, type) => {
+  _.consoleGroup('reacting', 'Reacting to model changes', 'Type: ' + type + ', paths:', changedPaths)
   _.each(atom._private.model.watchers, (watcher) => {
     if (triggerIsValidWatcher(watcher, type) &&
       triggerPathsMatch(changedPaths, watcher.paths) &&
-      triggerValidatorMatch(watcher.validator)) {
-      _.consoleGroup('reacting', 'Reacting to model changes', 'Type:', type, 'Paths:', watcher.paths)
-      _.fnsRun(watcher.fns)
-      _.consoleGroupEnd()
+      triggerValidatorMatch(watcher.validators)) {
+      _.each(watcher.fns, (fn) => fn())
     }
   })
+  _.consoleGroupEnd()
 }
 
 const triggerIsValidWatcher = (watcher, type) => {
@@ -130,13 +133,11 @@ const triggerPathsMatch = (changedPaths, watcherPaths) => {
   })
 }
 
-const triggerValidatorMatch = (validator) => {
-  if (validator) {
-    return _.every(validator, (fns, path) => {
+const triggerValidatorMatch = (validators) => {
+  if (validators) {
+    return _.every(validators, (fns, path) => {
       const value = get(path)
-      return _.every(_.parseArray(fns), (fn) => {
-        return fn(value)
-      })
+      return _.every(fns, (fn) => fn(value))
     })
   }
   return true
@@ -171,14 +172,41 @@ const set = (path, newValue, options = {}) => {
 
 export default {
 
+  // watchers
+
+  watch: (paths, validators, fns, options) => {
+    if (!areValidPaths(paths)) {
+      _.consoleError('Invalid paths in Wu model watch call: ' + paths + '. Paths should be a string or an arrays of strings.')
+    } else if (!areValidValidators(validators)) {
+      _.consoleError('Invalid validators in Wu model watch call: ' + validators + '. Validators should be an object like:\n{\n\t\'path.of.model\': validatorFunction,\n\t\'other.path.of.model\': [_.isNotEmpty, _.isString]\n}')
+    } else if (!areValidFns(fns)) {
+      _.consoleError('Invalid fns in Wu model watch call: ' + fns + '. Functions should be a function or an arrays of functions.')
+    } else {
+      const key = getWatcherKey()
+      atom._private.model.watchers[key] = parseWatcher(paths, validators, fns, options)
+      return key
+    }
+  },
+
+  stopWatching: (keys) => {
+    _.each(_.parseArray(keys), (key) => {
+      if (atom._private.model.watchers[key]) {
+        atom._private.model.watchers[key] = null
+      }
+    })
+  },
+  
+  // getters / setters
+
   get: (key, defaultValue) => {
     return _.cloneDeep(get(key, defaultValue))
   },
 
-  getValues: (keys) => {
-    return _.map(_.compact(_.parseArray(keys)), (key) => {
-      return atom.model.get(key)
-    })
+  populate: (data) => {
+    return _.mapDeep(data, null, (value) => _.isString(value) && _.startsWith(value, '#')
+      ? get(value.substr(1))
+      : value
+    )
   },
 
   set

@@ -1,12 +1,13 @@
 import _ from 'lodash'
-import { atom, getDefinition } from './common'
+import { getDefinition, runFn } from './common'
 
 export default (name, ...args) => {
   const definition = getDefinition('getter', name)
   if (definition) {
-    const modelArgs = atom.model.getValues(definition.args)
-    return _.isFunction(definition.fn)
-      ? definition.fn(...modelArgs.concat(...args))
-      : modelArgs[0]
+    const result = runFn(definition, ...args)
+    _.consoleLog('getter', 'Getter: run ' + name, 'Result:', result)
+    return result
+  } else {
+    _.consoleError('Invalid wu.getter name: ' + name)
   }
 }

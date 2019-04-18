@@ -19,11 +19,11 @@ const wrapSetStateMethod = function() {
 
 const parser = function(value) {
   if (_.isString(value)) {
-    if (_.startsWith(value, '#this.props.')) {
-      value = value.replace('#this.props.', '')
+    if (_.startsWith(value, '#props.')) {
+      value = value.replace('#props.', '')
       return _.get(this.props, value)
-    } else if (_.startsWith(value, '#this.state.')) {
-      value = value.replace('#this.state.', '')
+    } else if (_.startsWith(value, '#state.')) {
+      value = value.replace('#state.', '')
       return this.getState(value)
     }
   }
@@ -34,10 +34,13 @@ const parser = function(value) {
 
 const watchAtom = function() {
   const watchers = this.watchers()
-  this.atomWatcherKey = atom._private.model.watch(watchers, function() {
-    _.consoleLog('react', 'React: render ' + this.getName('name'), 'Watchers:', watchers)
-    this.forceUpdate()
-  }.bind(this))
+  if (watchers) {
+    this.atomWatcherKey = atom.model.watch(watchers, undefined, function() {
+      _.consoleGroup('react', 'React: render ' + this.getName('name'), 'Watchers:', watchers)
+      this.forceUpdate()
+      _.consoleGroupEnd()
+    }.bind(this))
+  }
 }
 
 const stopWatchingAtom = function() {
@@ -92,9 +95,7 @@ export default class Component extends React.Component {
     return this.constructor.name
   }
 
-  watchers() {
-    return []
-  }
+  watchers() {}
 
   // state
 

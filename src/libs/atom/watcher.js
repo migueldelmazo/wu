@@ -1,11 +1,10 @@
 import _ from 'lodash'
-import { atom, getDefinition } from './common'
+import { atom, getDefinition, runFn } from './common'
 
-const runWatcher = (name) => {
+const run = (name) => {
   const definition = getDefinition('watcher', name)
-  const modelArgs = atom.model.getValues(definition.args)
-  _.consoleGroup('watcher', 'Watcher: run ' + name, 'Args:', modelArgs, 'Definition:', definition)
-  definition.fn(...modelArgs)
+  _.consoleGroup('watcher', 'Watcher: run ' + name)
+  runFn(definition)
   _.consoleGroupEnd()
 }
 
@@ -13,9 +12,7 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('watcher', name)
-    atom._private.model.watch(definition.watcher, runWatcher.bind(null, name), undefined, {
-      type: 'watcher'
-    })
+    atom.model.watch(definition.onChange.paths, definition.onChange.check, run.bind(null, name))
   }
 
 }

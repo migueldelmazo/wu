@@ -1,12 +1,11 @@
 import _ from 'lodash'
-import { atom, getDefinition } from './common'
+import { atom, getDefinition, runFn, setInModel } from './common'
 
-const runEnsure = (name) => {
+const run = (name) => {
   const definition = getDefinition('ensure', name)
-  const modelArgs = atom.model.getValues(definition.args)
-  const result = definition.fn(...modelArgs)
-  _.consoleGroup('ensure', 'Ensure: run ' + name, 'Result:', result, 'Args:', modelArgs, 'Definition:', definition)
-  atom.model.set(definition.destination, result)
+  const result = runFn(definition)
+  _.consoleGroup('ensure', 'Ensure: run ' + name, 'Result:', result)
+  setInModel(definition, result)
   _.consoleGroupEnd()
 }
 
@@ -14,7 +13,7 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('ensure', name)
-    atom._private.model.watch(definition.watcher, runEnsure.bind(null, name), undefined, {
+    atom.model.watch(definition.onChange.paths, definition.onChange.check, run.bind(null, name), {
       type: 'ensure'
     })
   }
