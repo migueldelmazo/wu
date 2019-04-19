@@ -1,3 +1,1 @@
-# Wu app
-
-![Pattern](./docs/pattern.svg)
+![Pattern](./docs/pattern.svg =500x)
