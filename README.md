@@ -1,1 +1,1 @@
-![Pattern](./docs/pattern.svg =500x)
+![Pattern](./docs/pattern.svg | width=500)
