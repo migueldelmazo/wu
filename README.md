@@ -1,1 +1,1 @@
-![Pattern](./docs/pattern.png)
+![Pattern](./docs/wu-framework.png)
