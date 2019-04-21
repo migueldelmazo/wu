@@ -17,7 +17,7 @@ Wu is a framework for building web applications:
 (Allows the use of functional programming).
 
 ```javascript
-wu.create('ensurer', 'userIsLogged', { // name of the ensurer
+wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
   onChange: {
     paths: 'user.id', // path of the data model that we are watching
     check: {
@@ -26,7 +26,9 @@ wu.create('ensurer', 'userIsLogged', { // name of the ensurer
     }
   },
   from: 'user.id', // arguments that will receive the function 'fn'
-  fn: (userId) => !!userId, // pure function that runs when 'onChange.paths' has changed
+  fn: (userId) => {
+    return !!userId // pure function that runs when 'onChange.paths' has changed
+  },
   to: 'user.isLogged' // path of the data model where to save the result of 'fn'
 })
 ```
@@ -35,17 +37,134 @@ wu.create('ensurer', 'userIsLogged', { // name of the ensurer
 **watcher** works exactly like [ensurer](#ensurer) but does not save the result of the function in the data model. The goal is to use it to call third-party libraries such as React JS or LocalStorage...
 (**watcher** is the only item that is not designed to use functional programming).
 
+```javascript
+wu.create('watcher', 'setUserIdInLocalStorage', { // name of the watcher item
+  onChange: {
+    paths: 'user.id', // path of the data model that we are watching
+    check: {
+      // 'fn' function will only be executed when the value of 'user.id' is a non-empty string
+      'user.id': [_.negate(_.isEmpty), _.isString]
+    }
+  },
+  from: 'user.id', // arguments that will receive the function 'fn'
+  fn: (userId) => {
+    window.localStorage.setItem('userId', userId) // impure function that runs when 'onChange.paths' has changed
+  }
+})
+```
+
 ### router:
 **router** allows you to watch changes in the browser URL and save the normalized route in the data model.
 
-### api:
-**api** allows you to watch changes in the model and send Ajax requests to your server. When the server responses the request, **api** helps you manage it and save it in the data model. (Allows the use of functional programming).
+```javascript
+wu.create('router', 'userProfile', { // name of the router item
+  // url pattern
+  urlPattern: '/user/:userId/profile',
+  // every time the URL changes 'user.profileRoute' value it will be updated
+  to: 'user.profileRoute'
+})
+
+//  if the URL is '/user/asdf1234/profile' the value of 'user.profileRoute' will be:
+//  {
+//    isActive: true,
+//    params: { userId: 'asdf1234' }
+//  }
+
+//  if the URL does not match '/user/:userId/profile' the value of 'user.profileRoute' will be:
+//  {
+//    isActive: false,
+//    params: {}
+//  }
+```
 
 ### getter:
 **getter** allows you to define an interface to get data from the data model outside of Wu. (Allows the use of functional programming).
 
+```javascript
+wu.create('getter', 'getGreeting', { // name of the getter item
+  // arguments that will receive the function 'fn'
+  from: ['user.name', 'user.lang'],
+  // pure function
+  fn: (userName, userLang) => {
+    if (userLang === 'en') {
+      return 'Hello ' + userName
+    } else if (userLang === 'es') {
+      return 'Hola ' + userName
+    }
+  }
+})
+```
+
 ### setter:
 **setter** allows you to define an interface to save data from outside to the Wu data model. (Allows the use of functional programming).
+
+```javascript
+wu.create('setter', 'sendUserLogin', { // name of the setter item
+  // pure function
+  fn: (email, password) => {
+    return { email, password }
+  },
+  // path of model data
+  to: 'user.login.data'
+})
+
+// when a third-party library (for example ReactJs) executes the function sendUserLogin('email@email.com', '12345678')
+// the value of 'user.login.data' will be:
+// {
+//   email: 'email@email.com',
+//   password: '12345678'
+// }
+```
+
+### api:
+**api** allows you to watch changes in the model and send Ajax requests to your server. When the server responses the request, **api** helps you manage it and save it in the data model. (Allows the use of functional programming).
+
+```javascript
+wu.create('api', 'userLogin', { // name of the api item
+  onChange: {
+    paths: 'user.login.data', // path of the data model that we are watching
+    check: {
+      // request will only be sent when the value of 'user.login.data.email' is an email
+      // and value of 'user.login.data.password' is a non-empty string
+      'user.login.data.email': _.isEmail,
+      'user.login.data.password': [_.negate(_.isEmpty), _.isString]
+    }
+  },
+  request: {
+    method: 'post',
+    path: 'https://server.com/api/login',
+    body: {
+      // request body will be an object like '{ email, password }'
+      from: {
+        email: 'user.login.data.email',
+        password: 'user.login.data.password'
+      }
+    }
+  },
+  handlers: {
+    // if response http code is 200
+    onCode200: [
+      {
+        // save 'response.body' in 'user.profile' model data path
+        fn: (response) => {
+          return response.body
+        },
+        to: 'user.profile'
+      }
+    ],
+    // if response http code is 404
+    onCode404: [
+      {
+        // save this message in 'user.errorMessage' model data path
+        fn: () => {
+          return 'There is no user with this email and password in our database. Try other credentials please.'
+        },
+        to: 'user.errorMessage'
+      }
+    ]
+  }
+})
+```
 
 ## Third-party libraries
 
