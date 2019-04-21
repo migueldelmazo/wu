@@ -19,17 +19,21 @@ Wu is a framework for building web applications:
 ```javascript
 wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
   onChange: {
-    paths: 'user.id', // path of the data model that we are watching
+    // path of the data model that we are watching
+    paths: 'user.id',
+    // 'fn' function will only be executed when the value of 'user.id' is a non-empty string
     check: {
-      // 'fn' function will only be executed when the value of 'user.id' is a non-empty string
       'user.id': [_.negate(_.isEmpty), _.isString]
     }
   },
-  from: 'user.id', // arguments that will receive the function 'fn'
+  // arguments that will receive the function 'fn'
+  from: 'user.id',
+  // pure function that runs when 'onChange.paths' has changed
   fn: (userId) => {
-    return !!userId // pure function that runs when 'onChange.paths' has changed
+    return !!userId
   },
-  to: 'user.isLogged' // path of the data model where to save the result of 'fn'
+  // path of the data model where to save the result of 'fn'
+  to: 'user.isLogged'
 })
 ```
 
@@ -40,15 +44,18 @@ wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
 ```javascript
 wu.create('watcher', 'setUserIdInLocalStorage', { // name of the watcher item
   onChange: {
-    paths: 'user.id', // path of the data model that we are watching
+    // path of the data model that we are watching
+    paths: 'user.id',
+    // 'fn' function will only be executed when the value of 'user.id' is a non-empty string
     check: {
-      // 'fn' function will only be executed when the value of 'user.id' is a non-empty string
       'user.id': [_.negate(_.isEmpty), _.isString]
     }
   },
-  from: 'user.id', // arguments that will receive the function 'fn'
+  // arguments that will receive the function 'fn'
+  from: 'user.id',
+  // impure function that runs when 'onChange.paths' has changed
   fn: (userId) => {
-    window.localStorage.setItem('userId', userId) // impure function that runs when 'onChange.paths' has changed
+    window.localStorage.setItem('userId', userId)
   }
 })
 ```
@@ -94,6 +101,7 @@ wu.create('getter', 'getGreeting', { // name of the getter item
   }
 })
 ```
+[See ReactJS for more info.]('#ReactJS')
 
 ### setter:
 **setter** allows you to define an interface to save data from outside to the Wu data model. (Allows the use of functional programming).
@@ -104,11 +112,11 @@ wu.create('setter', 'sendUserLogin', { // name of the setter item
   fn: (email, password) => {
     return { email, password }
   },
-  // path of model data
+  // path of the data model where the result of 'fn' will be saved
   to: 'user.login.data'
 })
 
-// when a third-party library (for example ReactJs) executes the function sendUserLogin('email@email.com', '12345678')
+// when a third-party library (for example ReactJS) executes sendUserLogin('email@email.com', '12345678')
 // the value of 'user.login.data' will be:
 // {
 //   email: 'email@email.com',
@@ -122,17 +130,21 @@ wu.create('setter', 'sendUserLogin', { // name of the setter item
 ```javascript
 wu.create('api', 'userLogin', { // name of the api item
   onChange: {
-    paths: 'user.login.data', // path of the data model that we are watching
+    // path of the data model that we are watching
+    paths: 'user.login.data',
     check: {
       // request will only be sent when the value of 'user.login.data.email' is an email
-      // and value of 'user.login.data.password' is a non-empty string
       'user.login.data.email': _.isEmail,
+      // and value of 'user.login.data.password' is a non-empty string
       'user.login.data.password': [_.negate(_.isEmpty), _.isString]
     }
   },
   request: {
+    // request method
     method: 'post',
+    // request url or path
     path: 'https://server.com/api/login',
+    // request post body
     body: {
       // request body will be an object like '{ email, password }'
       from: {
@@ -170,9 +182,30 @@ wu.create('api', 'userLogin', { // name of the api item
 
 It is very easy to work with third-party libraries using **getters**, **setters** and **watchers**.
 
-### React JS
+### ReactJS
 
 Wu allows you to use [React JS classes](https://reactjs.org) that are already integrated with the functionality of Wu.
+
+```javascript
+import React from 'react'
+import WuComponent from 'wu/react-component'
+
+export default class MyView extends WuComponent {
+  // path of the data model that we are watching
+  // when 'user.name' change in the data model this view will be rendered automatically
+  onChange() {
+    return ['user.name', 'user.lang']
+  }
+  render() {
+    return (
+      <div>
+        { this.get('getGreeting') }
+      </div>
+    )
+  }
+}
+```
+[See 'getGreeting' getter for more info.]('#getter')
 
 ## Dependencies
 
