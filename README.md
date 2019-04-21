@@ -101,7 +101,7 @@ wu.create('getter', 'getGreeting', { // name of the getter item
   }
 })
 ```
-[See ReactJS for more info.]('#ReactJS')
+[See ReactJS for more info.](#reactjs)
 
 ### setter:
 **setter** allows you to define an interface to save data from outside to the Wu data model. (Allows the use of functional programming).
@@ -205,7 +205,7 @@ export default class MyView extends WuComponent {
   }
 }
 ```
-[See 'getGreeting' getter for more info.]('#getter')
+[See 'getGreeting' getter for more info.](#getter)
 
 ## Dependencies
 
