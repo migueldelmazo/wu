@@ -19,19 +19,15 @@ Wu is a framework for building web applications:
 ```javascript
 wu.create('ensurer', 'userIsLogged', { // name of the ensurer
   onChange: {
-    // path of the data model that we are watching
-    paths: 'user.id',
+    paths: 'user.id', // path of the data model that we are watching
     check: {
       // 'fn' function will only be executed when the value of 'user.id' is a non-empty string
       'user.id': [_.negate(_.isEmpty), _.isString]
     }
   },
-  // arguments that will receive the function 'fn'
-  from: 'user.id',
-  // pure function that runs when 'onChange.paths' has changed
-  fn: (userId) => !!userId,
-  // path of the data model where to save the result of 'fn'
-  to: 'user.isLogged'
+  from: 'user.id', // arguments that will receive the function 'fn'
+  fn: (userId) => !!userId, // pure function that runs when 'onChange.paths' has changed
+  to: 'user.isLogged' // path of the data model where to save the result of 'fn'
 })
 ```
 
