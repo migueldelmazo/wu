@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import { wu, getDefinition, runFn, setInModel } from './common'
+import { wu, runFn, setInModel } from './common'
+import { getDefinition } from './definition'
 
 const run = (name) => {
   const definition = getDefinition('ensurer', name)

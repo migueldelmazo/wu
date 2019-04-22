@@ -21,7 +21,7 @@ wu.create('watcher', 'userLoginNavigate', {
   onChange: {
     paths: ['user.jwt', 'user.login.route']
   },
-  args: ['#user.jwt', '#user.login.route'],
+  args: ['user.jwt', 'user.login.route'],
   run: (userJwt, loginRoute) => {
     if (!_.isEmpty(userJwt) && loginRoute.isValid) {
       _.navigate('/profile/' + userJwt)
@@ -30,11 +30,11 @@ wu.create('watcher', 'userLoginNavigate', {
 })
 
 wu.create('getter', 'userLoginRoute', {
-  args: '#user.login.route.isValid'
+  args: 'user.login.route.isValid'
 })
 
 wu.create('getter', 'userLoginSending', {
-  args: '#user.login.api.sending'
+  args: 'user.login.api.sending'
 })
 
 wu.create('setter', 'userLoginSend', {
@@ -58,8 +58,8 @@ wu.create('api', 'userLogin', {
     path: '/login.json',
     query: {
       args: {
-        email: '#user.login.data.email',
-        password: '#user.login.data.password'
+        email: 'user.login.data.email',
+        password: 'user.login.data.password'
       }
     }
   },

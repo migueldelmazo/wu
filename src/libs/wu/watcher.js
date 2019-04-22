@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import { wu, getDefinition, runFn } from './common'
+import { wu, runFn } from './common'
+import { getDefinition } from './definition'
 
 const run = (name) => {
   const definition = getDefinition('watcher', name)

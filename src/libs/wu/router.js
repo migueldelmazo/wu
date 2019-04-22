@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import { wu, getDefinition, setInModel } from './common'
+import { wu, setInModel } from './common'
+import { getDefinition } from './definition'
 
 const updateModel = () => {
   wu.model.set('app.router', _.getWindowLocationData())

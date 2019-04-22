@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import { wu, checkDefinitionType, setDefinition } from './common'
+import { wu } from './common'
+import { checkDefinitionType, setDefinition } from './definition'
 import api from './api'
 import ensurer from './ensurer'
 import getter from './getter'

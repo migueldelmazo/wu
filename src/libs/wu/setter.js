@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import { getDefinition, runFn, setInModel } from './common'
+import { runFn, setInModel } from './common'
+import { getDefinition } from './definition'
 
 export default (name, ...args) => {
   const definition = getDefinition('setter', name)

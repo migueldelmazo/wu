@@ -203,10 +203,13 @@ export default {
   },
 
   populate: (data) => {
-    return _.mapDeep(data, null, (value) => _.isString(value) && _.startsWith(value, '#')
-      ? get(value.substr(1))
-      : value
-    )
+    return _.mapDeep(data, null, (value) => {
+      if (_.isString(value)) {
+        return _.startsWith(value, '#') ? value.substr(1) : get(value)
+      } else {
+        return value
+      }
+    })
   },
 
   set

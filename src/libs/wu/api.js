@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import { wu, getDefinition, runFn } from './common'
+import { wu, runFn } from './common'
+import { getDefinition } from './definition'
 import cache from './api-cache'
 import flags from './api-flags'
 import handlers from './api-handlers'

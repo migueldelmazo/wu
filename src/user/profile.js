@@ -10,7 +10,7 @@ wu.create('watcher', 'user.profile.navigate', {
   onChange: {
     paths: ['user.jwt', 'user.profile.route']
   },
-  args: ['#user.jwt', '#user.profile.route'],
+  args: ['user.jwt', 'user.profile.route'],
   run: (userJwt, profileRoute) => {
     if (_.isEmpty(userJwt) && profileRoute.isValid) {
       _.navigate('/')
@@ -19,11 +19,11 @@ wu.create('watcher', 'user.profile.navigate', {
 })
 
 wu.create('getter', 'user.profile.route', {
-  args: '#user.profile.route.isValid'
+  args: 'user.profile.route.isValid'
 })
 
 wu.create('getter', 'user.profile', {
-  args: '#user.profile.data',
+  args: 'user.profile.data',
   run: (profile, prop) => (profile && profile[prop]) || ''
 })
 
@@ -39,7 +39,7 @@ wu.create('api', 'user.profile', {
     path: '/profile.json',
     query: {
       args: {
-        jwt: '#user.jwt'
+        jwt: 'user.jwt'
       }
     }
   },
