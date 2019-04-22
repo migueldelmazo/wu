@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { wu, setInModel } from './common'
-import { getDefinition } from './definition'
+import { getDefinition, setDefinition } from './definition'
 
 const updateModel = () => {
   wu.model.set('app.router', _.getWindowLocationData())
@@ -23,6 +23,13 @@ export default {
   start: () => {
     _.initRouter(updateModel)
     updateModel()
+  },
+
+  setDefinition: (name, definition) => {
+    setDefinition('router', name, definition, {
+      urlPattern: true,
+      to: true
+    })
   },
 
   watch: (name) => {

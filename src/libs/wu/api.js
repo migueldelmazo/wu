@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { wu, runFn } from './common'
-import { getDefinition } from './definition'
+import { getDefinition, setDefinition } from './definition'
 import cache from './api-cache'
 import flags from './api-flags'
 import handlers from './api-handlers'
@@ -131,6 +131,15 @@ export default {
     cache.init()
     queue.init()
     online.init(handleRequests)
+  },
+
+  setDefinition: (name, definition) => {
+    setDefinition('api', name, definition, {
+      onChange: true,
+      request: true,
+      handlers: true,
+      flags: false
+    })
   },
 
   watch: (name) => {

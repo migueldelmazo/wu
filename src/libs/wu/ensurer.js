@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { wu, runFn, setInModel } from './common'
-import { getDefinition } from './definition'
+import { getDefinition, setDefinition } from './definition'
 
 const run = (name) => {
   const definition = getDefinition('ensurer', name)
@@ -11,6 +11,15 @@ const run = (name) => {
 }
 
 export default {
+
+  setDefinition: (name, definition) => {
+    setDefinition('ensurer', name, definition, {
+      onChange: true,
+      args: false,
+      run: false,
+      to: true
+    })
+  },
 
   watch: (name) => {
     const definition = getDefinition('ensurer', name)

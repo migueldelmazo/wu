@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { wu, runFn } from './common'
-import { getDefinition } from './definition'
+import { getDefinition, setDefinition } from './definition'
 
 const run = (name) => {
   const definition = getDefinition('watcher', name)
@@ -10,6 +10,14 @@ const run = (name) => {
 }
 
 export default {
+
+  setDefinition: (name, definition) => {
+    setDefinition('watcher', name, definition, {
+      onChange: true,
+      args: false,
+      run: true
+    })
+  },
 
   watch: (name) => {
     const definition = getDefinition('watcher', name)

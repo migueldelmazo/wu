@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { wu } from './common'
-import { checkDefinitionType, setDefinition } from './definition'
+import { checkDefinitionType } from './definition'
 import api from './api'
 import ensurer from './ensurer'
 import getter from './getter'
@@ -10,56 +10,32 @@ import setter from './setter'
 import watcher from './watcher'
 import './lodash'
 
-wu.getter = getter
-wu.setter = setter
+wu.getter = getter.getter
+wu.setter = setter.setter
 wu.model = model
 
 wu.create = (type, name, definition) => {
   switch (type) {
     case 'api':
-      setDefinition(type, name, definition, {
-        onChange: true,
-        request: true,
-        handlers: true,
-        flags: false
-      })
+      api.setDefinition(name, definition)
       api.watch(name)
       break;
     case 'ensurer':
-      setDefinition(type, name, definition, {
-        onChange: true,
-        args: false,
-        run: false,
-        to: true
-      })
+      ensurer.setDefinition(name, definition)
       ensurer.watch(name)
       break;
     case 'getter':
-      setDefinition(type, name, definition, {
-        args: false,
-        run: false
-      })
+      getter.setDefinition(name, definition)
       break;
     case 'router':
-      setDefinition(type, name, definition, {
-        urlPattern: true,
-        to: true
-      })
+      router.setDefinition(name, definition)
       router.watch(name)
       break;
     case 'setter':
-      setDefinition(type, name, definition, {
-        args: false,
-        run: false,
-        to: true
-      })
+      setter.setDefinition(name, definition)
       break;
     case 'watcher':
-      setDefinition(type, name, definition, {
-        onChange: true,
-        args: false,
-        run: true
-      })
+      watcher.setDefinition(name, definition)
       watcher.watch(name)
       break;
     default:
