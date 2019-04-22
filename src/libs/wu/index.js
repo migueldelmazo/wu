@@ -10,10 +10,6 @@ import setter from './setter'
 import watcher from './watcher'
 import './lodash'
 
-wu.getter = getter.getter
-wu.setter = setter.setter
-wu.model = model
-
 wu.create = (type, name, definition) => {
   switch (type) {
     case 'api':
@@ -43,6 +39,10 @@ wu.create = (type, name, definition) => {
   }
 }
 
+wu.getter = getter.getter
+wu.setter = setter.setter
+wu.model = model
+
 wu.start = () => {
   _.consoleGroup('wu', 'Starting Wu')
   api.start()
@@ -53,4 +53,6 @@ wu.start = () => {
 
 export default wu
 
-window.wu = wu
+if (process.env.NODE_ENV === 'development') {
+  window.wu = wu
+}

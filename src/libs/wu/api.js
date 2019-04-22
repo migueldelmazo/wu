@@ -126,13 +126,6 @@ const handleResponse = (request) => {
 
 export default {
 
-  start: () => {
-    wu._private.api = wu._private.api || {}
-    cache.init()
-    queue.init()
-    online.init(handleRequests)
-  },
-
   setDefinition: (name, definition) => {
     setDefinition('api', name, definition, {
       onChange: true,
@@ -145,6 +138,13 @@ export default {
   watch: (name) => {
     const definition = getDefinition('api', name)
     wu.model.watch(definition.onChange.paths, definition.onChange.check, send.bind(null, name))
+  },
+  
+  start: () => {
+    wu._private.api = wu._private.api || {}
+    cache.init()
+    queue.init()
+    online.init(handleRequests)
   }
 
 }

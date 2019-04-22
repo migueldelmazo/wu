@@ -20,11 +20,6 @@ const run = (name) => {
 
 export default {
 
-  start: () => {
-    _.initRouter(updateModel)
-    updateModel()
-  },
-
   setDefinition: (name, definition) => {
     setDefinition('router', name, definition, {
       urlPattern: true,
@@ -36,6 +31,11 @@ export default {
     wu.model.watch('app.router.url', undefined, run.bind(null, name), {
       type: 'ensurer'
     })
+  },
+  
+  start: () => {
+    _.initRouter(updateModel)
+    updateModel()
   }
 
 }
