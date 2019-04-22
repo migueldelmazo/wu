@@ -64,7 +64,10 @@ const handleRequests = () => {
 const handleRequest = (request) => {
   _.consoleGroup('api', 'API: send ' + request.name, 'Request:', request)
   queue.start(request)
-  flags.set(request, 'sending', true)
+  flags.set(request, {
+    complete: false,
+    sending: true
+  })
   if (cache.exists(request)) {
     cache.import(request)
     handleResponse(request)
@@ -118,7 +121,10 @@ const setRawResponse = (request, response) => {
 const handleResponse = (request) => {
   _.consoleGroup('api', 'API: response ' + request.name + ' with status ' + request.response.raw.status, 'Request:', request)
   handlers.runActions(request)
-  flags.set(request, 'sending', false)
+  flags.set(request, {
+    complete: true,
+    sending: false
+  })
   cache.set(request)
   queue.close(request)
   _.consoleGroupEnd()
