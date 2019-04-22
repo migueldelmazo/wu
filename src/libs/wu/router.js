@@ -9,8 +9,8 @@ const run = (name) => {
   const definition = getDefinition('router', name)
   const router = wu.model.get('app.router')
   const result = {
-    isValid: _.matchRouteParams(router.pathName, definition.urlPathName),
-    params: _.getRouteParams(router.pathName, definition.urlPathName)
+    isValid: _.matchRouteParams(router.pathName, definition.urlPattern),
+    params: _.getRouteParams(router.pathName, definition.urlPattern)
   }
   _.consoleGroup('router', 'Router: set ' + name, 'Result:', result)
   setInModel(definition, result)
@@ -26,7 +26,7 @@ export default {
 
   watch: (name) => {
     wu.model.watch('app.router.url', undefined, run.bind(null, name), {
-      type: 'ensure'
+      type: 'ensurer'
     })
   }
 

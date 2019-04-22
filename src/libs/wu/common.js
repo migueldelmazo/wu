@@ -9,9 +9,9 @@ const wu = {
 // run function
 
 const runFn = (definition, ...fnArgs) => {
-  let modelArgs = definition.from ? wu.model.populate(definition.from) : []
+  let modelArgs = definition.args ? wu.model.populate(definition.args) : []
   modelArgs = _.parseArray(modelArgs)
-  return _.isFunction(definition.fn) ? definition.fn(...modelArgs, ...fnArgs) : modelArgs[0]
+  return _.isFunction(definition.run) ? definition.run(...modelArgs, ...fnArgs) : modelArgs[0]
 }
 
 // set in model
@@ -38,7 +38,7 @@ const setDefinition = (type, name, definition, props) => {
 }
 
 const checkDefinitionType = (type, name) => {
-  _.consoleError('Invalid type in wu.create(\'' + type + '\', \'' + name + '\', {...}). Type should be api, ensure, getter, router, setter or watcher.')
+  _.consoleError('Invalid type in wu.create(\'' + type + '\', \'' + name + '\', {...}). Type should be api, ensurer, getter, router, setter or watcher.')
 }
 
 const checkDefinitionName = (type, name) => {
@@ -65,14 +65,14 @@ const checkDefinitionProp = (type, name, definition, prop, isRequired) => {
     if (prop === 'onChange' && !_.isPlainObject(value)) {
       showError('Invalid "onChange" property in', type, name, '{...}', '"onChange" should be an object.')
     }
-    if (prop === 'fn' && !_.isFunction(value)) {
-      showError('Invalid "fn" property in', type, name, '{...}', '"fn" should be a function.')
+    if (prop === 'run' && !_.isFunction(value)) {
+      showError('Invalid "run" property in', type, name, '{...}', '"run" should be a function.')
     }
     if (prop === 'to' && !_.isString(value)) {
       showError('Invalid "to" property in', type, name, '{...}', '"to" should be a string.')
     }
-    if (prop === 'urlPathName' && !_.isString(value)) {
-      showError('Invalid "urlPathName" property in', type, name, '{...}', '"urlPathName" should be a string like "/user" or "/user/:userId".')
+    if (prop === 'urlPattern' && !_.isString(value)) {
+      showError('Invalid "urlPattern" property in', type, name, '{...}', '"urlPattern" should be a string like "/user" or "/user/:userId".')
     }
   }
 }

@@ -6,7 +6,7 @@ const common = 'border-radius: 3px; padding: 2px 0px 2px 6px;'
 _.consoleConfig({
   styles: {
     api: 'background: #17a2b8; color: white;' + common,
-    ensure: 'background: #dc3545; color: white;' + common,
+    ensurer: 'background: #dc3545; color: white;' + common,
     getter: 'background: #7cbb00; color: white;' + common,
     model: 'background: #888; color: white;' + common,
     reacting: 'border: solid 1px #666; color: #666;' + common,

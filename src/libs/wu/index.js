@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { wu, checkDefinitionType, setDefinition } from './common'
 import api from './api'
-import ensure from './ensure'
+import ensurer from './ensurer'
 import getter from './getter'
 import model from './model'
 import router from './router'
@@ -24,40 +24,40 @@ wu.create = (type, name, definition) => {
       })
       api.watch(name)
       break;
-    case 'ensure':
+    case 'ensurer':
       setDefinition(type, name, definition, {
         onChange: true,
-        from: false,
-        fn: false,
+        args: false,
+        run: false,
         to: true
       })
-      ensure.watch(name)
+      ensurer.watch(name)
       break;
     case 'getter':
       setDefinition(type, name, definition, {
-        from: false,
-        fn: false
+        args: false,
+        run: false
       })
       break;
     case 'router':
       setDefinition(type, name, definition, {
-        urlPathName: true,
+        urlPattern: true,
         to: true
       })
       router.watch(name)
       break;
     case 'setter':
       setDefinition(type, name, definition, {
-        from: false,
-        fn: false,
+        args: false,
+        run: false,
         to: true
       })
       break;
     case 'watcher':
       setDefinition(type, name, definition, {
         onChange: true,
-        from: false,
-        fn: true
+        args: false,
+        run: true
       })
       watcher.watch(name)
       break;

@@ -2,15 +2,15 @@ import _ from 'lodash'
 import wu from '../libs/wu'
 
 wu.create('router', 'userLogin', {
-  urlPathName: '/',
+  urlPattern: '/',
   to: 'user.login.route'
 })
 
-wu.create('ensure', 'userLogin', {
+wu.create('ensurer', 'userLogin', {
   onChange: {
     paths: 'app.ready'
   },
-  from: {
+  args: {
     email: '',
     password: ''
   },
@@ -21,8 +21,8 @@ wu.create('watcher', 'userLoginNavigate', {
   onChange: {
     paths: ['user.jwt', 'user.login.route']
   },
-  from: ['#user.jwt', '#user.login.route'],
-  fn: (userJwt, loginRoute) => {
+  args: ['#user.jwt', '#user.login.route'],
+  run: (userJwt, loginRoute) => {
     if (!_.isEmpty(userJwt) && loginRoute.isValid) {
       _.navigate('/profile/' + userJwt)
     }
@@ -30,15 +30,15 @@ wu.create('watcher', 'userLoginNavigate', {
 })
 
 wu.create('getter', 'userLoginRoute', {
-  from: '#user.login.route.isValid'
+  args: '#user.login.route.isValid'
 })
 
 wu.create('getter', 'userLoginSending', {
-  from: '#user.login.api.sending'
+  args: '#user.login.api.sending'
 })
 
 wu.create('setter', 'userLoginSend', {
-  fn: (email, password) => ({
+  run: (email, password) => ({
     email,
     password
   }),
@@ -57,7 +57,7 @@ wu.create('api', 'userLogin', {
     method: 'get',
     path: '/login.json',
     query: {
-      from: {
+      args: {
         email: '#user.login.data.email',
         password: '#user.login.data.password'
       }
@@ -66,7 +66,7 @@ wu.create('api', 'userLogin', {
   handlers: {
     onCode200: [
       {
-        fn: (response) => response.body.jsonWebToken,
+        run: (response) => response.body.jsonWebToken,
         to: 'user.jwt'
       }
     ]

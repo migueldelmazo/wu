@@ -2,7 +2,7 @@ import _ from 'lodash'
 import wu from '../libs/wu'
 
 wu.create('router', 'user.profile', {
-  urlPathName: '/profile/:userId',
+  urlPattern: '/profile/:userId',
   to: 'user.profile.route'
 })
 
@@ -10,8 +10,8 @@ wu.create('watcher', 'user.profile.navigate', {
   onChange: {
     paths: ['user.jwt', 'user.profile.route']
   },
-  from: ['#user.jwt', '#user.profile.route'],
-  fn: (userJwt, profileRoute) => {
+  args: ['#user.jwt', '#user.profile.route'],
+  run: (userJwt, profileRoute) => {
     if (_.isEmpty(userJwt) && profileRoute.isValid) {
       _.navigate('/')
     }
@@ -19,12 +19,12 @@ wu.create('watcher', 'user.profile.navigate', {
 })
 
 wu.create('getter', 'user.profile.route', {
-  from: '#user.profile.route.isValid'
+  args: '#user.profile.route.isValid'
 })
 
 wu.create('getter', 'user.profile', {
-  from: '#user.profile.data',
-  fn: (profile, prop) => (profile && profile[prop]) || ''
+  args: '#user.profile.data',
+  run: (profile, prop) => (profile && profile[prop]) || ''
 })
 
 wu.create('api', 'user.profile', {
@@ -38,7 +38,7 @@ wu.create('api', 'user.profile', {
     method: 'get',
     path: '/profile.json',
     query: {
-      from: {
+      args: {
         jwt: '#user.jwt'
       }
     }
@@ -46,7 +46,7 @@ wu.create('api', 'user.profile', {
   handlers: {
     onCode200: [
       {
-        fn: (response) => response.body.user,
+        run: (response) => response.body.user,
         to: 'user.profile.data'
       }
     ]

@@ -79,7 +79,7 @@ const getWatcherKey = () => {
 
 let onChangeTimer
 const pendingPaths = {
-  ensure: [],
+  ensurer: [],
   default: []
 }
 
