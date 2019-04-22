@@ -19,7 +19,7 @@ const areValidValidators = (validators) => {
   return (
     _.isPlainObject(validators) &&
     _.every(validators, (fns) => _.every(_.parseArray(fns), _.isFunction))
-  ) ||
+    ) ||
     validators === undefined
 }
 
@@ -195,7 +195,7 @@ export default {
       }
     })
   },
-  
+
   // getters / setters
 
   get: (key, defaultValue) => {

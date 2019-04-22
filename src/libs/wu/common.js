@@ -85,13 +85,6 @@ const parseDefinition = (definition, props) => {
   return _.pick(definition, _.keys(props))
 }
 
-export {
-  wu,
-  checkDefinitionType,
-  getDefinition,
-  setDefinition,
-  runFn,
-  setInModel
-}
+export { wu, checkDefinitionType, getDefinition, setDefinition, runFn, setInModel }
 
 window.wu = wu
