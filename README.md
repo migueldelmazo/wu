@@ -21,18 +21,18 @@ wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
   onChange: {
     // path of the data model that we are watching
     paths: 'user.id',
-    // 'fn' function will only be executed when the value of 'user.id' is a non-empty string
+    // 'run' function will only be executed when the value of 'user.id' is a non-empty string
     check: {
       'user.id': [_.negate(_.isEmpty), _.isString]
     }
   },
-  // arguments that will receive the function 'fn'
-  from: 'user.id',
+  // arguments that will receive the function 'run'
+  args: 'user.id',
   // pure function that runs when 'onChange.paths' has changed
-  fn: (userId) => {
+  run: (userId) => {
     return !!userId
   },
-  // path of the data model where to save the result of 'fn'
+  // path of the data model where to save the result of 'run'
   to: 'user.isLogged'
 })
 ```
@@ -46,15 +46,15 @@ wu.create('watcher', 'setUserIdInLocalStorage', { // name of the watcher item
   onChange: {
     // path of the data model that we are watching
     paths: 'user.id',
-    // 'fn' function will only be executed when the value of 'user.id' is a non-empty string
+    // 'run' function will only be executed when the value of 'user.id' is a non-empty string
     check: {
       'user.id': [_.negate(_.isEmpty), _.isString]
     }
   },
-  // arguments that will receive the function 'fn'
-  from: 'user.id',
+  // arguments that will receive the function 'run'
+  args: 'user.id',
   // impure function that runs when 'onChange.paths' has changed
-  fn: (userId) => {
+  run: (userId) => {
     window.localStorage.setItem('userId', userId)
   }
 })
@@ -89,10 +89,10 @@ wu.create('router', 'userProfile', { // name of the router item
 
 ```javascript
 wu.create('getter', 'getGreeting', { // name of the getter item
-  // arguments that will receive the function 'fn'
-  from: ['user.name', 'user.lang'],
+  // arguments that will receive the function 'run'
+  args: ['user.name', 'user.lang'],
   // pure function
-  fn: (userName, userLang) => {
+  run: (userName, userLang) => {
     if (userLang === 'en') {
       return 'Hello ' + userName
     } else if (userLang === 'es') {
@@ -109,10 +109,10 @@ wu.create('getter', 'getGreeting', { // name of the getter item
 ```javascript
 wu.create('setter', 'sendUserLogin', { // name of the setter item
   // pure function
-  fn: (email, password) => {
+  run: (email, password) => {
     return { email, password }
   },
-  // path of the data model where the result of 'fn' will be saved
+  // path of the data model where the result of 'run' will be saved
   to: 'user.login.data'
 })
 
@@ -147,7 +147,7 @@ wu.create('api', 'userLogin', { // name of the api item
     // request post body
     body: {
       // request body will be an object like '{ email, password }'
-      from: {
+      args: {
         email: 'user.login.data.email',
         password: 'user.login.data.password'
       }
@@ -158,7 +158,7 @@ wu.create('api', 'userLogin', { // name of the api item
     onCode200: [
       {
         // save 'response.body' in 'user.profile' model data path
-        fn: (response) => {
+        run: (response) => {
           return response.body
         },
         to: 'user.profile'
@@ -168,7 +168,7 @@ wu.create('api', 'userLogin', { // name of the api item
     onCode404: [
       {
         // save this message in 'user.errorMessage' model data path
-        fn: () => {
+        run: () => {
           return 'There is no user with this email and password in our database. Try other credentials please.'
         },
         to: 'user.errorMessage'
