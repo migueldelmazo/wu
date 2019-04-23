@@ -2,8 +2,8 @@ import _ from 'lodash'
 import { wu } from './common'
 
 const isValidResponseToSetInCache = (request) => {
-  return request.config.cacheable === true &&
-    request.config.fromCache !== true &&
+  return request.options.cacheable === true &&
+    request.options.fromCache !== true &&
     request.request.method === 'GET' &&
     request.response.raw.status === 200 &&
     request.response.raw.error === false &&
@@ -30,15 +30,15 @@ export default {
 
   import: (request) => {
     request.response.raw = _.get(wu._private.api.cache, getCacheKey(request))
-    request.config.fromCache = true
+    request.options.fromCache = true
   },
 
   set: (request) => {
     if (isValidResponseToSetInCache(request)) {
       _.set(wu._private.api.cache, getCacheKey(request), _.cloneDeep(request.response.raw))
-      request.config.setInCache = true
+      request.options.setInCache = true
     } else {
-      request.config.setInCache = false
+      request.options.setInCache = false
     }
   }
 

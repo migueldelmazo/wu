@@ -71,7 +71,12 @@ wu.create('api', 'userLogin', {
       }
     ]
   },
-  flags: {
-    sending: 'user.login.api.sending'
+  options: {
+    flags: {
+      complete: 'user.login.api.complete',
+      error: 'user.login.api.error',
+      ok: 'user.login.api.ok',
+      sending: 'user.login.api.sending'
+    }
   }
 })

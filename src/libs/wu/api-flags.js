@@ -5,7 +5,7 @@ export default {
 
   set: (request, flags) => {
     _.each(flags, (value, flag) => {
-      flag = request.flags[flag]
+      flag = request.options.flags[flag]
       if (flag) {
         wu.model.set(flag, value)
       }

@@ -26,10 +26,10 @@ const parseRequest = (name) => {
   const path = _.result(definition, 'request.path', '') + _.objectToQuery(query)
   return {
     name,
-    config: {
-      cacheable: _.get(definition, 'config.cacheable', true)
+    options: {
+      cacheable: _.get(definition, 'options.cacheable', true),
+      flags: _.get(definition, 'options.flags', {})
     },
-    flags: definition.flags || {},
     handlers: definition.handlers || {},
     request: {
       body,
@@ -135,9 +135,9 @@ export default {
   setDefinition: (name, definition) => {
     setDefinition('api', name, definition, {
       onChange: true,
-      request: true,
       handlers: true,
-      flags: false
+      options: false,
+      request: true
     })
   },
 
