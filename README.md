@@ -1,20 +1,21 @@
-![Pattern](./docs/wu-framework.png)
-
 # Wu framework
 
 Wu is a framework for building web applications:
 
-* **Reactive data model:** the reactive data model is the heart of Wu. **You can observe any path of the data model** and when someone changes the value of your path **you will be warned to react** as you want. No element of Wu is related to each other. **All elements are related through the reactive data model.**
+* **Reactive data model:** the reactive data model is the core of Wu. **You can observe any path of the data model** and when someone changes the value of your path **you will be warned to react** as you want. No element of Wu is related to each other. **All elements are related through the reactive data model.**
 * **Declarative:** each of the 6 items ([API](#api), [ensurer](#ensurer), [watcher](#watcher), [router](#router), [getter](#getter) and [setter](#setter)) are defined with a simple declarative interface.
 * **Functional programming:** all items (except [watcher](#watcher)) use functional programming. From Wu we recommend that all functions that you write be pure.
 * **Model-oriented:** your responsibility as a developer is to ensure that **the data model is consistent**. If you meet this condition the development with Wu is easy and fast.
 * **No flows, no past, no future:** with Wu you only have to worry about the data model being coherent. It does not matter in what order things happen, no matter what happened in the past, no matter what will happen in the future, **you should only worry that the current data model is consistent.**
 
+![Pattern](./docs/wu-framework.png)
+
 ## Wu concepts
 
-### ensurer:
-**ensurer** allows you to execute a function and save its result in the data model every time other data change. The goal is to always keep the data model consistent.
-(Allows the use of functional programming).
+### Ensurer:
+**Ensurer** allows you to execute a function and save its result in the data model every time other data change. The goal is to always keep the data model consistent.
+
+**Data flow is:** Reactive data model &#10148; Ensurer (pure function) &#10148; Reactive data model.
 
 ```javascript
 wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
@@ -26,7 +27,7 @@ wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
   },
   // arguments that will receive the function 'run'
   args: 'user.id',
-  // pure function that runs when 'onChange.paths' has changed
+  // pure function that runs when 'onChange' has changed and 'when' conditions match
   run: (userId) => {
     return !!userId
   },
@@ -35,9 +36,10 @@ wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
 })
 ```
 
-### watcher:
-**watcher** works exactly like [ensurer](#ensurer) but does not save the result of the function in the data model. The goal is to use it to call third-party libraries such as React JS or LocalStorage...
-(**watcher** is the only item that is not designed to use functional programming).
+### Watcher:
+**Watcher** works exactly like [ensurer](#ensurer) but does not save the result of the function in the data model. The goal is to use it to call third-party libraries such as React JS, LocalStorage...
+
+**Data flow is:** Reactive data model &#10148; Watcher (non-pure function) &#10148; Third-party libraries.
 
 ```javascript
 wu.create('watcher', 'setUserIdInLocalStorage', { // name of the watcher item
@@ -49,15 +51,18 @@ wu.create('watcher', 'setUserIdInLocalStorage', { // name of the watcher item
   },
   // arguments that will receive the function 'run'
   args: 'user.id',
-  // impure function that runs when 'onChange.paths' has changed
+  // impure function that runs when 'onChange' has changed and 'when' conditions match
   run: (userId) => {
     window.localStorage.setItem('userId', userId)
   }
 })
 ```
 
-### router:
-**router** allows you to watch changes in the browser URL and save the normalized route in the data model.
+### Router:
+**Router** allows you to watch changes in the browser URL and save the normalized route in the data model.
+The data stored in the model are the URL params and if the route is active.
+
+**Data flow is:** Browser URL &#10148; Router (pure function) &#10148; Reactive data model.
 
 ```javascript
 wu.create('router', 'userProfile', { // name of the router item
@@ -80,8 +85,26 @@ wu.create('router', 'userProfile', { // name of the router item
 //  }
 ```
 
-### getter:
-**getter** allows you to define an interface to get data from the data model outside of Wu. (Allows the use of functional programming).
+Also, in order for you to be able to get the URL data and watch the changes, when the browser URL changes, the path of the data model **'app.route'** is updated with the following information:
+
+```javascript
+// https://localhost:3000/path?one=1#two
+{
+  hash: 'two',
+  host: 'localhost:3000',
+  hostname: 'localhost',
+  pathName: '/path',
+  port: '3000',
+  protocol: 'https:',
+  queryParams: {one: '1'},
+  url: 'https://localhost:3000/path?one=1#two'
+}
+```
+
+### Getter:
+**Getter** allows you to define an interface to get data from the data model outside of Wu.
+
+**Data flow is:** Reactive data model &#10148; Getter (pure function) &#10148; Third-party libraries.
 
 ```javascript
 wu.create('getter', 'getGreeting', { // name of the getter item
@@ -99,8 +122,10 @@ wu.create('getter', 'getGreeting', { // name of the getter item
 ```
 [See ReactJS for more info.](#reactjs)
 
-### setter:
-**setter** allows you to define an interface to save data from outside to the Wu data model. (Allows the use of functional programming).
+### Setter:
+**Setter** allows you to define an interface to save data from outside to the Wu data model.
+
+**Data flow is:** Third-party libraries &#10148; Setter (pure function) &#10148; Reactive data model.
 
 ```javascript
 wu.create('setter', 'sendUserLogin', { // name of the setter item
@@ -120,8 +145,10 @@ wu.create('setter', 'sendUserLogin', { // name of the setter item
 // }
 ```
 
-### api:
-**api** allows you to watch changes in the model and send Ajax requests to your server. When the server responses the request, **api** helps you manage it and save it in the data model. (Allows the use of functional programming).
+### API:
+**API** allows you to watch changes in the model and send Ajax requests to your server. When the server responses, **API** helps you manage it and save it in the data model.
+
+**Data flow is:** Reactive data model &#10148; API (pure functions) &#10148; Server &#10148; API (pure functions) &#10148; Reactive data model.
 
 ```javascript
 wu.create('api', 'userLogin', { // name of the api item
@@ -136,7 +163,7 @@ wu.create('api', 'userLogin', { // name of the api item
   request: {
     // request method
     method: 'post',
-    // request url or path
+    // request URL or path
     path: 'https://server.com/api/login',
     // request post body
     body: {
@@ -165,7 +192,7 @@ wu.create('api', 'userLogin', { // name of the api item
         run: () => {
           return 'There is no user with this email and password in our database. Try other credentials please.'
         },
-        update: 'user.errorMessage'
+        update: 'user.loginErrorMessage'
       }
     ]
   }
@@ -185,12 +212,12 @@ import React from 'react'
 import WuComponent from 'wu/react-component'
 
 export default class MyView extends WuComponent {
-  // path of the data model that we are watching
-  // when 'user.name' change in the data model this view will be rendered automatically
-  onChange() {
+  onChange () {
+    // path of the data model that we are watching
+    // when 'user.name' or 'user.lang' change in the data model this view will be rendered automatically
     return ['user.name', 'user.lang']
   }
-  render() {
+  render () {
     return (
       <div>
         { this.get('getGreeting') }
