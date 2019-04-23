@@ -18,13 +18,11 @@ Wu is a framework for building web applications:
 
 ```javascript
 wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
-  onChange: {
-    // path of the data model that we are watching
-    paths: 'user.id',
-    // 'run' function will only be executed when the value of 'user.id' is a non-empty string
-    check: {
-      'user.id': [_.negate(_.isEmpty), _.isString]
-    }
+  // path of the data model that we are watching
+  onChange: 'user.id',
+  // 'run' function will only be executed when the value of 'user.id' is a non-empty string
+  when: {
+    'user.id': [_.negate(_.isEmpty), _.isString]
   },
   // arguments that will receive the function 'run'
   args: 'user.id',
@@ -33,7 +31,7 @@ wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
     return !!userId
   },
   // path of the data model where to save the result of 'run'
-  to: 'user.isLogged'
+  update: 'user.isLogged'
 })
 ```
 
@@ -43,13 +41,11 @@ wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
 
 ```javascript
 wu.create('watcher', 'setUserIdInLocalStorage', { // name of the watcher item
-  onChange: {
-    // path of the data model that we are watching
-    paths: 'user.id',
-    // 'run' function will only be executed when the value of 'user.id' is a non-empty string
-    check: {
-      'user.id': [_.negate(_.isEmpty), _.isString]
-    }
+  // path of the data model that we are watching
+  onChange: 'user.id',
+  // 'run' function will only be executed when the value of 'user.id' is a non-empty string
+  when: {
+    'user.id': [_.negate(_.isEmpty), _.isString]
   },
   // arguments that will receive the function 'run'
   args: 'user.id',
@@ -68,7 +64,7 @@ wu.create('router', 'userProfile', { // name of the router item
   // url pattern
   urlPattern: '/user/:userId/profile',
   // every time the URL changes 'user.profileRoute' value it will be updated
-  to: 'user.profileRoute'
+  update: 'user.profileRoute'
 })
 
 //  if the URL is '/user/asdf1234/profile' the value of 'user.profileRoute' will be:
@@ -113,7 +109,7 @@ wu.create('setter', 'sendUserLogin', { // name of the setter item
     return { email, password }
   },
   // path of the data model where the result of 'run' will be saved
-  to: 'user.login.data'
+  update: 'user.login.data'
 })
 
 // when a third-party library (for example ReactJS) executes sendUserLogin('email@email.com', '12345678')
@@ -129,15 +125,13 @@ wu.create('setter', 'sendUserLogin', { // name of the setter item
 
 ```javascript
 wu.create('api', 'userLogin', { // name of the api item
-  onChange: {
-    // path of the data model that we are watching
-    paths: 'user.login.data',
-    check: {
-      // request will only be sent when the value of 'user.login.data.email' is an email
-      'user.login.data.email': _.isEmail,
-      // and value of 'user.login.data.password' is a non-empty string
-      'user.login.data.password': [_.negate(_.isEmpty), _.isString]
-    }
+  // path of the data model that we are watching
+  onChange: 'user.login.data',
+  when: {
+    // request will only be sent when the value of 'user.login.data.email' is an email
+    'user.login.data.email': _.isEmail,
+    // and value of 'user.login.data.password' is a non-empty string
+    'user.login.data.password': [_.negate(_.isEmpty), _.isString]
   },
   request: {
     // request method
@@ -161,7 +155,7 @@ wu.create('api', 'userLogin', { // name of the api item
         run: (response) => {
           return response.body
         },
-        to: 'user.profile'
+        update: 'user.profile'
       }
     ],
     // if response http code is 404
@@ -171,7 +165,7 @@ wu.create('api', 'userLogin', { // name of the api item
         run: () => {
           return 'There is no user with this email and password in our database. Try other credentials please.'
         },
-        to: 'user.errorMessage'
+        update: 'user.errorMessage'
       }
     ]
   }
