@@ -1,6 +1,6 @@
 # Wu framework: Ensurer items
 
-![Pattern](./docs/wu-framework-ensurer.png)
+![Pattern](./wu-framework-ensurer.png)
 
 **Ensurer** allows you to execute a function and save its result in the data model every time other data change. The goal is to always keep the data model consistent.
 
@@ -28,7 +28,7 @@ wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
 ### Console
 When someone changes the value of **'user.id'** the developer tools console shows:
 
-![Console](./docs/wu-framework-ensurer.png)
+![Console](./wu-framework-ensurer-console.png)
 
 ### Ensurer definition:
 
