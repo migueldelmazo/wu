@@ -12,6 +12,8 @@ Wu is a framework that uses **declarative programming**. The API, ensurer, watch
 | `run`      | Optional | Optional | Required |          | Optional | Optional |
 | `update`   | Required | Required |          | Required |          | Required |
 
+___
+
 ### `onChange:`
 
 * **Description:** path(s) of the data model that we are watching.
@@ -30,6 +32,7 @@ Wu is a framework that uses **declarative programming**. The API, ensurer, watch
   onChange: ['user.name', 'user.lang']
 }
 ```
+___
 
 ### `when:`
 
@@ -55,6 +58,7 @@ Wu is a framework that uses **declarative programming**. The API, ensurer, watch
   }
 }
 ```
+___
 
 ### `args:`
 
@@ -96,6 +100,7 @@ Wu is a framework that uses **declarative programming**. The API, ensurer, watch
   // 'run' function will be executed with arguments: 'Anna', 'This is a string'
 }
 ```
+___
 
 ### `run:`
 
@@ -121,6 +126,7 @@ Wu is a framework that uses **declarative programming**. The API, ensurer, watch
   }
 }
 ```
+___
 
 ### `update:`
 
@@ -135,5 +141,3 @@ Wu is a framework that uses **declarative programming**. The API, ensurer, watch
   update: 'user.name'
 }
 ```
-
-## Console
