@@ -15,15 +15,16 @@ export default {
   setDefinition: (name, definition) => {
     setDefinition('ensurer', name, definition, {
       onChange: true,
+      when: false,
       args: false,
       run: false,
-      to: true
+      update: true
     })
   },
 
   watch: (name) => {
     const definition = getDefinition('ensurer', name)
-    wu.model.watch(definition.onChange.paths, definition.onChange.check, run.bind(null, name), {
+    wu.model.watch(definition.onChange, definition.when, run.bind(null, name), {
       type: 'ensurer'
     })
   }

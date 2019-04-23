@@ -8,7 +8,7 @@ export default {
     setDefinition('setter', name, definition, {
       args: false,
       run: false,
-      to: true
+      update: true
     })
   },
 

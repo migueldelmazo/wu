@@ -14,6 +14,7 @@ export default {
   setDefinition: (name, definition) => {
     setDefinition('watcher', name, definition, {
       onChange: true,
+      when: false,
       args: false,
       run: true
     })
@@ -21,7 +22,7 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('watcher', name)
-    wu.model.watch(definition.onChange.paths, definition.onChange.check, run.bind(null, name))
+    wu.model.watch(definition.onChange, definition.when, run.bind(null, name))
   }
 
 }

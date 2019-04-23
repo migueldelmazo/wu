@@ -3,13 +3,11 @@ import wu from '../libs/wu'
 
 wu.create('router', 'user.profile', {
   urlPattern: '/profile/:userId',
-  to: 'user.profile.route'
+  update: 'user.profile.route'
 })
 
 wu.create('watcher', 'user.profile.navigate', {
-  onChange: {
-    paths: ['user.jwt', 'user.profile.route']
-  },
+  onChange: ['user.jwt', 'user.profile.route'],
   args: ['user.jwt', 'user.profile.route'],
   run: (userJwt, profileRoute) => {
     if (_.isEmpty(userJwt) && profileRoute.isValid) {
@@ -28,11 +26,9 @@ wu.create('getter', 'user.profile', {
 })
 
 wu.create('api', 'user.profile', {
-  onChange: {
-    paths: 'user.jwt',
-    check: {
-      'user.jwt': [_.negate(_.isEmpty), _.isString]
-    }
+  onChange: 'user.jwt',
+  when: {
+    'user.jwt': [_.negate(_.isEmpty), _.isString]
   },
   request: {
     method: 'get',
@@ -47,7 +43,7 @@ wu.create('api', 'user.profile', {
     onCode200: [
       {
         run: (response) => response.body.user,
-        to: 'user.profile.data'
+        update: 'user.profile.data'
       }
     ]
   },

@@ -17,7 +17,7 @@ const runFn = (definition, ...fnArgs) => {
 // set in model
 
 const setInModel = (definition, value) => {
-  wu.model.set(definition.to, value)
+  wu.model.set(definition.update, value)
 }
 
 export { wu, runFn, setInModel }

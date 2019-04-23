@@ -3,24 +3,20 @@ import wu from '../libs/wu'
 
 wu.create('router', 'userLogin', {
   urlPattern: '/',
-  to: 'user.login.route'
+  update: 'user.login.route'
 })
 
-wu.create('ensurer', 'userLogin', {
-  onChange: {
-    paths: 'app.ready'
-  },
+wu.create('ensurder', 'userLogin', {
+  onChange: 'app.ready',
   args: {
     email: '',
     password: ''
   },
-  to: 'user.login.data'
+  update: 'user.login.data'
 })
 
 wu.create('watcher', 'userLoginNavigate', {
-  onChange: {
-    paths: ['user.jwt', 'user.login.route']
-  },
+  onChange: ['user.jwt', 'user.login.route'],
   args: ['user.jwt', 'user.login.route'],
   run: (userJwt, loginRoute) => {
     if (!_.isEmpty(userJwt) && loginRoute.isValid) {
@@ -42,16 +38,14 @@ wu.create('setter', 'userLoginSend', {
     email,
     password
   }),
-  to: 'user.login.data'
+  update: 'user.login.data'
 })
 
 wu.create('api', 'userLogin', {
-  onChange: {
-    paths: 'user.login.data',
-    check: {
-      'user.login.data.email': _.isEmail,
-      'user.login.data.password': [_.negate(_.isEmpty), _.isString]
-    }
+  onChange: 'user.login.data',
+  when: {
+    'user.login.data.email': _.isEmail,
+    'user.login.data.password': [_.negate(_.isEmpty), _.isString]
   },
   request: {
     method: 'get',
@@ -67,7 +61,7 @@ wu.create('api', 'userLogin', {
     onCode200: [
       {
         run: (response) => response.body.jsonWebToken,
-        to: 'user.jwt'
+        update: 'user.jwt'
       }
     ]
   },

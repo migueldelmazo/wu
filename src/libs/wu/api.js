@@ -134,16 +134,17 @@ export default {
 
   setDefinition: (name, definition) => {
     setDefinition('api', name, definition, {
-      onChange: true,
       handlers: true,
+      onChange: true,
       options: false,
-      request: true
+      request: true,
+      when: false
     })
   },
 
   watch: (name) => {
     const definition = getDefinition('api', name)
-    wu.model.watch(definition.onChange.paths, definition.onChange.check, send.bind(null, name))
+    wu.model.watch(definition.onChange, definition.when, send.bind(null, name))
   },
   
   start: () => {

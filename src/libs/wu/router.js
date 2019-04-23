@@ -23,7 +23,7 @@ export default {
   setDefinition: (name, definition) => {
     setDefinition('router', name, definition, {
       urlPattern: true,
-      to: true
+      update: true
     })
   },
 
