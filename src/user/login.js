@@ -6,7 +6,7 @@ wu.create('router', 'userLogin', {
   update: 'user.login.route'
 })
 
-wu.create('ensurder', 'userLogin', {
+wu.create('ensurer', 'userLogin', {
   onChange: 'app.ready',
   args: {
     email: '',
