@@ -238,7 +238,7 @@ Wu is an experimental framework that is still in **beta**. The main purpose of W
 
 ## Contributions
 
-If you are interested in participating in the improvement or development of Wu please contact me: [@migueldelmazo](//migueldelmazo.com). I would love for you to help me develop Wu.
+If you are interested in participating in the improvement or development of Wu please contact me: [migueldelmazo](//migueldelmazo.com). I would love for you to help me develop Wu.
 
 I would especially like to receive suggestions about the names of the methods, so that they are more readable and easier to use.
 
