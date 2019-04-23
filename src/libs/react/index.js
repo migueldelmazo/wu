@@ -33,10 +33,10 @@ const parser = function(value) {
 // wu Watchers
 
 const watch = function() {
-  const watchers = this.watchers()
+  const watchers = this.onChange()
   if (watchers) {
     this.watcherKey = wu.model.watch(watchers, undefined, function() {
-      _.consoleGroup('react', 'React: render ' + this.getName('name'), 'Watchers:', watchers)
+      _.consoleGroup('react', 'React: render ' + this.getName('name'), 'onChange paths:', watchers)
       this.forceUpdate()
       _.consoleGroupEnd()
     }.bind(this))
@@ -95,7 +95,7 @@ export default class Component extends React.Component {
     return this.constructor.name
   }
 
-  watchers() {}
+  onChange() {}
 
   // state
 

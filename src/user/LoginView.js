@@ -3,7 +3,7 @@ import Component from '../libs/react'
 
 export default class LoginView extends Component {
 
-  watchers() {
+  onChange() {
     return 'user.login'
   }
 
