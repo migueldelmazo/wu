@@ -2,7 +2,7 @@
 
 Wu is a framework that uses **declarative programming**. The API, ensurer, watcher, router, getter and setter items use the same properties to define their behavior.
 
-## Item properties
+### Required, optional and not applicable properties
 
 |            | API      | Ensurer  | Watcher  | Router   | Getter   | Setter   |
 |------------|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|
