@@ -48,11 +48,16 @@ _.mixin({
    * @returns {object} Object like { url, pachName, hash, queryParams }
    */
   getWindowLocationData: () => {
+    const location = window.location
     return {
-      url: window.location.href,
-      pathName: window.location.pathname,
-      hash: window.location.hash.substr(1),
-      queryParams: _.queryParamsToObject(window.location.href)
+      hash: location.hash.substr(1),
+      host: location.host,
+      hostname: location.hostname,
+      pathName: location.pathname,
+      port: location.port,
+      protocol: location.protocol,
+      queryParams: _.queryParamsToObject(location.href),
+      url: location.href
     }
   },
 

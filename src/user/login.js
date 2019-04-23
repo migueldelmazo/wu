@@ -19,14 +19,14 @@ wu.create('watcher', 'userLoginNavigate', {
   onChange: ['user.jwt', 'user.login.route'],
   args: ['user.jwt', 'user.login.route'],
   run: (userJwt, loginRoute) => {
-    if (!_.isEmpty(userJwt) && loginRoute.isValid) {
+    if (!_.isEmpty(userJwt) && loginRoute.isActive) {
       _.navigate('/profile/' + userJwt)
     }
   }
 })
 
 wu.create('getter', 'userLoginRoute', {
-  args: 'user.login.route.isValid'
+  args: 'user.login.route.isActive'
 })
 
 wu.create('getter', 'userLoginSending', {

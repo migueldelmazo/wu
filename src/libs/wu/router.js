@@ -10,7 +10,7 @@ const run = (name) => {
   const definition = getDefinition('router', name)
   const router = wu.model.get('app.router')
   const result = {
-    isValid: _.matchRouteParams(router.pathName, definition.urlPattern),
+    isActive: _.matchRouteParams(router.pathName, definition.urlPattern),
     params: _.getRouteParams(router.pathName, definition.urlPattern)
   }
   _.consoleGroup('router', 'Router: set ' + name, 'Result:', result)
