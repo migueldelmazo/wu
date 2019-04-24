@@ -3,8 +3,12 @@ import { runFn, setInModel } from './common'
 
 export default {
 
-  runActions: (request) => {
-    const handler = _.get(request.handlers, 'onCode' + request.response.raw.status)
+  setHandler: (request) => {
+    request.response.handler = 'onCode' + request.response.raw.status
+  },
+
+  runHandler: (request, handler) => {
+    handler = _.get(request.handlers, handler)
     _.each(handler, (definition) => {
       setInModel(definition, runFn(definition, request.response.raw, request.request))
     })

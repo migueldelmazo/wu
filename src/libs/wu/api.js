@@ -122,11 +122,16 @@ const setRawResponse = (request, response) => {
 }
 
 const handleResponse = (request) => {
+  handlers.setHandler(request)
   _.consoleGroup('api', 'API: response ' + request.name + ' with status ' + request.response.raw.status, 'Request:', request)
-  handlers.runActions(request)
+  handlers.runHandler(request, request.response.handler)
+  handlers.runHandler(request, 'onComplete')
   flags.set(request, {
     complete: true,
-    sending: false
+    error: request.response.raw.error,
+    ok: !request.response.raw.error,
+    sending: false,
+    status: request.response.raw.status
   })
   cache.set(request)
   queue.close(request)
