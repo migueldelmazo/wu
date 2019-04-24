@@ -12,7 +12,7 @@ export default {
   init: (requestsHandler) => {
     window.addEventListener('online', ensureModel)
     window.addEventListener('offline', ensureModel)
-    wu.model.watch('app.online', undefined, requestsHandler)
+    wu.model.watch('app.online', requestsHandler)
     ensureModel()
   }
 
