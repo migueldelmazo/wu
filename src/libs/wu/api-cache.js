@@ -6,8 +6,7 @@ const isValidResponseToSetInCache = (request) => {
     request.options.fromCache !== true &&
     request.request.method === 'GET' &&
     request.response.raw.status === 200 &&
-    request.response.raw.error === false &&
-    request.response.isValid === true
+    request.response.raw.error === false
 }
 
 const getCacheKey = (request) => {

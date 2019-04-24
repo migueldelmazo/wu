@@ -66,20 +66,23 @@ const handleRequest = (request) => {
   queue.start(request)
   flags.set(request, {
     complete: false,
-    sending: true
+    error: false,
+    ok: false,
+    sending: true,
+    status: ''
   })
   if (cache.exists(request)) {
     cache.import(request)
     handleResponse(request)
   } else {
-    fetch(request.request.path, getRequestOptions(request))
+    fetch(request.request.path, getFetchOptions(request))
       .then((response) => setRawResponse(request, response))
       .then(() => handleResponse(request))
   }
   _.consoleGroupEnd()
 }
 
-const getRequestOptions = (request) => {
+const getFetchOptions = (request) => {
   const options = {
     headers: request.request.headers,
     method: request.request.method
@@ -144,7 +147,7 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('api', name)
-    wu.model.watch(definition.onChange, definition.when, send.bind(null, name))
+    wu.model.watch(definition.onChange, send.bind(null, name), definition.when)
   },
   
   start: () => {
