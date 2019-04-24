@@ -8,10 +8,11 @@ export default class LoginView extends Component {
   }
 
   render() {
+    const profile = this.get('userProfile')
     return (
       <div
         className='container'
-        hidden={ !this.get('user.profile.route') }
+        hidden={ !this.get('userProfileRoute') }
       >
         <div className='row'>
           <div className='col-6'>
@@ -19,15 +20,15 @@ export default class LoginView extends Component {
             <ul>
               <li>
                 Id:
-                { this.get('user.profile', 'id') }
+                { profile.id }
               </li>
               <li>
                 Email:
-                { this.get('user.profile', 'email') }
+                { profile.email }
               </li>
               <li>
                 Name:
-                { this.get('user.profile', 'name') }
+                { profile.name }
               </li>
             </ul>
           </div>
