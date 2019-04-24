@@ -200,6 +200,10 @@ wu.create('api', 'userLogin', { // name of the api item
 })
 ```
 
+## Documentation
+
+You can find Wu [documentation in this page](./docs/documentation.md).
+
 ## Third-party libraries
 
 It is very easy to work with third-party libraries using **getters**, **setters** and **watchers**.

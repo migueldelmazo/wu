@@ -4,7 +4,7 @@ Wu is a framework that uses **declarative programming**. The API, ensurer, watch
 
 ### Required, optional and not applicable properties
 
-|                         | API      | Ensurer  | Watcher  | Router   | Getter   | Setter   |
+|                         | [API](./documentation-api.md) | [Ensurer](./documentation-ensurer.md) | [Watcher](./documentation-watcher.md) | [Router](./documentation-router.md) | [Getter](./documentation-getter.md) | [Setter](./documentation-setter.md) |
 |-------------------------|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|
 | [`onChange`](#onchange) | Required | Required | Required | N/A      | N/A      | N/A      |
 | [`when`](#when)         | Optional | Optional | Optional | N/A      | N/A      | N/A      |
@@ -36,7 +36,7 @@ ___
 
 ### `when:`
 
-* **Description:** before executing the function `run` it is validated that the conditions of `when` match.
+* **Description:** before executing the function [`run`](#run) it is validated that the conditions of `when` match.
 * **Type:** plain object where keys are data model paths and values are function or array of functions.
 * **Optional** in API, ensurer and watcher.
 
@@ -64,8 +64,8 @@ ___
 
 * **Description:** arguments with which the function is executed.
 * **Type:** it can be any type of variable (array, boolean, number, object, string...).
-* **Optional** in API, ensurer, watcher, getter and setter.
-* **Order of arguments:** These arguments are the first ones that are passed to the function `run`. In the case of **getters** and **setters**, the arguments passed from third-party libraries are passed to the function at the end.
+* **Optional** in [API](./documentation-api.md), [ensurer](./documentation-ensurer.md), [watcher](./documentation-watcher.md), [getter](./documentation-getter.md) and [setter](./documentation-setter.md).
+* **Order of arguments:** These arguments are the first ones that are passed to the function [`run`](#run). In the case of [getters](./documentation-getter.md) and [setters](./documentation-setter.md), the arguments passed from third-party libraries are passed to the function at the end.
 * In case the arguments are **arrays, strings or objects**, the values of them are parsed **by replacing the strings with values of the data model** (except if the strings start with the character `#`).
 
 **Examples of use:**
@@ -107,14 +107,14 @@ ___
 * **Description:** function to execute.
 * **Type:** function.
 * **Required** in watcher.
-* **Optional** in API, ensurer, getter and setter.
+* **Optional** in [API](./documentation-api.md), [ensurer](./documentation-ensurer.md), [getter](./documentation-getter.md) and [setter](./documentation-setter.md).
 * **By default** if the function is not specified, the default function is `(arg) => arg`. It means, the function returns the first argument that receives.
 * **Order of arguments:** first the arguments defined in the property args. Then the arguments with which the function is called.
   * Third-party libraries can execute the function with their own arguments.
-  * API handlers receive the response data and request data as the last parameters.
+  * [API](./documentation-api.md) handlers receive the response data and request data as the last parameters.
 * **Functional programming:**
-  * **Pure function:** we recommend pure functions in API, ensurer, getter and setter.
-  * **Impure function:** in **watcher** the function must be impure because it is to execute functions of third-party libraries.
+  * **Pure function:** we recommend pure functions in [API](./documentation-api.md), [ensurer](./documentation-ensurer.md), [getter](./documentation-getter.md) and [setter](./documentation-setter.md).
+  * **Impure function:** in [watcher](./documentation-watcher.md) the function must be impure because it is to execute functions of third-party libraries.
 
 ```javascript
 {
@@ -131,8 +131,8 @@ ___
 ### `update:`
 
 * **Description:**
-  * In API, ensurer and setter is the path of the data model where to save the result of 'run'.
-  * In router is the path of the data model where to save the router matches.
+  * In [API](./documentation-api.md), [ensurer](./documentation-ensurer.md) and [setter](./documentation-setter.md) is the path of the data model where to save the result of 'run'.
+  * In [router](./documentation-router.md) is the path of the data model where to save the router matches.
 * **Type:** string.
 * **Required** in API, ensurer, router and setter.
 
