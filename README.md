@@ -139,6 +139,13 @@ wu.create('api', 'userProfile', { // name of the api item
 })
 ```
 
+## Setup and start
+
+```
+npm install
+npm start
+```
+
 ## Documentation
 
 You can find Wu documentation in following pages:
