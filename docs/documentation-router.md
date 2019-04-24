@@ -26,10 +26,10 @@ the path of the data model `app.route` is updated with the following information
   url: 'https://localhost:3000/path?one=1#two'
 }
 ```
-![Pattern](./wu-framework.png)
 
 ### Data flow:
 Browser URL &#10148; Reactive data model.
+![Pattern](./wu-framework.svg)
 
 ### Router definition properties:
 | Properties                                               | Required |

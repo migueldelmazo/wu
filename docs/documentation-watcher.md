@@ -1,9 +1,9 @@
 # Wu framework: Watcher documentation
 **Watcher** works exactly like [ensurer](./documentation-ensurer.md) but does not save the result of the function in the data model. The goal is to use it to **call third-party libraries such as React JS, LocalStorage, Stripe...**
-![Pattern](./wu-framework.png)
 
 ### Data flow:
 Reactive data model &#10148; Watcher (non-pure function) &#10148; Third-party libraries.
+![Pattern](./wu-framework.svg)
 
 ### Watcher definition properties:
 | Properties                                           | Required |

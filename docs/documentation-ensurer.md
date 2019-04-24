@@ -1,9 +1,8 @@
 # Wu framework: Ensurer documentation
 **Ensurer** allows you to execute a function and save its result in the data model every time other data change. The goal is to always keep the data model consistent.
-![Pattern](./wu-framework.png)
-
 ### Data flow:
 Reactive data model &#10148; Ensurer (pure function) &#10148; Reactive data model.
+![Pattern](./wu-framework.svg)
 
 ### Ensurer definition properties:
 | Properties                                           | Required |

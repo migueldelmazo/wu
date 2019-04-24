@@ -7,11 +7,11 @@ Wu is a framework for building web applications:
 * **No flows, no past, no future:** with Wu you only have to worry about the data model being coherent. It does not matter in what order things happen, no matter what happened in the past, no matter what will happen in the future, **you should only worry that the current data model is consistent.**
 * Wu guarantees that **all the actions that have to happen, will happen**.
 
-![Pattern](./docs/wu-framework.png)
+![Pattern](./docs/wu-framework.svg)
 
 ## Wu concepts
 
-### Ensurer:
+### [Ensurer:](./docs/documentation-ensurer.md)
 **Ensurer** allows you to execute a function and save its result in the data model every time other data change. The goal is to always keep the data model consistent.
 
 ```javascript
@@ -29,7 +29,7 @@ wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
 })
 ```
 
-### Watcher:
+### [Watcher:](./docs/documentation-watcher.md)
 **Watcher** works exactly like [ensurer](#ensurer) but does not save the result of the function in the data model. The goal is to use it to call third-party libraries such as React JS, LocalStorage, Stripe...
 
 ```javascript
@@ -45,7 +45,7 @@ wu.create('watcher', 'setUserIdInLocalStorage', { // name of the watcher item
 })
 ```
 
-### Router:
+### [Router:](./docs/documentation-router.md)
 **Router** allows you to watch changes in the browser URL and save the normalized route in the data model.
 The data stored in the model are the URL params and if the route is active.
 
@@ -62,7 +62,7 @@ wu.create('router', 'userLoginRoute', { // name of the router item
 Also, in order for you to be able to get the URL data and watch the changes, when the browser URL changes,
 the path of the data model **'app.route'** is updated. More info in [router documentation](./docs/documentation-router.md).
 
-### Getter:
+### [Getter:](./docs/documentation-getter.md)
 **Getter** allows you to define an interface to get data from the data model outside of Wu.
 
 ```javascript
@@ -87,7 +87,7 @@ render () {
 // when 'user.name' is 'Anna' and 'user.lang' is 'en' the result of render is '<h1>Hello Anna</h1>'
 ```
 
-### Setter:
+### [Setter:](./docs/documentation-setter.md)
 **Setter** allows you to define an interface to save data from outside to the Wu data model.
 
 ```javascript
@@ -111,7 +111,7 @@ sendLoginData () {
 // when 'sendLoginData' is executed 'user.login.data' will have { email: 'email@email.com', password: '12345678' }
 ```
 
-### API:
+### [API:](./docs/documentation-api.md)
 **API** allows you to watch changes in the data model and send Ajax requests to your server. When the server responses, **API** helps you manage it and save it in the data model.
 
 ```javascript
@@ -167,7 +167,7 @@ You can find Wu documentation in following pages:
   * [`run`](./docs/documentation-properties.md#run)
   * [`update`](./docs/documentation-properties.md#update)
   * [`urlPattern`](./docs/documentation-properties.md#urlpattern)
-* [Wu console functionality](./documentation-console.md)
+* [Wu console functionality](./docs/documentation-console.md)
 
 ## Third-party libraries
 
@@ -199,7 +199,7 @@ export default class MyView extends WuComponent {
 
 ## Dependencies
 
-Wu only has one dependency: [Loash](https://lodash.com)
+Wu only has one dependency: [Lodash](https://lodash.com)
 
 ## Current state of Wu
 

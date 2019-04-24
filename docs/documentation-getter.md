@@ -1,9 +1,9 @@
 # Wu framework: Getter documentation
 **Getter** allows you to define an interface to get data from the data model outside of Wu.
-![Pattern](./wu-framework.png)
 
 ### Data flow:
 Reactive data model &#10148; Getter (pure function) &#10148; Third-party libraries.
+![Pattern](./wu-framework.svg)
 
 ### Getter definition properties:
 | Properties                                           | Required |

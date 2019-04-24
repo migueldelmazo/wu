@@ -1,9 +1,9 @@
 # Wu framework: Setter documentation
 **Setter** allows you to define an interface to save data from outside to the Wu data model.
-![Pattern](./wu-framework.png)
 
 ### Data flow:
 Third-party libraries &#10148; Setter (pure function) &#10148; Reactive data model.
+![Pattern](./wu-framework.svg)
 
 ### Ensurer definition properties:
 | Properties                                           | Required |
