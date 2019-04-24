@@ -28,7 +28,7 @@ export default {
   },
 
   watch: (name) => {
-    wu.model.watch('app.router.url', undefined, run.bind(null, name), {
+    wu.model.watch('app.router.url', run.bind(null, name), undefined, {
       type: 'ensurer'
     })
   },

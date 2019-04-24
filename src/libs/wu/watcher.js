@@ -22,7 +22,7 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('watcher', name)
-    wu.model.watch(definition.onChange, definition.when, run.bind(null, name))
+    wu.model.watch(definition.onChange, run.bind(null, name), definition.when)
   }
 
 }

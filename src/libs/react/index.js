@@ -35,7 +35,7 @@ const parser = function(value) {
 const watch = function() {
   const watchers = this.onChange()
   if (watchers) {
-    this.watcherKey = wu.model.watch(watchers, undefined, function() {
+    this.watcherKey = wu.model.watch(watchers, function() {
       _.consoleGroup('react', 'React: render ' + this.getName('name'), 'onChange paths:', watchers)
       this.forceUpdate()
       _.consoleGroupEnd()
