@@ -1,18 +1,17 @@
-[Back to documentation](./documentation.md)
+[Back to documentation](./README.md)
 
 # Wu framework: properties documentation
 
 Wu is a framework that uses **declarative programming**. The [API](./documentation-api.md), [ensurer](./documentation-ensurer.md), [watcher](./documentation-watcher.md), [router](./documentation-router.md), [getter](./documentation-getter.md) and [setter](./documentation-setter.md) items use the same properties to define their behavior.
 
-### Required, optional and not applicable properties
-
+### Required, optional and not applicable properties:
 |                         | [API](./documentation-api.md) | [Ensurer](./documentation-ensurer.md) | [Watcher](./documentation-watcher.md) | [Router](./documentation-router.md) | [Getter](./documentation-getter.md) | [Setter](./documentation-setter.md) |
-|-------------------------|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|
-| [`onChange`](#onchange) | Required | Required | Required | N/A      | N/A      | N/A      |
-| [`when`](#when)         | Optional | Optional | Optional | N/A      | N/A      | N/A      |
-| [`args`](#args)         | Optional | Optional | Optional | N/A      | Optional | Optional |
-| [`run`](#run)           | Optional | Optional | Required | N/A      | Optional | Optional |
-| [`update`](#update)     | Required | Required | N/A      | Required | N/A      | Required |
+|-------------------------|:-----------------------------:|:-------------------------------------:|:-------------------------------------:|:-----------------------------------:|:-----------------------------------:|:-----------------------------------:|
+| [`onChange`](#onchange) | Required                      | Required                              | Required                              | N/A                                 | N/A                                 | N/A                                 |
+| [`when`](#when)         | Optional                      | Optional                              | Optional                              | N/A                                 | N/A                                 | N/A                                 |
+| [`args`](#args)         | Optional                      | Optional                              | Optional                              | N/A                                 | Optional                            | Optional                            |
+| [`run`](#run)           | Optional                      | Optional                              | Required                              | N/A                                 | Optional                            | Optional                            |
+| [`update`](#update)     | Required                      | Required                              | N/A                                   | Required                            | N/A                                 | Required                            |
 
 ___
 
@@ -40,7 +39,7 @@ ___
 
 * **Description:** before executing the function [`run`](#run) it is validated that the conditions of `when` match.
 * **Type:** plain object where keys are data model paths and values are function or array of functions.
-* **Optional** in API, ensurer and watcher.
+* **Optional** in [API](./documentation-api.md), [ensurer](./documentation-ensurer.md) and [watcher](./documentation-watcher.md).
 
 **Examples of use:**
 ```javascript
@@ -133,7 +132,7 @@ ___
 ### `update:`
 
 * **Description:**
-  * In [API](./documentation-api.md), [ensurer](./documentation-ensurer.md) and [setter](./documentation-setter.md) is the path of the data model where to save the result of 'run'.
+  * In [API](./documentation-api.md), [ensurer](./documentation-ensurer.md) and [setter](./documentation-setter.md) is the path of the data model where to save the result of [`run`](#run).
   * In [router](./documentation-router.md) is the path of the data model where to save the router matches.
 * **Type:** string.
 * **Required** in API, ensurer, router and setter.
