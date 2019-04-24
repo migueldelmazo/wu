@@ -205,7 +205,13 @@ export default {
   populate: (data) => {
     return _.mapDeep(data, null, (value) => {
       if (_.isString(value)) {
-        return _.startsWith(value, '#') ? value.substr(1) : get(value)
+        if (value === '') {
+          return ''
+        } else if (_.startsWith(value, '#')) {
+          return value.substr(1)
+        } else {
+          return get(value)
+        }
       } else {
         return value
       }
