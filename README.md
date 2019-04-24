@@ -1,12 +1,11 @@
 # Wu framework
-
 Wu is a framework for building web applications:
-
 * **Reactive data model:** the reactive data model is the core of Wu. **You can observe any path of the data model** and when someone changes the value of your path **you will be warned to react** as you want. No element of Wu is related to each other. **All elements are related through the reactive data model.**
 * **Declarative:** each of the 6 items ([API](#api), [ensurer](#ensurer), [watcher](#watcher), [router](#router), [getter](#getter) and [setter](#setter)) are defined with a simple declarative interface.
 * **Functional programming:** all items (except [watcher](#watcher)) use functional programming. From Wu we recommend that all functions that you write be pure.
 * **Model-oriented:** your responsibility as a developer is to ensure that **the data model is consistent**. If you meet this condition the development with Wu is easy and fast.
 * **No flows, no past, no future:** with Wu you only have to worry about the data model being coherent. It does not matter in what order things happen, no matter what happened in the past, no matter what will happen in the future, **you should only worry that the current data model is consistent.**
+* Wu guarantees that **all the actions that have to happen, will happen**.
 
 ![Pattern](./docs/wu-framework.png)
 
@@ -15,19 +14,13 @@ Wu is a framework for building web applications:
 ### Ensurer:
 **Ensurer** allows you to execute a function and save its result in the data model every time other data change. The goal is to always keep the data model consistent.
 
-**Data flow is:** Reactive data model &#10148; Ensurer (pure function) &#10148; Reactive data model.
-
 ```javascript
 wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
   // path of the data model that we are watching
   onChange: 'user.id',
-  // 'run' function will only be executed when the value of 'user.id' is a non-empty string
-  when: {
-    'user.id': [_.negate(_.isEmpty), _.isString]
-  },
   // arguments that will receive the function 'run'
   args: 'user.id',
-  // pure function that runs when 'onChange' has changed and 'when' conditions match
+  // pure function that runs when 'onChange' has changed
   run: (userId) => {
     return !!userId
   },
@@ -37,21 +30,15 @@ wu.create('ensurer', 'userIsLogged', { // name of the ensurer item
 ```
 
 ### Watcher:
-**Watcher** works exactly like [ensurer](#ensurer) but does not save the result of the function in the data model. The goal is to use it to call third-party libraries such as React JS, LocalStorage...
-
-**Data flow is:** Reactive data model &#10148; Watcher (non-pure function) &#10148; Third-party libraries.
+**Watcher** works exactly like [ensurer](#ensurer) but does not save the result of the function in the data model. The goal is to use it to call third-party libraries such as React JS, LocalStorage, Stripe...
 
 ```javascript
 wu.create('watcher', 'setUserIdInLocalStorage', { // name of the watcher item
   // path of the data model that we are watching
   onChange: 'user.id',
-  // 'run' function will only be executed when the value of 'user.id' is a non-empty string
-  when: {
-    'user.id': [_.negate(_.isEmpty), _.isString]
-  },
   // arguments that will receive the function 'run'
   args: 'user.id',
-  // impure function that runs when 'onChange' has changed and 'when' conditions match
+  // impure function that runs when 'onChange' has changed
   run: (userId) => {
     window.localStorage.setItem('userId', userId)
   }
@@ -62,138 +49,90 @@ wu.create('watcher', 'setUserIdInLocalStorage', { // name of the watcher item
 **Router** allows you to watch changes in the browser URL and save the normalized route in the data model.
 The data stored in the model are the URL params and if the route is active.
 
-**Data flow is:** Browser URL &#10148; Router (pure function) &#10148; Reactive data model.
-
 ```javascript
-wu.create('router', 'userProfile', { // name of the router item
-  // url pattern
-  urlPattern: '/user/:userId/profile',
-  // every time the URL changes 'user.profileRoute' value it will be updated
-  update: 'user.profileRoute'
+wu.create('router', 'userLoginRoute', { // name of the router item
+  urlPattern: '/user/:userId/detail',
+  update: 'user.detail.route'
 })
 
-//  if the URL is '/user/asdf1234/profile' the value of 'user.profileRoute' will be:
-//  {
-//    isActive: true,
-//    params: { userId: 'asdf1234' }
-//  }
-
-//  if the URL does not match '/user/:userId/profile' the value of 'user.profileRoute' will be:
-//  {
-//    isActive: false,
-//    params: {}
-//  }
+// when browser URL is '/user/asdf1234/detail' 'user.detail.route' is { isActive: true, params: { userId: 'asdf1234' } }
+// when browser URL is not '/user/asdf1234/detail' 'user.detail.route' is { isActive: false, params: {} }
 ```
 
-Also, in order for you to be able to get the URL data and watch the changes, when the browser URL changes, the path of the data model **'app.route'** is updated with the following information:
-
-```javascript
-// https://localhost:3000/path?one=1#two
-{
-  hash: 'two',
-  host: 'localhost:3000',
-  hostname: 'localhost',
-  pathName: '/path',
-  port: '3000',
-  protocol: 'https:',
-  queryParams: {one: '1'},
-  url: 'https://localhost:3000/path?one=1#two'
-}
-```
+Also, in order for you to be able to get the URL data and watch the changes, when the browser URL changes,
+the path of the data model **'app.route'** is updated. More info in [router documentation](./docs/documentation-router.md).
 
 ### Getter:
 **Getter** allows you to define an interface to get data from the data model outside of Wu.
 
-**Data flow is:** Reactive data model &#10148; Getter (pure function) &#10148; Third-party libraries.
-
 ```javascript
-wu.create('getter', 'getGreeting', { // name of the getter item
+// file user.js
+wu.create('getter', 'userGreeting', { // name of the getter item
   // arguments that will receive the function 'run'
   args: ['user.name', 'user.lang'],
   // pure function
-  run: (userName, userLang) => {
-    if (userLang === 'en') {
-      return 'Hello ' + userName
-    } else if (userLang === 'es') {
-      return 'Hola ' + userName
-    }
+  run: (name, lang) => {
+    if (lang === 'en') return 'Hello ' + name
+    else if (lang === 'it') return 'Ciao ' + name
+    else return 'Hola ' + name
   }
 })
+// file userGreeting.template.js
+render () {
+  return (
+    <h1>{wu.getter('userGreeting')}</h1>
+  )
+}
+
+// when 'user.name' is 'Anna' and 'user.lang' is 'en' the result of render is '<h1>Hello Anna</h1>'
 ```
-[See ReactJS for more info.](#reactjs)
 
 ### Setter:
 **Setter** allows you to define an interface to save data from outside to the Wu data model.
 
-**Data flow is:** Third-party libraries &#10148; Setter (pure function) &#10148; Reactive data model.
-
 ```javascript
-wu.create('setter', 'sendUserLogin', { // name of the setter item
+// file user.js
+wu.create('setter', 'userSendLoginData', { // name of the setter item
   // pure function
   run: (email, password) => {
-    return { email, password }
+    return {
+      email,
+      password
+    }
   },
-  // path of the data model where the result of 'run' will be saved
+  // path of the data model where to save the result of 'run'
   update: 'user.login.data'
 })
+// file userLogin.template.js
+sendLoginData () {
+  wu.setter('userSendLoginData', 'email@email.com', '12345678')
+}
 
-// when a third-party library (for example ReactJS) executes sendUserLogin('email@email.com', '12345678')
-// the value of 'user.login.data' will be:
-// {
-//   email: 'email@email.com',
-//   password: '12345678'
-// }
+// when 'sendLoginData' is executed 'user.login.data' will have { email: 'email@email.com', password: '12345678' }
 ```
 
 ### API:
-**API** allows you to watch changes in the model and send Ajax requests to your server. When the server responses, **API** helps you manage it and save it in the data model.
-
-**Data flow is:** Reactive data model &#10148; API (pure functions) &#10148; Server &#10148; API (pure functions) &#10148; Reactive data model.
+**API** allows you to watch changes in the data model and send Ajax requests to your server. When the server responses, **API** helps you manage it and save it in the data model.
 
 ```javascript
-wu.create('api', 'userLogin', { // name of the api item
+wu.create('api', 'userProfile', { // name of the api item
   // path of the data model that we are watching
-  onChange: 'user.login.data',
-  when: {
-    // request will only be sent when the value of 'user.login.data.email' is an email
-    'user.login.data.email': _.isEmail,
-    // and value of 'user.login.data.password' is a non-empty string
-    'user.login.data.password': [_.negate(_.isEmpty), _.isString]
-  },
+  onChange: 'user.id',
   request: {
     // request method
-    method: 'post',
+    method: 'get',
     // request URL or path
-    path: 'https://server.com/api/login',
-    // request post body
-    body: {
-      // request body will be an object like '{ email, password }'
-      args: {
-        email: 'user.login.data.email',
-        password: 'user.login.data.password'
-      },
-      run: (data) => data
-    }
+    path: 'https://server.com/api/user/profile',
   },
   handlers: {
     // if response http code is 200
     onCode200: [
       {
-        // save 'response.body' in 'user.profile' model data path
+        // save 'response.body' in 'user.profile' data model path
         run: (response) => {
           return response.body
         },
         update: 'user.profile'
-      }
-    ],
-    // if response http code is 404
-    onCode404: [
-      {
-        // save this message in 'user.errorMessage' model data path
-        run: () => {
-          return 'There is no user with this email and password in our database. Try other credentials please.'
-        },
-        update: 'user.loginErrorMessage'
       }
     ]
   }
@@ -202,11 +141,37 @@ wu.create('api', 'userLogin', { // name of the api item
 
 ## Documentation
 
-You can find Wu [documentation in this page](./docs/README.md).
+You can find Wu documentation in following pages:
+* Wu items:
+  * [API](./docs/documentation-api.md)
+  * [ensurer](./docs/documentation-ensurer.md)
+  * [watcher](./docs/documentation-watcher.md)
+  * [router](./docs/documentation-router.md)
+  * [getter](./docs/documentation-getter.md)
+  * [setter](./docs/documentation-setter.md)
+* Public methods:
+  * [`wu.create()`](./docs/documentation-public-methods.md#wucreate)
+  * [`wu.start()`](./docs/documentation-public-methods.md#wustart)
+  * [`wu.getter()`](./docs/documentation-public-methods.md#wugetter)
+  * [`wu.setter()`](./docs/documentation-public-methods.md#wusetter)
+* Public model methods:
+  * [`wu.model.set()`](./docs/documentation-public-model-methods.md#wumodelset)
+  * [`wu.model.get()`](./docs/documentation-public-model-methods.md#wumodelget)
+  * [`wu.model.populate()`](./docs/documentation-public-model-methods.md#wumodelpopulate)
+  * [`wu.model.watch()`](./docs/documentation-public-model-methods.md#wumodelwatch)
+  * [`wu.model.stopWatching()`](./docs/documentation-public-model-methods.md#wumodelstopwatching)
+* Wu items properties:
+  * [`onChange`](./docs/documentation-properties.md#onchange)
+  * [`when`](./docs/documentation-properties.md#when)
+  * [`args`](./docs/documentation-properties.md#args)
+  * [`run`](./docs/documentation-properties.md#run)
+  * [`update`](./docs/documentation-properties.md#update)
+  * [`urlPattern`](./docs/documentation-properties.md#urlpattern)
+* [Wu console functionality](./documentation-console.md)
 
 ## Third-party libraries
 
-It is very easy to work with third-party libraries using **getters**, **setters** and **watchers**.
+It is very easy to work with third-party libraries using [getters](./docs/documentation-getter.md), [setters](./docs/documentation-setter.md) and [watchers](./docs/documentation-watcher.md).
 
 ### ReactJS
 
@@ -231,7 +196,6 @@ export default class MyView extends WuComponent {
   }
 }
 ```
-[See 'getGreeting' getter for more info.](#getter)
 
 ## Dependencies
 

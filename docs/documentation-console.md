@@ -1,5 +1,3 @@
-[Back to documentation](./README.md)
-
 # Wu framework: console documentation
 
 ## Wu instance
