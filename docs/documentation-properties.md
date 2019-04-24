@@ -4,13 +4,13 @@ Wu is a framework that uses **declarative programming**. The API, ensurer, watch
 
 ### Required, optional and not applicable properties
 
-|            | API      | Ensurer  | Watcher  | Router   | Getter   | Setter   |
-|------------|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|
-| `onChange` | Required | Required | Required |          |          |          |
-| `when`     | Optional | Optional | Optional |          |          |          |
-| `args`     | Optional | Optional | Optional |          | Optional | Optional |
-| `run`      | Optional | Optional | Required |          | Optional | Optional |
-| `update`   | Required | Required |          | Required |          | Required |
+|                         | API      | Ensurer  | Watcher  | Router   | Getter   | Setter   |
+|-------------------------|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|
+| [`onChange`](#onchange) | Required | Required | Required | N/A      | N/A      | N/A      |
+| [`when`](#when)         | Optional | Optional | Optional | N/A      | N/A      | N/A      |
+| [`args`](#args)         | Optional | Optional | Optional | N/A      | Optional | Optional |
+| [`run`](#run)           | Optional | Optional | Required | N/A      | Optional | Optional |
+| [`update`](#update)     | Required | Required | N/A      | Required | N/A      | Required |
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 ### `when:`
 
-* **Description:** before executing the function **run** it is validated that the conditions of **when** match.
+* **Description:** before executing the function `run` it is validated that the conditions of `when` match.
 * **Type:** plain object where keys are data model paths and values are function or array of functions.
 * **Optional** in API, ensurer and watcher.
 
@@ -54,7 +54,7 @@ ___
   when: {
     'user.email': _.isEmail,
     'user.name': [_.negate(_.isEmpty), _.isString],
-    'user.age': (userAge) => userAge > 18 // custom function
+    'user.age': (userAge) => userAge >= 18 // custom function
   }
 }
 ```
@@ -65,39 +65,39 @@ ___
 * **Description:** arguments with which the function is executed.
 * **Type:** it can be any type of variable (array, boolean, number, object, string...).
 * **Optional** in API, ensurer, watcher, getter and setter.
-* **Order of arguments:** These arguments are the first ones that are passed to the function. In the case of **getters** and **setters**, the arguments passed from third-party libraries are passed to the function at the end.
-* **String arguments are parsed** with the values of the data model, except if they start with the character `#`.
+* **Order of arguments:** These arguments are the first ones that are passed to the function `run`. In the case of **getters** and **setters**, the arguments passed from third-party libraries are passed to the function at the end.
+* In case the arguments are **arrays, strings or objects**, the values of them are parsed **by replacing the strings with values of the data model** (except if the strings start with the character `#`).
 
 **Examples of use:**
 ```javascript
 {
-  args: ['user.email', 'user.email']
   // 'run' function will be executed with arguments: 'Anna', 'anna@gmail.com'
+  args: ['user.name', 'user.email']
 }
 ```
 
 ```javascript
 {
-  args: ['user.email', 'user.email', true, null, 1, [1, 2, 3] ]
   // 'run' function will be executed with arguments: 'Anna', 'anna@gmail.com', true, null, 1, [1, 2, 3]
+  args: ['user.name', 'user.email', true, null, 1, [1, 2, 3] ]
 }
 ```
 
 ```javascript
 {
+  // 'run' function will be executed with arguments: { name: 'Anna', email: 'anna@gmail.com', sendEmail: true }
   args: {
     name: 'user.name',
     email: 'user.email',
     sendEmail: true
   }
-  // 'run' function will be executed with arguments: { name: 'Anna', email: 'anna@gmail.com', sendEmail: true }
 }
 ```
 
 ```javascript
 {
-  args: ['user.email', '#This is a string']
   // 'run' function will be executed with arguments: 'Anna', 'This is a string'
+  args: ['user.email', '#This is a string']
 }
 ```
 ___
@@ -106,8 +106,8 @@ ___
 
 * **Description:** function to execute.
 * **Type:** function.
-* **Optional** in API, ensurer, getter and setter.
 * **Required** in watcher.
+* **Optional** in API, ensurer, getter and setter.
 * **By default** if the function is not specified, the default function is `(arg) => arg`. It means, the function returns the first argument that receives.
 * **Order of arguments:** first the arguments defined in the property args. Then the arguments with which the function is called.
   * Third-party libraries can execute the function with their own arguments.

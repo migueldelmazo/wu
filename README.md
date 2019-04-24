@@ -171,7 +171,8 @@ wu.create('api', 'userLogin', { // name of the api item
       args: {
         email: 'user.login.data.email',
         password: 'user.login.data.password'
-      }
+      },
+      run: (data) => data
     }
   },
   handlers: {
