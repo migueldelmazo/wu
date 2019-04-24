@@ -1,10 +1,10 @@
-[Back to documentation](./documentation.md)
+[Back to documentation](./README.md)
 
 # Wu framework: console documentation
 
 ## Wu instance
 
-In the **development environment**, the Wu value is published in the `window.wu` to facilitate development and debugging.
+In the **development environment** Wu is published in the `window.wu` to facilitate development and debugging.
 
 #### Wu's public methods are documented [here](./documentation-public-methods.md).
 
@@ -12,8 +12,8 @@ In the **development environment**, the Wu value is published in the `window.wu`
 
 * `_private:`
   * `api:`
-    * `cache:` Calls made through the API that have been cached by Wu.
-    * `queue:` Current call list to the API and its status.
+    * `cache:` Calls made through the [API](./documentation-api.md) that have been cached by Wu.
+    * `queue:` Current call list to the [API](./documentation-api.md) and its status.
   * `items:`
     [apis](./documentation-api.md),
     [ensurers](./documentation-ensurer.md),

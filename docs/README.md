@@ -11,5 +11,6 @@
   * [router](./documentation-router.md)
   * [getter](./documentation-getter.md)
   * [setter](./documentation-setter.md)
+* [Wu console documentation](./documentation-console.md)
   
   

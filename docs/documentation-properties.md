@@ -6,7 +6,7 @@ Wu is a framework that uses **declarative programming**. The [API](./documentati
 
 ### Required, optional and not applicable properties:
 |                         | [API](./documentation-api.md) | [Ensurer](./documentation-ensurer.md) | [Watcher](./documentation-watcher.md) | [Router](./documentation-router.md) | [Getter](./documentation-getter.md) | [Setter](./documentation-setter.md) |
-|-------------------------|:-----------------------------:|:-------------------------------------:|:-------------------------------------:|:-----------------------------------:|:-----------------------------------:|:-----------------------------------:|
+|------------------------:|:-----------------------------:|:-------------------------------------:|:-------------------------------------:|:-----------------------------------:|:-----------------------------------:|:-----------------------------------:|
 | [`onChange`](#onchange) | Required                      | Required                              | Required                              | N/A                                 | N/A                                 | N/A                                 |
 | [`when`](#when)         | Optional                      | Optional                              | Optional                              | N/A                                 | N/A                                 | N/A                                 |
 | [`args`](#args)         | Optional                      | Optional                              | Optional                              | N/A                                 | Optional                            | Optional                            |
@@ -19,7 +19,7 @@ ___
 
 * **Description:** path(s) of the data model that we are watching.
 * **Type:** string or array of strings.
-* **Required** in API, ensurer and watcher.
+* **Required** in [API](./documentation-api.md), [ensurer](./documentation-ensurer.md) and [watcher](./documentation-watcher.md).
 
 **Examples of use:**
 ```javascript

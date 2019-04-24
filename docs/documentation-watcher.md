@@ -1,4 +1,4 @@
-[Back to documentation](./documentation.md)
+[Back to documentation](./README.md)
 
 # Wu framework: watcher
 
