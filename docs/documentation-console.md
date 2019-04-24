@@ -1,3 +1,5 @@
+[Back to documentation](./documentation.md)
+
 # Wu framework: console documentation
 
 ## Wu instance
@@ -27,6 +29,8 @@ In the **development environment**, the Wu value is published in the `window.wu`
 Below is the result of the console of a small program that manages the user's profile and login.
 
 ![Pattern](./wu-framework-console-definitions.png)
+
+___
 
 ## Wu flow
 

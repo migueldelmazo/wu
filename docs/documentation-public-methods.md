@@ -1,7 +1,16 @@
+[Back to documentation](./documentation.md)
+
 # Wu framework: public methods
 
-## `wu.create(type, name, definition)`
+* [`wu.create(type, name, definition)`](#wu-framework-public-methods)
+* [`wu.start()`](#wustart)
+* [`wu.getter(name, ...args) / wu.setter(name, ...args)`](#wugettername-args--wusettername-args)
+* [`wu.model.set(path, value)`](#wumodelsetpath-value)
+* [`wu.model.get(path, defaultValue)`](#wumodelgetpath-defaultvalue)
+* [`wu.model.watch(paths, fns, validators)`](#wumodelwatchpaths-fns-validators)
+* [`wu.model.stopWatching(watcherId)`](#wumodelstopwatchingwatcherid)
 
+## `wu.create(type, name, definition)`
 This method allows you to create items of Wu to be used by other items of Wu or by third-party libraries.
 
 **Arguments:**
@@ -29,9 +38,9 @@ wu.create('ensurer', 'userLogin', {
   update: 'user.login.data'
 })
 ```
+___
 
 ## `wu.start()`
-
 * Start the Wu application:
   * Watch the events of the browser URL router.
   * Start some internal elements such as the API.
@@ -41,9 +50,9 @@ wu.create('ensurer', 'userLogin', {
 ```javascript
 wu.start()
 ```
+___
 
 ## `wu.getter(name, ...args) / wu.setter(name, ...args)`
-
 Allows to execute `getters` and `setters` previously defined with `wu.create(...)`
 It is recommended to visit the documentation of [getter](./documentation-getter.md) and [setter](./documentation-setter.md).
 
@@ -54,9 +63,9 @@ wu.getter('shopGetOrders', { status: 'sent' })
 ```javascript
 wu.setter('paypalInitPayment', 100, '€')
 ```
+___
 
 ## `wu.model.set(path, value)`
-
 Set a value in a property of the data model.
 
 **Arguments:**
@@ -67,9 +76,9 @@ Set a value in a property of the data model.
 ```javascript
 wu.model.set('user.profile.name', 'Anna')
 ```
+___
 
 ## `wu.model.get(path, defaultValue)`
-
 Return the value of a property of the data model. The value is cloned before being returned so that the data model can not be modified by mistake.
 
 **Arguments:**
@@ -83,9 +92,9 @@ Return the value of a property of the data model. The value is cloned before bei
 ```javascript
 wu.model.get('user.profile.name', '') // 'Anna'
 ```
+___
 
 ## `wu.model.populate(data)`
-
 Iterate and return an object and if its values are a strings, it parses them with the values of the data model.
 If the string starts with `#` do not parse it.
 
@@ -106,9 +115,9 @@ wu.model.populate(['user.profile.name']) // ['Anna']
 wu.model.populate(['user.profile.name', '#user.profile.name']) // ['Anna', 'user.profile.name']
 wu.model.populate(['user.profile.name', 1, true, null, undefined]) // ['Anna', 1, true, null, undefined]
 ```
+___
 
 ## `wu.model.watch(paths, fns, validators)`
-
 Start watching some paths of the data model and run the functions when the values change.
 
 **Arguments:**
@@ -134,9 +143,9 @@ wu.model.watch(
   }
 )
 ```
+___
 
 ## `wu.model.stopWatching(watcherId)`
-
 Stop watching a path that has previously been watched by `wu.watch`.
 Requires the identifier returned by `wu.watch`.
 

@@ -1,6 +1,8 @@
+[Back to documentation](./documentation.md)
+
 # Wu framework: properties documentation
 
-Wu is a framework that uses **declarative programming**. The API, ensurer, watcher, router, getter and setter items use the same properties to define their behavior.
+Wu is a framework that uses **declarative programming**. The [API](./documentation-api.md), [ensurer](./documentation-ensurer.md), [watcher](./documentation-watcher.md), [router](./documentation-router.md), [getter](./documentation-getter.md) and [setter](./documentation-setter.md) items use the same properties to define their behavior.
 
 ### Required, optional and not applicable properties
 

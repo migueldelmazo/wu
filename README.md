@@ -202,7 +202,7 @@ wu.create('api', 'userLogin', { // name of the api item
 
 ## Documentation
 
-You can find Wu [documentation in this page](./docs/documentation.md).
+You can find Wu [documentation in this page](./docs/README.md).
 
 ## Third-party libraries
 

@@ -1,6 +1,6 @@
-# Wu framework: Ensurer items (WIP)
+[Back to documentation](./documentation.md)
 
-![Pattern](./wu-framework-ensurer.png)
+# Wu framework: Ensurer items (WIP)
 
 **Ensurer** allows you to execute a function and save its result in the data model every time other data change. The goal is to always keep the data model consistent.
 
