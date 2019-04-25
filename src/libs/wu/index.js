@@ -25,7 +25,6 @@ wu.create = (type, name, definition) => {
       break;
     case 'router':
       router.setDefinition(name, definition)
-      router.watch(name)
       break;
     case 'setter':
       setter.setDefinition(name, definition)

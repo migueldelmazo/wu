@@ -11,6 +11,10 @@ const getDefinition = (type, name) => {
   }
 }
 
+const getDefinitions = (type) => {
+  return wu._private.items[type] || {}
+}
+
 // set definition
 
 const setDefinition = (type, name, definition, props) => {
@@ -83,6 +87,6 @@ const parseDefinition = (definition, props) => {
   return _.pick(definition, _.keys(props))
 }
 
-export { checkDefinitionType, getDefinition, setDefinition }
+export { checkDefinitionType, getDefinition, getDefinitions, setDefinition }
 
 window.wu = wu

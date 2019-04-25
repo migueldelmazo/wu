@@ -1,21 +1,28 @@
 import _ from 'lodash'
 import { wu, setInModel } from './common'
-import { getDefinition, setDefinition } from './definition'
+import { getDefinitions, setDefinition } from './definition'
 
 const updateModel = () => {
   wu.model.set('app.router', _.getWindowLocationData())
 }
 
-const run = (name) => {
-  const definition = getDefinition('router', name)
-  const router = wu.model.get('app.router')
-  const result = {
+const run = () => {
+  const currentRouter = wu.model.get('app.router')
+  const found = _.some(getDefinitions('router'), (definition, name) => {
+    const result = getRouteMatches(definition, currentRouter)
+    _.consoleGroup('router', 'Router: set ' + name, 'Result:', result)
+    setInModel(definition, result)
+    _.consoleGroupEnd()
+    return result.isActive
+  })
+  wu.model.set('app.router.found', found)
+}
+
+const getRouteMatches = (definition, router) => {
+  return {
     isActive: _.matchRouteParams(router.pathName, definition.urlPattern),
     params: _.getRouteParams(router.pathName, definition.urlPattern)
   }
-  _.consoleGroup('router', 'Router: set ' + name, 'Result:', result)
-  setInModel(definition, result)
-  _.consoleGroupEnd()
 }
 
 export default {
@@ -26,16 +33,13 @@ export default {
       update: true
     })
   },
-
-  watch: (name) => {
-    wu.model.watch('app.router.url', run.bind(null, name), undefined, {
-      type: 'ensurer'
-    })
-  },
   
   start: () => {
     _.initRouter(updateModel)
     updateModel()
+    wu.model.watch('app.router.url', run, undefined, {
+      type: 'ensurer'
+    })
   }
 
 }
