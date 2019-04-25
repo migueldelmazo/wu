@@ -44,7 +44,7 @@ const watch = function() {
 }
 
 const stopWatching = function() {
-  wu._private.model.stopWatching(this.watcherKey)
+  wu.model.stopWatching(this.watcherKey)
 }
 
 // run methods
