@@ -9,9 +9,13 @@ const wu = {
 // run function
 
 const runFn = (definition, ...fnArgs) => {
-  let modelArgs = definition.args ? wu.model.populate(definition.args) : []
-  modelArgs = _.parseArray(modelArgs)
-  return _.isFunction(definition.run) ? definition.run(...modelArgs, ...fnArgs) : modelArgs[0]
+  if (_.isPlainObject(definition)) {
+    let modelArgs = definition.args ? wu.model.populate(definition.args) : []
+    modelArgs = _.parseArray(modelArgs)
+    return _.isFunction(definition.run) ? definition.run(...modelArgs, ...fnArgs) : modelArgs[0]
+  } else {
+    return definition
+  }
 }
 
 // set in model

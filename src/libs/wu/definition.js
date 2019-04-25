@@ -5,7 +5,7 @@ import { wu } from './common'
 
 const getDefinition = (type, name) => {
   if (_.has(wu._private.items[type], name)) {
-    return wu._private.items[type][name]
+    return _.cloneDeep(wu._private.items[type][name])
   } else {
     showError('Definition not found in', type, name, '{...}')
   }
