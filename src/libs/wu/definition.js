@@ -21,10 +21,10 @@ const setDefinition = (type, name, definition, props) => {
   if (checkDefinitionName(type, name) &&
     checkDefinition(type, name, definition) &&
     isValidDefinitionProps(type, name, definition, props)) {
-      wu._private.items[type] = wu._private.items[type] || {}
-      wu._private.items[type][name] = parseDefinition(definition, props)
-      _.consoleLog(type, _.capitalize(type) + ': create ' + name, 'Definition:', getDefinition(type, name))
-    }
+    wu._private.items[type] = wu._private.items[type] || {}
+    wu._private.items[type][name] = parseDefinition(definition, props)
+    _.consoleLog(type, _.capitalize(type) + ': create ' + name, 'Definition:', getDefinition(type, name))
+  }
 }
 
 const checkDefinitionType = (type, name) => {
