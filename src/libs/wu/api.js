@@ -60,7 +60,7 @@ const getRequestData = (definition, key, defaultValue, context) => {
 
 const handleRequests = () => {
   setTimeout(() => {
-    if (wu.model.get('app.online')) {
+    if (wu.model.get('api.online')) {
       const nextRequest = queue.getNext()
       if (!_.isEmpty(nextRequest)) {
         handleRequest(nextRequest)
