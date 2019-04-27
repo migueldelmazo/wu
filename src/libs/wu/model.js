@@ -154,7 +154,7 @@ const triggerPathMatch = (changedPath, watcherPath) => {
 // get/set
 
 const get = (key, defaultValue) => {
-  return _.get(wu._private.model.data, key, defaultValue)
+  return _.cloneDeep(_.get(wu._private.model.data, key, defaultValue))
 }
 
 const set = (path, newValue, options = {}) => {
@@ -162,7 +162,7 @@ const set = (path, newValue, options = {}) => {
   if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
     _.set(wu._private.model.data, path, _.cloneDeep(newValue))
     if (options.silent !== true) {
-      _.consoleLog('model', 'Model: set', path, '=', newValue)
+      _.consoleLog('model', 'Model: set ' + typeof newValue, path, '=', newValue)
       triggerDebounced(path, options)
     }
   }
@@ -198,9 +198,7 @@ export default {
 
   // getters / setters
 
-  get: (key, defaultValue) => {
-    return _.cloneDeep(get(key, defaultValue))
-  },
+  get,
 
   populate: (data) => {
     return _.mapDeep(data, null, (value) => {
