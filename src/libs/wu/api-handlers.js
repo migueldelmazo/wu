@@ -10,7 +10,7 @@ export default {
   runHandler: (request, handler) => {
     handler = _.get(request.handlers, handler)
     _.each(handler, (definition) => {
-      setInModel(definition, runFn(definition, request.response.raw, request.request))
+      setInModel(definition, runFn(definition, request.response.raw, request))
     })
   }
 

@@ -9,7 +9,7 @@ import queue from './api-queue'
 
 // send
 
-const send = (name) => {
+const add = (name) => {
   const definition = getDefinition('api', name)
   const contextItems = getDefinitionContext(definition)
   _.each(contextItems, (contextItem) => {
@@ -20,9 +20,7 @@ const send = (name) => {
 }
 
 const getDefinitionContext = (definition) => {
-  const context = _.get(definition, 'options.context', {})
-  const result = runFn(context)
-  return _.isEmpty(result) ? [undefined] : _.parseArray(result)
+  return _.has(definition, 'options.context') ? runFn(definition.options.context) : [undefined]
 }
 
 const parseRequest = (name, definition, context) => {
@@ -63,9 +61,9 @@ const handleRequests = () => {
       const nextRequest = queue.getNext()
       if (!_.isEmpty(nextRequest)) {
         handleRequest(nextRequest)
+        handleRequests()
       }
     }
-    handleRequests()
   })
 }
 
@@ -152,7 +150,7 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('api', name)
-    wu.model.watch(definition.onChange, send.bind(null, name), definition.when)
+    wu.model.watch(definition.onChange, add.bind(null, name), definition.when)
   },
 
   start: () => {
