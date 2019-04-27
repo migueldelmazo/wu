@@ -10,9 +10,9 @@ const wu = {
 
 const runFn = (definition, ...fnArgs) => {
   if (_.isPlainObject(definition)) {
-    let modelArgs = definition.args ? wu.model.populate(definition.args) : []
-    modelArgs = _.parseArray(modelArgs)
-    return _.isFunction(definition.run) ? definition.run(...modelArgs, ...fnArgs) : modelArgs[0]
+    const modelArgs = definition.args ? wu.model.populate(definition.args) : []
+    const args = [].concat(_.parseArray(modelArgs)).concat(fnArgs)
+    return _.isFunction(definition.run) ? definition.run(...args) : args[0]
   } else {
     return definition
   }
