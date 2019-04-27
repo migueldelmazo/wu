@@ -1,5 +1,7 @@
 # Wu framework: public model methods
 
+ToDo: Explain how the model works
+
 * [`wu.model.set()`](#wumodelset)
 * [`wu.model.get()`](#wumodelget)
 * [`wu.model.populate()`](#wumodelpopulate)
