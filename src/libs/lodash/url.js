@@ -8,11 +8,14 @@ const listenPopStateEvent = () => {
 
 const listenPushStateEvent = () => {
   window.addEventListener('click', (ev) => {
-    if (isAnchorDomElementWithHref(ev)) {
+    const href = getEventHref(ev)
+    if (href) {
       ev.stopPropagation()
       ev.preventDefault()
-      _.navigate(ev.srcElement.href)
-      runCallback()
+      if (href !== window.location.href) {
+        _.navigate(href)
+        runCallback()
+      }
     }
   })
 }
