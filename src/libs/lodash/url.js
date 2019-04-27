@@ -17,8 +17,11 @@ const listenPushStateEvent = () => {
   })
 }
 
-const isAnchorDomElementWithHref = (ev) => {
-  return ev.srcElement.tagName === 'A' && _.isString(ev.srcElement.href)
+const getEventHref = (ev) => {
+  const anchor = _.find(ev.path, (element) => {
+    return element.tagName === 'A' && _.isString(element.href)
+  })
+  return (anchor && anchor.href) || ''
 }
 
 // callback
