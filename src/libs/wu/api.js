@@ -15,7 +15,6 @@ const send = (name) => {
   _.each(contextItems, (contextItem) => {
     const request = parseRequest(name, definition, contextItem)
     queue.add(request)
-    _.consoleLog('api', 'API: added ' + request.name, 'Request:', request)
   })
   handleRequests()
 }
@@ -71,7 +70,7 @@ const handleRequests = () => {
 }
 
 const handleRequest = (request) => {
-  _.consoleGroup('api', 'API: send ' + request.name, 'Request:', request)
+  _.consoleGroup('api', 'API: send ' + request.name, 'Path:', request.request.path, 'Request:', request)
   queue.start(request)
   flags.setRequestFlags(request)
   if (cache.exists(request)) {
@@ -130,7 +129,7 @@ const setRawResponse = (request, response) => {
 
 const handleResponse = (request) => {
   handlers.setHandler(request)
-  _.consoleGroup('api', 'API: response ' + request.name + ' with status ' + request.response.raw.status, 'Request:', request)
+  _.consoleGroup('api', 'API: response ' + request.name + ' with status ' + request.response.raw.status, 'Path:', request.request.path, 'Request:', request)
   handlers.runHandler(request, request.response.handler)
   handlers.runHandler(request, 'onComplete')
   flags.setResponseFlags(request)
@@ -155,7 +154,7 @@ export default {
     const definition = getDefinition('api', name)
     wu.model.watch(definition.onChange, send.bind(null, name), definition.when)
   },
-  
+
   start: () => {
     wu._private.api = wu._private.api || {}
     cache.init()

@@ -11,7 +11,7 @@ const set = (request, flags) => {
 }
 
 export default {
-  
+
   setRequestFlags: (request) => {
     set(request, {
       complete: false,
@@ -21,7 +21,7 @@ export default {
       status: ''
     })
   },
-  
+
   setResponseFlags: (request) => {
     set(request, {
       complete: true,
