@@ -4,7 +4,7 @@
   "description": "Reactive, functional and declarative framework for webapps",
   "main": "build/index.js",
   "scripts": {
-    "build": "./node_modules/.bin/babel src --out-dir build",
+    "postinstall": "./node_modules/.bin/babel src --out-dir build",
     "format:js": "./node_modules/.bin/esformatter -i --config .formatrc 'src/**/*.js'"
   },
   "repository": {
