@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Wu</title>
+    <style>
+      html {
+        font-size: 48px;
+      }
+      .triangle-xl, .triangle-s {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 1rem 0 1rem calc(1.732 * 1rem);
+      }
+      .triangle-s {
+        border-width: .5rem 0 .5rem calc(1.732 * .5rem);
+      }
+      .reverse {
+        transform: scaleX(-1);
+      }
+    </style>
+  </head>
+  <body>
+    
+    <div class='container'><div>
+      
+    <script type="text/javascript">
+      
+      const grid = (items, triangleClass, leftOffset, leftIncrement, topOffset, topIncrement) => {
+        for (let y = 0; y < items.length; y += 1) {
+          for (let x = 0; x < items[y].length; x += 1) {
+            const element = document.createElement('div')
+            element.classList.add(triangleClass)
+            element.style.left = 'calc(' + leftOffset + 'rem + ' + x * leftIncrement + 'rem)'
+            element.style.top = 'calc(' + topOffset + 'rem + ' + y * topIncrement + ' * 1rem)'
+            element.style.borderColor = 'transparent transparent transparent ' + items[y][x]
+            if (y % 2 === x % 2) {
+              element.classList.add('reverse')
+            }
+            document.body.appendChild(element)
+          }
+        }
+      }
+      
+      grid([
+        ['transparent', 'transparent', '#A134DA', '#A736E1'],
+        ['transparent', '#7C23AA', '#8126B0', '#AB38E7', '#B13BEE'],
+        ['transparent', '#5A157F', '#8528B6', '#8C2ABE', '#B53CF3'],
+        ['transparent', '#5B1580', '#601887', '#912CC4', '#962FCB'],
+        ['transparent', '#450C64', '#661A8E', '#6B1C94', '#9D32D4'],
+        ['transparent', '#450C64', '#4A0E6A', '#711F9B', '#7621A3'],
+        ['transparent', 'transparent', '#501071', '#551379']
+      ], 'triangle-xl', 0, 1.72, 1.5, .98)
+      
+      grid([
+        ['#F2DBFE', 'transparent', 'transparent', '#C96BFA'],
+        ['#EFD3FD', 'transparent', 'transparent', '#CC72FA'],
+        ['#ECCCFD', 'transparent', 'transparent', '#CF7BFA'],
+        ['#E9C2FD', '#E1ABFC', '#DEA3FC', '#D282FA', 'transparent'],
+        ['#E6BBFD', '#E3B3FC', '#DA9AFB', '#D792FB', 'transparent']
+      ], 'triangle-s', 3.5, .835, 3.95, .485)
+      
+    </script>
+  </body>
+</html>
