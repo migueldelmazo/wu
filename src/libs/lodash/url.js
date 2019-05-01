@@ -21,10 +21,24 @@ const listenPushStateEvent = () => {
 }
 
 const getEventHref = (ev) => {
-  const anchor = _.find(ev.path, (element) => {
+  const anchor = _.find(getEventNodeParents(ev), (element) => {
     return element.tagName === 'A' && _.isString(element.href)
   })
   return (anchor && anchor.href) || ''
+}
+
+const getEventNodeParents = (ev) => {
+  if (ev.composedPath) {
+    return ev.composedPath()
+  } else {
+    let node = ev.target
+    const nodes = []
+    do {
+      nodes.push(node)
+      node = node.parentNode
+    } while (node.parentNode !== null)
+    return nodes
+  }
 }
 
 // callback
