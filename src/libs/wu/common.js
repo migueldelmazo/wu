@@ -25,5 +25,3 @@ const setInModel = (definition, value) => {
 }
 
 export { wu, runFn, setInModel }
-
-window.wu = wu

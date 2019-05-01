@@ -88,5 +88,3 @@ const parseDefinition = (definition, props) => {
 }
 
 export { checkDefinitionType, getDefinition, getDefinitions, setDefinition }
-
-window.wu = wu

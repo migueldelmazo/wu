@@ -52,6 +52,6 @@ wu.start = () => {
 
 export default wu
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' && window) {
   window.wu = wu
 }
