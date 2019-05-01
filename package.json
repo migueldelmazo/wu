@@ -4,7 +4,7 @@
   "description": "Reactive, functional and declarative framework for webapps",
   "main": "build/index.js",
   "scripts": {
-    "postinstall": "./node_modules/.bin/babel src --out-dir build",
+    "postinstall": "babel src --out-dir build",
     "format:js": "./node_modules/.bin/esformatter -i --config .formatrc 'src/**/*.js'"
   },
   "repository": {
@@ -25,12 +25,12 @@
   },
   "homepage": "https://github.com/migueldelmazo/wu#readme",
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
     "esformatter": "^0.10.0"
   },
   "dependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
     "lodash": "^4.17.11"
   }
 }
