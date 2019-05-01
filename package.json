@@ -1,30 +1,36 @@
 {
   "name": "wu",
   "version": "0.0.1",
-  "description": "Web application",
-  "main": "index.js",
+  "description": "Reactive, functional and declarative framework for webapps",
+  "main": "build/index.js",
   "scripts": {
-    "format:js": "./node_modules/.bin/esformatter -i --config .formatrc 'src/**/*.js'",
-    "start": "HTTPS=true react-scripts start",
-    "webapp-build": "react-scripts build",
-    "test": "test"
+    "build": "./node_modules/.bin/babel src --out-dir build",
+    "format:js": "./node_modules/.bin/esformatter -i --config .formatrc 'src/**/*.js'"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/migueldelmazo/wu.git"
+  },
+  "keywords": [
+    "Wu",
+    "Framework",
+    "Reactive",
+    "Functional programming",
+    "Declarative programming"
+  ],
   "author": "info@migueldelmazo.com",
-  "license": "ISC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/migueldelmazo/wu/issues"
+  },
+  "homepage": "https://github.com/migueldelmazo/wu#readme",
   "devDependencies": {
-    "esformatter": "^0.10.0",
-    "esformatter-jsx": "^8.0.1",
-    "react-scripts": "^2.1.8"
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "esformatter": "^0.10.0"
   },
   "dependencies": {
-    "lodash": "^4.17.11",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+    "lodash": "^4.17.11"
+  }
 }
