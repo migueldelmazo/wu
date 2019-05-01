@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import '../lodash'
+import 'lodash-utils'
 
 const common = 'border-radius: 3px; padding: 2px 0px 2px 6px;'
 

@@ -1,6 +1,0 @@
-import './console'
-import './iterators'
-import './parser'
-import './url'
-import './utils'
-import './validator'

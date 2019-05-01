@@ -24,13 +24,14 @@
     "url": "https://github.com/migueldelmazo/wu/issues"
   },
   "homepage": "https://github.com/migueldelmazo/wu#readme",
-  "devDependencies": {
-    "esformatter": "^0.10.0",
-    "lodash": "^4.17.11"
-  },
   "dependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
-    "@babel/preset-env": "^7.4.4"
+    "@babel/preset-env": "^7.4.4",
+    "lodash-utils": "git+https://github.com/migueldelmazo/lodash-utils.git"
+  },
+  "devDependencies": {
+    "esformatter": "^0.10.0",
+    "lodash": "^4.17.11"
   }
 }
