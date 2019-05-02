@@ -18,7 +18,7 @@
     "Functional programming",
     "Declarative programming"
   ],
-  "author": "info@migueldelmazo.com",
+  "author": "Miguel del Mazo",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/migueldelmazo/wu/issues"
@@ -27,8 +27,7 @@
   "dependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "lodash-utils": "git+https://github.com/migueldelmazo/lodash-utils.git"
+    "@babel/preset-env": "^7.4.4"
   },
   "devDependencies": {
     "esformatter": "^0.10.0",
