@@ -1,8 +1,8 @@
 # Wu framework
-![Pattern](./resources/wu-logotype-02.png)
+![Pattern](./resources/wu-logotype-03.png)
 
 Wu is a framework for building web applications:
-* **Reactive data model:** the reactive data model is the core of Wu. **You can observe any path of the data model** and when someone changes the value of your path **you will be warned to react** as you want. No element of Wu is related to each other. **All elements are related through the reactive data model.**
+* **Reactive data model:** the reactive data model is the core of Wu. **You can watch any path of the data model** and when someone changes the value of your path **you will be warned to react** as you want. No element of Wu is related to each other. **All elements are related through the reactive data model.**
 * **Declarative:** each of the 6 items ([API](#api), [ensurer](#ensurer), [watcher](#watcher), [router](#router), [getter](#getter) and [setter](#setter)) are defined with a simple declarative interface.
 * **Functional programming:** all items (except [watcher](#watcher)) use functional programming. From Wu we recommend that all functions that you write be pure.
 * **Model-oriented:** your responsibility as a developer is to ensure that **the data model is consistent**. If you meet this condition the development with Wu is easy and fast.

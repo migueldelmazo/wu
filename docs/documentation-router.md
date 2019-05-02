@@ -9,7 +9,7 @@ The router updates the data model indicated by the path [`update`](./documentati
 }
 ```
 Also, in order for you to be able to get the URL data and watch the changes, when the browser URL changes,
-the path of the data model `app.route` is updated with the following information:
+the path of the data model `app.route.location` is updated with the following information:
 
 ```javascript
 // when browser URL is https://localhost:3000/path?one=1#two 'app.route' is:
@@ -26,6 +26,7 @@ the path of the data model `app.route` is updated with the following information
   url: 'https://localhost:3000/path?one=1#two'
 }
 ```
+Also `app.route.notFound = true` if none of the router created in Wu match the current URL.
 
 ### Data flow:
 Browser URL &#10148; Reactive data model.

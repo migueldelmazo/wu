@@ -24,10 +24,11 @@ wu.create('getter', 'userGreeting', { // name of the getter item
     else return 'Hola ' + name
   }
 })
+
 // file userGreeting.template.js
 render () {
   return (
-    <h1>{wu.getter('userGreeting')}</h1>
+    <h1>{ wu.getter('userGreeting') }</h1>
   )
 }
 
@@ -46,12 +47,32 @@ wu.create('getter', 'userGreeting', { // name of the getter item
     else return 'Hola ' + name
   }
 })
+
 // file userGreeting.template.js
 render () {
   return (
-    <h1>{wu.getter('userGreeting', 'en')}</h1>
+    <h1>{ wu.getter('userGreeting', 'en') }</h1>
   )
 }
 
 // when 'user.name' is 'Anna' and 'user.lang' is 'en' the result of render is '<h1>Hello Anna</h1>'
+```
+### Example: without 'run' function
+```javascript
+// file user.js
+wu.create('getter', 'userName', { // name of the getter item
+  // if 'run' function is not specified, the default function is (arg) => arg
+  // it means, the function returns the first argument that receives
+  // this getter returns the value of 'user.name' in data model
+  args: 'user.name'
+})
+
+// file user.template.js
+render () {
+  return (
+    <h1>Hello { wu.getter('userName') }</h1>
+  )
+}
+
+// when 'user.name' is 'Anna' the result of render is '<h1>Hello Anna</h1>'
 ```

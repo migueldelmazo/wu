@@ -26,6 +26,7 @@ wu.create('setter', 'userSendLoginData', { // name of the setter item
   // path of the data model where to save the result of 'run'
   update: 'user.login.data'
 })
+
 // file userLogin.template.js
 sendLoginData () {
   wu.setter('userSendLoginData', 'email@email.com', '12345678')
@@ -49,9 +50,29 @@ wu.create('setter', 'userSendLoginData', { // name of the setter item
   // path of the data model where to save the result of 'run'
   update: 'user.login.data'
 })
+
 // file userLogin.template.js
 sendLoginData () {
   wu.setter('userSendLoginData', '12345678')
+}
+
+// when 'sendLoginData' is executed 'user.login.data' will have { email: 'email@email.com', password: '12345678' }
+```
+### Example: without 'run'  function
+```javascript
+// file user.js
+wu.create('setter', 'userSendLoginData', { // name of the setter item
+  // if 'run' function is not specified, the default function is (arg) => arg
+  // it means, the function returns the first argument that receives
+  update: 'user.login.data'
+})
+
+// file userLogin.template.js
+sendLoginData () {
+  wu.setter('userSendLoginData', {
+    email: 'email@email.com',
+    password: '12345678'
+  })
 }
 
 // when 'sendLoginData' is executed 'user.login.data' will have { email: 'email@email.com', password: '12345678' }

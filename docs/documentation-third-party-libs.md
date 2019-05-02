@@ -2,7 +2,7 @@
 
 It is very easy to work with third-party libraries using [getters](./documentation-getter.md), [setters](./documentation-setter.md) and [watchers](./documentation-watcher.md).
 
-#### [React JS](https://github.com/migueldelmazo/wu-reactjs)
+## [React JS](https://github.com/migueldelmazo/wu-reactjs)
 We have developed a module in **React JS that integrates with Wu**, and that allows:
 
 **Render a view automatically** when a property of the data model changes, through `onChange` method.

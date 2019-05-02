@@ -75,14 +75,14 @@ Start watching some paths of the data model and run the functions when the value
 ```javascript
 wu.model.watch(
   'user.id',
+  () => {
+    const userId = wu.model.get('user.id')
+    window.localStorage('userId', userId)
+  },
   {
     'user.name': [_.negate(_.isEmpty), _.isString],
     'user.age': _.isNumber,
     'user.status': (status) => status === 'ready'
-  },
-  () => {
-    const userId = wu.model.get('user.id')
-    window.localStorage('userId', userId)
   }
 )
 ```

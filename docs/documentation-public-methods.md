@@ -9,8 +9,8 @@
 This method allows you to create items of Wu to be used by other items of Wu or by third-party libraries.
 
 **Arguments:**
-* `type (string) [required]:` Type of item It can be `api`, `ensurer`, `watcher`, `router`, `getter` and `setter`.
-* `name (string) [required]:` Name of the item. Used to be used by other items.
+* `type (string) [required]:` Type of item. It can be `api`, `ensurer`, `watcher`, `router`, `getter` and `setter`.
+* `name (string) [required]:` Name of the item. Used to be used by other items, for debugging and more.
 * `definition (object) [required]:` Declarative definition of the item. The documentation of each type of element is defined on its own page:
 [API](./documentation-api.md), [ensurer](./documentation-ensurer.md), [watcher](./documentation-watcher.md), [router](./documentation-router.md), [getter](./documentation-getter.md) and [setter](./documentation-setter.md).
 
@@ -43,7 +43,7 @@ wu.start()
 ___
 
 ### `wu.getter()`
-Allows to execute `getters` previously defined with `wu.create(...)`
+Allows to execute `getters` previously defined with `wu.create(...)`.
 It is recommended to visit the [getter](./documentation-getter.md) documentation.
 
 **Example of use:**
@@ -53,7 +53,7 @@ wu.getter('shopGetOrders', { status: 'sent' })
 ___
 
 ### `wu.setter()`
-Allows to execute `setters` previously defined with `wu.create(...)`
+Allows to execute `setters` previously defined with `wu.create(...)`.
 It is recommended to visit the [setter](./documentation-setter.md) documentation.
 
 **Example of use:**
