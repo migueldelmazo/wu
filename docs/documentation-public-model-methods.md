@@ -1,6 +1,14 @@
 # Wu framework: public model methods
 
-ToDo: Explain how the model works
+The model of Wu is **simply a plain object of Javascript** where you can [set](#wumodelset) and [get](#wumodelget) the properties with the values you want.
+
+It is a reactive model, **you can watch one or several properties** of the model. When someone changes one of those properties **you will be notified**.
+
+It is a **preventive model**. If you set a property with the same value several times, you will only be notified the first time.
+
+With the [validators](#wumodelwatch) of the model you can decide **when to be notified of a change**.
+
+## Public model methods
 
 * [`wu.model.set()`](#wumodelset)
 * [`wu.model.get()`](#wumodelget)

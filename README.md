@@ -144,6 +144,7 @@ wu.create('api', 'userProfile', { // name of the api item
 ## Documentation
 
 You can find Wu documentation in following pages:
+* [How does it work?](./docs/documentation-how-does-it-work.md)
 * Wu items:
   * [API](./docs/documentation-api.md)
   * [ensurer](./docs/documentation-ensurer.md)
