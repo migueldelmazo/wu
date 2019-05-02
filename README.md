@@ -141,13 +141,6 @@ wu.create('api', 'userProfile', { // name of the api item
 })
 ```
 
-## Setup and start
-
-```
-npm install
-npm start
-```
-
 ## Documentation
 
 You can find Wu documentation in following pages:
@@ -177,34 +170,13 @@ You can find Wu documentation in following pages:
   * [`update`](./docs/documentation-properties.md#update)
   * [`urlPattern`](./docs/documentation-properties.md#urlpattern)
 * [Wu console functionality](./docs/documentation-console.md)
+* [Third-party libraries](./docs/documentation-third-party-libs.md)
+  * [Wu React JS](https://github.com/migueldelmazo/wu-reactjs)
 
 ## Third-party libraries
 
 It is very easy to work with third-party libraries using [getters](./docs/documentation-getter.md), [setters](./docs/documentation-setter.md) and [watchers](./docs/documentation-watcher.md).
-
-### ReactJS
-
-Wu allows you to use [React JS classes](https://reactjs.org) that are already integrated with the functionality of Wu.
-
-```javascript
-import React from 'react'
-import WuComponent from 'wu/react-component'
-
-export default class MyView extends WuComponent {
-  onChange () {
-    // path of the data model that we are watching
-    // when 'user.name' or 'user.lang' change in the data model this view will be rendered automatically
-    return ['user.name', 'user.lang']
-  }
-  render () {
-    return (
-      <div>
-        { this.get('getGreeting') }
-      </div>
-    )
-  }
-}
-```
+Visit the [documentation](./docs/documentation-third-party-libs.md) to learn about the modules developed.
 
 ## Dependencies
 
