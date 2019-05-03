@@ -50,6 +50,10 @@ wu.start = () => {
   _.consoleGroupEnd()
 }
 
+wu.reset = () => {
+  model.start()
+}
+
 export default wu
 
 if (process.env.NODE_ENV === 'development' && window) {
