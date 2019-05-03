@@ -14,7 +14,7 @@ const updateModel = () => {
 const routerExists = () => {
   const location = _.getWindowLocationData()
   return _.some(getDefinitions('router'), (definition) => {
-    return _.matchRouteParams(location.pathName, definition.urlPattern)
+    return _.matchRouteParams(location.pathname, definition.urlPattern)
   })
 }
 
@@ -24,8 +24,8 @@ const run = () => {
   const router = wu.model.get('app.router.location')
   _.each(getDefinitions('router'), (definition, name) => {
     const result = {
-      isActive: _.matchRouteParams(router.pathName, definition.urlPattern),
-      params: _.getRouteParams(router.pathName, definition.urlPattern)
+      isActive: _.matchRouteParams(router.pathname, definition.urlPattern),
+      params: _.getRouteParams(router.pathname, definition.urlPattern)
     }
     _.consoleGroup('router', 'Router: set ' + name, 'Result:', result)
     setInModel(definition, result)
