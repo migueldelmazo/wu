@@ -60,7 +60,7 @@ const parseOptions = (options) => {
   }
 }
 
-const parseWatcher = (paths, validators, fns, options) => {
+const parseWatcher = (paths, fns, validators, options) => {
   return {
     paths: parsePaths(paths),
     validators: parseValidators(validators),
@@ -180,7 +180,7 @@ export default {
       _.consoleError('Invalid validators in wu.model.watch(' + paths + ', ' + fns + ', ' + validators + '). Validators should be an object like:\n{\n\t\'path.of.model\': validatorFunction,\n\t\'other.path.of.model\': [_.isNotEmpty, _.isString]\n}')
     } else {
       const key = getWatcherKey()
-      wu._private.model.watchers[key] = parseWatcher(paths, validators, fns, _options)
+      wu._private.model.watchers[key] = parseWatcher(paths, fns, validators, _options)
       return key
     }
   },
