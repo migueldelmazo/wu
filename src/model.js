@@ -3,10 +3,13 @@ import { wu } from './common'
 
 // wu private items
 
-wu._private.model = {
-  data: {},
-  watchers: {}
+const start = () => {
+  wu._private.model = {
+    data: {},
+    watchers: {}
+  }
 }
+start()
 
 // watchers validators
 
@@ -168,6 +171,8 @@ const set = (path, newValue, options = {}) => {
 // wu public methods
 
 export default {
+
+  start,
 
   // watchers
 
