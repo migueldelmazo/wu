@@ -5,7 +5,8 @@
   "main": "build/index.js",
   "scripts": {
     "postinstall": "babel src --out-dir build",
-    "format:js": "./node_modules/.bin/esformatter -i --config .formatrc 'src/**/*.js'"
+    "format:js": "esformatter -i --config .formatrc 'src/**/*.js'",
+    "test": "react-scripts test --coverage"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,12 @@
   },
   "devDependencies": {
     "esformatter": "^0.10.0",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "react-scripts": "^3.0.0"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/*.js"
+    ]
   }
 }

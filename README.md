@@ -179,6 +179,15 @@ You can find Wu documentation in following pages:
 It is very easy to work with third-party libraries using [getters](./docs/documentation-getter.md), [setters](./docs/documentation-setter.md) and [watchers](./docs/documentation-watcher.md).
 Visit the [documentation](./docs/documentation-third-party-libs.md) to learn about the modules developed.
 
+## Tests
+
+To ejecute the tests (with [Jest](https://jestjs.io/)) run:
+
+```
+$ npm install
+$ npm test
+```
+
 ## Examples
 
 Here you can see an example of [ToDo app](https://github.com/migueldelmazo/wu-example-todos).
