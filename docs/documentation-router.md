@@ -28,6 +28,10 @@ the path of the data model `app.route.location` is updated with the following in
 ```
 Also `app.route.notFound = true` if none of the router created in Wu match the current URL.
 
+### Important:
+
+**All created routers are ensured** when [`wu.start()`](./documentation-public-methods.md#wustart) is executed.
+
 ### Data flow:
 Browser URL &#10148; Reactive data model.
 ![Pattern](./wu-framework.svg)
