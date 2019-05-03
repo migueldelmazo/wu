@@ -137,13 +137,10 @@ const triggerPathsMatch = (changedPaths, watcherPaths) => {
 }
 
 const triggerValidatorMatch = (validators) => {
-  if (validators) {
-    return _.every(validators, (fns, path) => {
-      const value = get(path)
-      return _.every(fns, (fn) => fn(value))
-    })
-  }
-  return true
+  return _.every(validators, (fns, path) => {
+    const value = get(path)
+    return _.every(fns, (fn) => fn(value))
+  })
 }
 
 const triggerPathMatch = (changedPath, watcherPath) => {
