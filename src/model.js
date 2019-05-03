@@ -161,10 +161,7 @@ const set = (path, newValue, options = {}) => {
   const currentValue = _.get(wu._private.model.data, path)
   if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
     _.set(wu._private.model.data, path, _.cloneDeep(newValue))
-    if (options.silent !== true) {
-      _.consoleLog('model', 'Model: set ' + typeof newValue, path, '=', newValue)
-      triggerDebounced(path, options)
-    }
+    triggerDebounced(path, options)
   }
 }
 
