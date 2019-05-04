@@ -67,6 +67,7 @@ ___
 * **Optional** in [API](./documentation-api.md), [ensurer](./documentation-ensurer.md), [watcher](./documentation-watcher.md), [getter](./documentation-getter.md) and [setter](./documentation-setter.md).
 * **Order of arguments:** These arguments are the first ones that are passed to the function [`run`](#run). In the case of [getters](./documentation-getter.md) and [setters](./documentation-setter.md), the arguments passed from third-party libraries are passed to the function at the end.
 * In case the arguments are **arrays, strings or objects**, the values of them are parsed **by replacing the strings with values of the data model** (except if the strings start with the character `#`).
+* If you want the **first argument of 'run' to be an array**, you must specify it explicitly: `args: ['data.myArray']` or `args: [['data.myArray'], 'data.otherProp']`
 
 **Examples of use:**
 ```javascript

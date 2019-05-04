@@ -20,7 +20,8 @@ const add = (name) => {
 }
 
 const getDefinitionContext = (definition) => {
-  return _.has(definition, 'options.context') ? runFn(definition.options.context) : [undefined]
+  const context = _.has(definition, 'options.context') ? runFn(definition.options.context) : undefined
+  return _.isArray(context) || _.isPlainObject(context) ? context : [context]
 }
 
 const parseRequest = (name, definition, context) => {
@@ -36,7 +37,7 @@ const parseRequest = (name, definition, context) => {
       cacheable: _.get(definition, 'options.cacheable', true),
       flags: _.get(definition, 'options.flags', {})
     },
-    handlers: _.get(definition, 'handlers', {}),
+    onResponse: _.get(definition, 'onResponse', {}),
     request: {
       body,
       headers,
@@ -73,8 +74,10 @@ const handleRequest = (request) => {
   flags.setRequestFlags(request)
   if (cache.exists(request)) {
     cache.import(request)
+    cache.setFromCache(request, true)
     handleResponse(request)
   } else {
+    cache.setFromCache(request, false)
     fetch(getFetchPath(request), getFetchOptions(request))
       .then((response) => setRawResponse(request, response))
       .then(() => handleResponse(request))
@@ -107,7 +110,7 @@ const setRawResponse = (request, response) => {
           body: body,
           error: false,
           errorMessage: '',
-          headers: _.clone(response.headers),
+          headers: _.clone(response.headers || {}),
           status: response.status
         }
       }
@@ -118,18 +121,16 @@ const setRawResponse = (request, response) => {
           body: {},
           error: true,
           errorMessage: err.message,
-          headers: {},
-          status: 500
+          headers: _.clone(response.headers || {}),
+          status: response.status || 500
         }
       }
     })
 }
 
 const handleResponse = (request) => {
-  handlers.setHandler(request)
   _.consoleGroup('api', 'API: response ' + request.name + ' with status ' + request.response.raw.status, 'Path:', request.request.path, 'Request:', request)
-  handlers.runHandler(request, request.response.handler)
-  handlers.runHandler(request, 'onComplete')
+  handlers.runHandlers(request)
   flags.setResponseFlags(request)
   cache.set(request)
   queue.close(request)
@@ -140,8 +141,8 @@ export default {
 
   setDefinition: (name, definition) => {
     setDefinition('api', name, definition, {
-      handlers: true,
       onChange: true,
+      onResponse: true,
       options: false,
       request: true,
       when: false

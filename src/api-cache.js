@@ -30,7 +30,10 @@ export default {
 
   import: (request) => {
     request.response.raw = _.get(wu._private.api.cache, getCacheKey(request))
-    request.options.fromCache = true
+  },
+
+  setFromCache: (request, status) => {
+    request.options.fromCache = status
   },
 
   set: (request) => {
