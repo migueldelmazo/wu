@@ -1,4 +1,17 @@
 # Wu framework: API documentation
+
+* [Data flow](#data-flow)
+* [Definition properties](#api-definition-properties)
+* [Request property](#request-property)
+* [onResponse property](#onresponse-property)
+* Options
+  * [options.cacheable](#optionscacheable)
+  * [options.flags](#optionsflags)
+  * [options.context](#optionscontext)
+  * [options.getHandler](#optionsgethandler)
+* [navigator.online](#navigatoronline)
+* [Queue](#queue)
+
 **API** allows you to watch changes in the data model and send Ajax requests to your server. When the server responses, **API** helps you manage it and save it in the data model.
 ![Pattern](./wu-framework.svg)
 
@@ -7,22 +20,22 @@ Reactive data model &#10148; API (pure functions) &#10148; Server &#10148; API (
 
 The flow that Wu performs with each API item is:
 1. **You create an API item** that watchs a path in the data model with
-  [`onChange`](./documentation-properties.md#onchange) and [`when`](./documentation-properties.md#when) properties.
+[`onChange`](./documentation-properties.md#onchange) and [`when`](./documentation-properties.md#when) properties.
 2. **When the path changes** in the data model, Wu executes the API item:
-   1. **Get all your [`request`](#request-property) data:** `method`, `path`, `query`, `body`, `headers` and [`context`](#optionscontext).
-   2. **Add the API item to a call [`queue`](#queue).**
-   3. When the call is ready to be sent:
-     1. **Start the [`flags`](#optionsflags).**
-     2. Check if the call **can be returned from [`cache`](#optionscacheable)** or
-     3. **Send the request to the server** and wait for the response.
+    1. **Get all your [`request`](#request-property) data:** `method`, `path`, `query`, `body`, `headers` and [`context`](#optionscontext).
+    2. **Add the API item to a call [`queue`](#queue).**
+    3. When the call is ready to be sent:
+      1. **Start the [`flags`](#optionsflags).**
+      2. Check if the call **can be returned from [`cache`](#optionscacheable)** or
+      3. **Send the request to the server** and wait for the response.
 3. When the server response arrives:
-   1. Run the [`onResponse`](#onresponse-property) handlers:
-     1. Run the `onResponse.init` handler.
-     2. Run the custom handler: `onResponse.status200`, `onResponse.status404`, `onResponse.status500`...
-     3. Run the handler `onResponse.success` or `onResponse.error` (depending on the answer).
-     4. Run the `onResponse.complete` handler.
-   2. **Finish the [`flags`](#optionsflags)**.
-   3. **Add the call to the [`cache`](#optionscacheable)** (if applicable).
+    1. Run the [`onResponse`](#onresponse-property) handlers:
+      1. Run the `onResponse.init` handler.
+      2. Run the custom handler: `onResponse.status200`, `onResponse.status404`, `onResponse.status500`...
+      3. Run the handler `onResponse.success` or `onResponse.error` (depending on the answer).
+      4. Run the `onResponse.complete` handler.
+    2. **Finish the [`flags`](#optionsflags)**.
+    3. **Add the call to the [`cache`](#optionscacheable)** (if applicable).
 
 ### API definition properties:
 | Properties                                           | Required |
