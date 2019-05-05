@@ -126,17 +126,17 @@ wu.create('api', 'userProfile', { // name of the api item
     // request URL or path
     path: 'https://server.com/api/user/profile',
   },
-  handlers: {
+  onResponse: {
     // if response http code is 200
-    onCode200: [
-      {
-        // save 'response.body' in 'user.profile' data model path
-        run: (response) => {
-          return response.body
-        },
-        update: 'user.profile'
-      }
-    ]
+    success: {
+      // save 'response.body' in 'user.profile' data model path
+      run: (response) => response.body,
+      update: 'user.profile'
+    },
+    error: {
+      run: (response) => response.errorMessage,
+      update: 'user.profile.errorMessage'
+    }
   }
 })
 ```
