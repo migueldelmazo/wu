@@ -4,7 +4,7 @@
 * [Definition properties](#api-definition-properties)
 * [Request property](#request-property)
 * [onResponse property](#onresponse-property)
-* Options
+* [Options](#options-property)
   * [options.cacheable](#optionscacheable)
   * [options.flags](#optionsflags)
   * [options.context](#optionscontext)
