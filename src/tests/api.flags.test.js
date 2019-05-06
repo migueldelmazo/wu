@@ -15,14 +15,16 @@ describe('Check wu.create("api") method', () => {
         complete: {
           run: (response, request) => {
             expect(wu.model.get('sending')).toBe(true)
+            expect(wu.model.get('success')).toBe(false)
             expect(wu.model.get('error')).toBe(false)
-            expect(wu.model.get('ok')).toBe(false)
+            expect(wu.model.get('errorMessage')).toBe('')
             expect(wu.model.get('complete')).toBe(false)
             expect(wu.model.get('status')).toBe('')
             setTimeout(() => {
               expect(wu.model.get('sending')).toBe(false)
+              expect(wu.model.get('success')).toBe(true)
               expect(wu.model.get('error')).toBe(false)
-              expect(wu.model.get('ok')).toBe(true)
+              expect(wu.model.get('errorMessage')).toBe('')
               expect(wu.model.get('complete')).toBe(true)
               expect(wu.model.get('status')).toBe(200)
               global.fetch.mockClear()
@@ -34,8 +36,9 @@ describe('Check wu.create("api") method', () => {
       options: {
         flags: {
           sending: 'sending',
+          success: 'success',
           error: 'error',
-          ok: 'ok',
+          errorMessage: 'errorMessage',
           complete: 'complete',
           status: 'status'
         }
@@ -54,14 +57,16 @@ describe('Check wu.create("api") method', () => {
         complete: {
           run: (response, request) => {
             expect(wu.model.get('sending')).toBe(true)
+            expect(wu.model.get('success')).toBe(false)
             expect(wu.model.get('error')).toBe(false)
-            expect(wu.model.get('ok')).toBe(false)
+            expect(wu.model.get('errorMessage')).toBe('')
             expect(wu.model.get('complete')).toBe(false)
             expect(wu.model.get('status')).toBe('')
             setTimeout(() => {
               expect(wu.model.get('sending')).toBe(false)
+              expect(wu.model.get('success')).toBe(false)
               expect(wu.model.get('error')).toBe(true)
-              expect(wu.model.get('ok')).toBe(false)
+              expect(wu.model.get('errorMessage')).toBe('Unexpected token e in JSON at position 0')
               expect(wu.model.get('complete')).toBe(true)
               expect(wu.model.get('status')).toBe(404)
               global.fetch.mockClear()
@@ -73,8 +78,9 @@ describe('Check wu.create("api") method', () => {
       options: {
         flags: {
           sending: 'sending',
+          success: 'success',
           error: 'error',
-          ok: 'ok',
+          errorMessage: 'errorMessage',
           complete: 'complete',
           status: 'status'
         }

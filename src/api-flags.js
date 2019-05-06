@@ -16,8 +16,9 @@ export default {
     set(request, {
       complete: false,
       error: false,
-      ok: false,
+      errorMessage: '',
       sending: true,
+      success: false,
       status: ''
     })
   },
@@ -26,8 +27,9 @@ export default {
     set(request, {
       complete: true,
       error: request.response.raw.error,
-      ok: !request.response.raw.error,
+      errorMessage: request.response.raw.errorMessage,
       sending: false,
+      success: !request.response.raw.error,
       status: request.response.raw.status
     })
   }
