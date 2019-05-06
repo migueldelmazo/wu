@@ -24,7 +24,7 @@ describe('Check wu.create("api") method', () => {
       onResponse: {
         complete: {
           run: (response, request) => {
-            expect(request.request).toStrictEqual({
+            expect(request).toStrictEqual({
               method: 'POST',
               path: 'https://server.com',
               query: {
@@ -77,7 +77,7 @@ describe('Check wu.create("api") method', () => {
       onResponse: {
         complete: {
           run: (response, request) => {
-            expect(request.request).toStrictEqual({
+            expect(request).toStrictEqual({
               method: 'POST',
               path: 'https://server.com',
               query: {

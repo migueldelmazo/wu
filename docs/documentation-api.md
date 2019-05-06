@@ -1,4 +1,5 @@
 # Wu framework: API documentation
+**API** allows you to watch changes in the data model and send Ajax requests to your server. When the server responses, **API** helps you manage it and save it in the data model.
 
 * [Data flow](#data-flow)
 * [Definition properties](#api-definition-properties)
@@ -8,11 +9,10 @@
   * [options.cacheable](#optionscacheable)
   * [options.flags](#optionsflags)
   * [options.context](#optionscontext)
-  * [options.getHandler](#optionsgethandler)
+  * [options.handler](#optionshandler)
 * [navigator.online](#navigatoronline)
 * [Queue](#queue)
 
-**API** allows you to watch changes in the data model and send Ajax requests to your server. When the server responses, **API** helps you manage it and save it in the data model.
 ![Pattern](./wu-framework.svg)
 
 ### Data flow:
@@ -43,7 +43,7 @@ The flow that Wu performs with each API item is:
 | [`onChange`](./documentation-properties.md#onchange) | Required |
 | [`when`](./documentation-properties.md#when)         | Optional |
 | [`request`](#request-property)                       | Required |
-| [`onResponse`](#onresponse-property)                   | Required |
+| [`onResponse`](#onresponse-property)                 | Required |
 | [`options`](#options-property)                       | Optional |
 
 #### Example:
@@ -120,7 +120,7 @@ ___
 [`run`](./documentation-properties.md#run) and [`update`](./documentation-properties.md#update) properties.
 * All [`run`](./documentation-properties.md#run) methods receive `response`, `request` and `options` as the last arguments.
 
-See [`options.getHandler`](#optionsgethandler) to customize the handlers.
+See [`options.handler`](#optionshandler) to customize the handlers.
 
 ```javascript
 wu.create('api', 'sendUserLogin', {
@@ -286,9 +286,11 @@ wu.create('api', 'getUsers', {
 })
 ```
 ___
-#### `options.getHandler:`
-If you want to **change the custom handler** you can do it by adding the object `options.getHandler`. This object can have the properties [`args`](./documentation-properties.md#args)
+#### `options.handler:`
+If you want to **change the custom handler** you can do it by adding the object `options.handler`. This object can have the properties [`args`](./documentation-properties.md#args)
 and [`run`](./documentation-properties.md#run). And also receives as last arguments `response`, `request` and `options`.
+
+`options.handler` must return a string.
 
 ```javascript
 wu.create('api', 'sendUserLogin', {
@@ -307,7 +309,7 @@ wu.create('api', 'sendUserLogin', {
     }
   },
   options: {
-    getHandler: {
+    handler: {
       run: (response, request, options) => {
         return response.status === 200 ? 'ok' : 'ko'
       }

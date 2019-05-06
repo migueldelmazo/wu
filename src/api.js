@@ -12,8 +12,8 @@ import queue from './api-queue'
 const add = (name) => {
   const definition = getDefinition('api', name)
   const contextItems = getDefinitionContext(definition)
-  _.each(contextItems, (contextItem) => {
-    const request = parseRequest(name, definition, contextItem)
+  _.each(contextItems, (context) => {
+    const request = parseRequest(name, definition, context)
     queue.add(request)
   })
   handleRequests()
@@ -21,7 +21,7 @@ const add = (name) => {
 
 const getDefinitionContext = (definition) => {
   const context = _.has(definition, 'options.context') ? runFn(definition.options.context) : undefined
-  return _.isArray(context) || _.isPlainObject(context) ? context : [context]
+  return _.isArray(context) ? context : [context]
 }
 
 const parseRequest = (name, definition, context) => {
@@ -35,7 +35,8 @@ const parseRequest = (name, definition, context) => {
     options: {
       context,
       cacheable: _.get(definition, 'options.cacheable', true),
-      flags: _.get(definition, 'options.flags', {})
+      flags: _.get(definition, 'options.flags', {}),
+      handler:  _.get(definition, 'options.handler', {})
     },
     onResponse: _.get(definition, 'onResponse', {}),
     request: {
@@ -49,9 +50,16 @@ const parseRequest = (name, definition, context) => {
   }
 }
 
-const getRequestData = (definition, key, defaultValue, context) => {
-  const data = _.get(definition, 'request.' + key)
-  return data ? runFn(data, context) : defaultValue
+const getRequestData = (request, key, defaultValue, context) => {
+  const definition = _.get(request, 'request.' + key)
+  const data = runFn(definition, context)
+  if (data === undefined) {
+    return defaultValue
+  } else if (_.isPlainObject(data) || _.isArray(data)) {
+    return wu.model.populate(data)
+  } else {
+    return data
+  }
 }
 
 // handler requests

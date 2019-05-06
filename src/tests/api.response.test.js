@@ -133,9 +133,6 @@ describe('Check wu.create("api") method', () => {
         path: 'https://server.com'
       },
       onResponse: {
-        getHandler: {
-          run: () => 'myCustomHandler'
-        },
         init: {
           run: () => responses.push('init')
         },
@@ -163,6 +160,76 @@ describe('Check wu.create("api") method', () => {
             }
           }
         ]
+      },
+      options: {
+        handler: {
+          run: () => 'myCustomHandler'
+        }
+      }
+    })
+    wu.start()
+  })
+  
+  test('Check invalid custom handler: should run default handler', (done) => {
+    const responses = []
+    common.mockFetch({
+      onChange: 'app.ready',
+      request: {
+        path: 'https://server.com'
+      },
+      onResponse: {
+        init: {
+          run: () => responses.push('init')
+        },
+        status200: {
+          run: () => responses.push('status200')
+        },
+        myCustomHandler: {
+          run: () => responses.push('myCustomHandler')
+        },
+        success: {
+          run: () => responses.push('success')
+        },
+        complete: [
+          {
+            run: () => responses.push('complete')
+          },
+          {
+            run: () => {
+              expect(responses).toStrictEqual(['init', 'status200', 'success', 'complete'])
+              global.fetch.mockClear()
+              done()
+            }
+          }
+        ]
+      },
+      options: {
+        handler: {
+          // invalid handler
+          run: () => undefined
+        }
+      }
+    })
+    wu.start()
+  })
+
+  test('Check response custom handlers arguments: should receive response, request and options', (done) => {
+    common.mockFetch({
+      onChange: 'app.ready',
+      request: {
+        path: 'https://server.com'
+      },
+      onResponse: {},
+      options: {
+        handler: {
+          run: (response, request, options) => {
+            expect(request.path).toBe('https://server.com')
+            expect(response.status).toBe(200)
+            expect(options.cacheable).toBe(true)
+            global.fetch.mockClear()
+            done()
+          }
+        }
       }
     })
     wu.start()

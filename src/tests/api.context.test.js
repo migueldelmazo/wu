@@ -6,18 +6,22 @@ describe('Check wu.create("api") method', () => {
   beforeEach(wu.reset)
   
   test('Check context: shold send 3 calls because context is [1, 2, 3]', (done) => {
+    const contexts = []
     common.mockFetch({
       onChange: 'app.ready',
       request: {
         path: {
-          run: (context) => 'https://server.com/' + context
+          run: (context) =>{
+            contexts.push(context)
+            return 'https://server.com/' + context
+          }
         }
       },
       onResponse: {
         complete: {
           args: ['result'],
-          run: (result = [], response, request) => {
-            result.push(request.options.context)
+          run: (result = [], response, request, options) => {
+            result.push(options.context)
             return result
           },
           update: 'result'
@@ -37,6 +41,7 @@ describe('Check wu.create("api") method', () => {
       args: ['result'],
       run: (result = []) => {
         if (result.length === 3) {
+          expect(contexts).toStrictEqual([1, 2, 3])
           expect(result).toStrictEqual([1, 2, 3])
           expect(global.fetch).toHaveBeenCalledTimes(3)
           global.fetch.mockClear()

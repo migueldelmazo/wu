@@ -13,8 +13,8 @@ describe('Check wu.create("api") method', () => {
       },
       onResponse: {
         complete: {
-          run: (response, request) => {
-            expect(request.options.cacheable).toBe(true)
+          run: (response, request, options) => {
+            expect(options.cacheable).toBe(true)
             global.fetch.mockClear()
             done()
           }
@@ -32,8 +32,8 @@ describe('Check wu.create("api") method', () => {
       },
       onResponse: {
         complete: {
-          run: (response, request) => {
-            expect(request.options.cacheable).toBe(false)
+          run: (response, request, options) => {
+            expect(options.cacheable).toBe(false)
             global.fetch.mockClear()
             done()
           }
@@ -54,16 +54,16 @@ describe('Check wu.create("api") method', () => {
       },
       onResponse: {
         complete: {
-          run: (response, request) => {
+          run: (response, request, options) => {
             if (wu.model.get('secondRequestSent') !== true) {
               // first request: from server
               wu.model.set('secondRequestSent', true)
               expect(response.body.one).toBe(1)
-              expect(request.options.fromCache).toBe(false)
+              expect(options.fromCache).toBe(false)
             } else {
               // second request: from server too
               expect(response.body.one).toBe(1)
-              expect(request.options.fromCache).toBe(false)
+              expect(options.fromCache).toBe(false)
               expect(global.fetch).toHaveBeenCalledTimes(2)
               global.fetch.mockClear()
               done()
@@ -86,16 +86,16 @@ describe('Check wu.create("api") method', () => {
       },
       onResponse: {
         complete: {
-          run: (response, request) => {
+          run: (response, request, options) => {
             if (wu.model.get('secondRequestSent') !== true) {
               // first request: from server
               wu.model.set('secondRequestSent', true)
               expect(response.body.one).toBe(1)
-              expect(request.options.fromCache).toBe(false)
+              expect(options.fromCache).toBe(false)
             } else {
               // second request: from server too
               expect(response.body.one).toBe(1)
-              expect(request.options.fromCache).toBe(false)
+              expect(options.fromCache).toBe(false)
               expect(global.fetch).toHaveBeenCalledTimes(2)
               global.fetch.mockClear()
               done()
@@ -116,16 +116,16 @@ describe('Check wu.create("api") method', () => {
       },
       onResponse: {
         complete: {
-          run: (response, request) => {
+          run: (response, request, options) => {
             if (wu.model.get('secondRequestSent') !== true) {
               // first request: from server
               wu.model.set('secondRequestSent', true)
               expect(response.body.one).toBe(1)
-              expect(request.options.fromCache).toBe(false)
+              expect(options.fromCache).toBe(false)
             } else {
               // second request: from server too
               expect(response.body.one).toBe(1)
-              expect(request.options.fromCache).toBe(false)
+              expect(options.fromCache).toBe(false)
               expect(global.fetch).toHaveBeenCalledTimes(2)
               global.fetch.mockClear()
               done()
@@ -145,14 +145,14 @@ describe('Check wu.create("api") method', () => {
       },
       onResponse: {
         complete: {
-          run: (response, request) => {
+          run: (response, request, options) => {
             if (wu.model.get('secondRequestSent') !== true) {
               // first request: from server
               wu.model.set('secondRequestSent', true)
-              expect(request.options.fromCache).toBe(false)
+              expect(options.fromCache).toBe(false)
             } else {
               // second request: from server too
-              expect(request.options.fromCache).toBe(false)
+              expect(options.fromCache).toBe(false)
               expect(global.fetch).toHaveBeenCalledTimes(2)
               global.fetch.mockClear()
               done()
@@ -172,16 +172,16 @@ describe('Check wu.create("api") method', () => {
       },
       onResponse: {
         complete: {
-          run: (response, request) => {
+          run: (response, request, options) => {
             if (wu.model.get('secondRequestSent') !== true) {
               // first request: from server
               wu.model.set('secondRequestSent', true)
               expect(response.body.one).toBe(1)
-              expect(request.options.fromCache).toBe(false)
+              expect(options.fromCache).toBe(false)
             } else {
               // second request: from cache
               expect(response.body.one).toBe(1)
-              expect(request.options.fromCache).toBe(true)
+              expect(options.fromCache).toBe(true)
               expect(global.fetch).toHaveBeenCalledTimes(1)
               global.fetch.mockClear()
               done()
