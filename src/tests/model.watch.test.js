@@ -183,4 +183,21 @@ describe('Check wu.model.watch() method', () => {
     }, 10)
   })
 
+  test('Check invalid model.watch arguments: should log an error', () => {
+    _.logError = (...args) => {
+    }
+    const spy = jest.spyOn(_, 'logError')
+    wu.model.watch()
+    wu.model.watch('')
+    wu.model.watch('data')
+    wu.model.watch('data', null)
+    wu.model.watch('data', () => {
+    }, null)
+    wu.model.watch('data', () => {
+    }, {
+      'data': null
+    })
+    expect(spy).toHaveBeenCalledTimes(6)
+  })
+
 })

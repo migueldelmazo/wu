@@ -65,10 +65,25 @@ describe('Check wu.create("setter") method', () => {
   })
 
   test('Check non existent setter: should log an error', () => {
-    _.logError = (...args) => {}
+    _.logError = (...args) => {
+    }
     const spy = jest.spyOn(_, 'logError')
     wu.setter('non-existent-setter')
     expect(spy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Check invalid setter properties: should log an error', () => {
+    _.logError = (...args) => {
+    }
+    const spy = jest.spyOn(_, 'logError')
+    wu.create('setter', 'setter-name', {})
+    wu.create('setter', 'setter-name', {
+      run: null
+    })
+    wu.create('setter', 'setter-name', {
+      update: null
+    })
+    expect(spy).toHaveBeenCalledTimes(3)
   })
 
 })

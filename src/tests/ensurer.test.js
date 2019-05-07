@@ -5,7 +5,7 @@ describe('Check wu.create("ensure") method', () => {
 
   beforeEach(wu.reset)
 
-  test('Check ensurer: should ensure new path when watcher path changes', (done) => {
+  test('Check ensurer: should ensure new path when ensurer path changes', (done) => {
     const callback = {
       fn: (data) => data + '-changed'
     }
@@ -28,7 +28,7 @@ describe('Check wu.create("ensure") method', () => {
     }, 10)
   })
 
-  test('Check ensurer: should set path when the same watcher path changes', (done) => {
+  test('Check ensurer: should set path when the same ensurer path changes', (done) => {
     const callback = {
       fn: () => 'value-changed'
     }
@@ -83,6 +83,37 @@ describe('Check wu.create("ensure") method', () => {
       expect(spy).toHaveBeenCalledTimes(0)
       done()
     }, 10)
+  })
+
+  test('Check invalid ensurer properties: should log an error', () => {
+    _.logError = (...args) => {
+    }
+    const spy = jest.spyOn(_, 'logError')
+    wu.create('ensurer', 'ensurer-name', {})
+    wu.create('ensurer', 'ensurer-name', {
+      onChange: null
+    })
+    wu.create('ensurer', 'ensurer-name', {
+      onChange: 'data',
+      when: null
+    })
+    wu.create('ensurer', 'ensurer-name', {
+      onChange: 'data',
+      when: {
+        'data': null
+      }
+    })
+    wu.create('ensurer', 'ensurer-name', {
+      onChange: 'data'
+    })
+    wu.create('ensurer', 'ensurer-name', {
+      onChange: 'data',
+      run: null
+    })
+    wu.create('ensurer', 'ensurer-name', {
+      update: null
+    })
+    expect(spy).toHaveBeenCalledTimes(14)
   })
 
 })

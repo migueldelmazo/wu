@@ -71,4 +71,19 @@ describe('Check wu.create("router") method', () => {
     }, 10)
   })
 
+  test('Check invalid router properties: should log an error', () => {
+    _.logError = (...args) => {
+    }
+    const spy = jest.spyOn(_, 'logError')
+    wu.create('router', 'router-name', {})
+    wu.create('router', 'router-name', {
+      urlPattern: null
+    })
+    wu.create('router', 'router-name', {
+      urlPattern: 'url',
+      update: ''
+    })
+    expect(spy).toHaveBeenCalledTimes(2)
+  })
+
 })

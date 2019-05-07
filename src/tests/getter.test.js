@@ -45,10 +45,21 @@ describe('Check wu.create("getter") method', () => {
   })
 
   test('Check non existent getter: should log an error', () => {
-    _.logError = (...args) => {}
+    _.logError = (...args) => {
+    }
     const spy = jest.spyOn(_, 'logError')
     wu.getter('non-existent-getter')
     expect(spy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Check invalid getter properties: should log an error', () => {
+    _.logError = (...args) => {
+    }
+    const spy = jest.spyOn(_, 'logError')
+    wu.create('watcher', 'watcher-name', {
+      run: null
+    })
+    expect(spy).toHaveBeenCalledTimes(2)
   })
 
 })

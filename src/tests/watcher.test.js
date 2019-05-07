@@ -45,4 +45,32 @@ describe('Check wu.create("watcher") method', () => {
     }, 10)
   })
 
+  test('Check watcher onChange property: should log an error', () => {
+    _.logError = (...args) => {
+    }
+    const spy = jest.spyOn(_, 'logError')
+    wu.create('watcher', 'watcher-name', {})
+    wu.create('watcher', 'watcher-name', {
+      onChange: null
+    })
+    wu.create('watcher', 'watcher-name', {
+      onChange: 'data',
+      when: null
+    })
+    wu.create('watcher', 'watcher-name', {
+      onChange: 'data',
+      when: {
+        'data': null
+      }
+    })
+    wu.create('watcher', 'watcher-name', {
+      onChange: 'data'
+    })
+    wu.create('watcher', 'watcher-name', {
+      onChange: 'data',
+      run: null
+    })
+    expect(spy).toHaveBeenCalledTimes(12)
+  })
+
 })

@@ -57,7 +57,7 @@ const isValidDefinitionProp = (type, name, definition, prop, isRequired) => {
   if (value === undefined && isRequired) {
     return showError('Required ' + prop + ' property in', type, name, '{...}')
   } else if (value !== undefined) {
-    if (prop === 'onChange' && !_.isArray(value) && !_.isString(value)) {
+    if (prop === 'onChange' && !_.every(_.parseArray(value), (val) => _.isString(val) && !_.isEmpty(val))) {
       return showError('Invalid "onChange" property in', type, name, '{...}', '"onChange" should be a string or an array of strings.')
     }
     if (prop === 'run' && !_.isFunction(value)) {
@@ -69,7 +69,7 @@ const isValidDefinitionProp = (type, name, definition, prop, isRequired) => {
     if (prop === 'urlPattern' && !_.isString(value)) {
       return showError('Invalid "urlPattern" property in', type, name, '{...}', '"urlPattern" should be a string like "/user" or "/user/:userId".')
     }
-    if (prop === 'when' && !_.isPlainObject(value) && !_.every(value, (fns) => _.every(_.parseArray(fns), _.isFunction))) {
+    if (prop === 'when' && (!_.isPlainObject(value) || !_.every(value, (fns) => _.every(_.parseArray(fns), _.isFunction)))) {
       return showError('Invalid "when" property in', type, name, '{...}',
         '"when" should should be an object like:\n{\n\t\'path.of.model\': validatorFunction,\n\t\'other.path.of.model\': [_.isNotEmpty, _.isString]\n}')
     }
