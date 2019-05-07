@@ -36,7 +36,7 @@ const parseRequest = (name, definition, context) => {
       context,
       cacheable: _.get(definition, 'options.cacheable', true),
       flags: _.get(definition, 'options.flags', {}),
-      handler:  _.get(definition, 'options.handler', {})
+      handler: _.get(definition, 'options.handler', {})
     },
     onResponse: _.get(definition, 'onResponse', {}),
     request: {
@@ -77,7 +77,7 @@ const handleRequests = () => {
 }
 
 const handleRequest = (request) => {
-  _.consoleGroup('api', 'API: send ' + request.name, 'Path:', request.request.path, 'Request:', request)
+  _.logStart('api', 'API: send ' + request.name, 'Path:', request.request.path, 'Request:', request)
   queue.start(request)
   flags.setRequestFlags(request)
   if (cache.exists(request)) {
@@ -90,7 +90,7 @@ const handleRequest = (request) => {
       .then((response) => setRawResponse(request, response))
       .then(() => handleResponse(request))
   }
-  _.consoleGroupEnd()
+  _.logEnd()
 }
 
 const getFetchPath = (request) => {
@@ -137,12 +137,12 @@ const setRawResponse = (request, response) => {
 }
 
 const handleResponse = (request) => {
-  _.consoleGroup('api', 'API: response ' + request.name + ' with status ' + request.response.raw.status, 'Path:', request.request.path, 'Request:', request)
+  _.logStart('api', 'API: response ' + request.name + ' with status ' + request.response.raw.status, 'Path:', request.request.path, 'Request:', request)
   handlers.runHandlers(request)
   flags.setResponseFlags(request)
   cache.set(request)
   queue.close(request)
-  _.consoleGroupEnd()
+  _.logEnd()
 }
 
 export default {

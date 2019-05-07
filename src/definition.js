@@ -23,7 +23,7 @@ const setDefinition = (type, name, definition, props) => {
     isValidDefinitionProps(type, name, definition, props)) {
     wu._private.items[type] = wu._private.items[type] || {}
     wu._private.items[type][name] = parseDefinition(definition, props)
-    _.consoleLog(type, _.capitalize(type) + ': create ' + name, 'Definition:', getDefinition(type, name))
+    _.log(type, _.capitalize(type) + ': create ' + name, 'Definition:', getDefinition(type, name))
   }
 }
 
@@ -79,7 +79,7 @@ const isValidDefinitionProp = (type, name, definition, prop, isRequired) => {
 }
 
 const showError = (prefix, type, name, definition, sufix = '') => {
-  _.consoleError(prefix + ' wu.create(\'' + type + '\', \'' + name + '\', ' + definition + '). ' + sufix)
+  _.logError(prefix + ' wu.create(\'' + type + '\', \'' + name + '\', ' + definition + '). ' + sufix)
   return false
 }
 

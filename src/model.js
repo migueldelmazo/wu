@@ -113,7 +113,7 @@ const triggerByType = (pendingPaths, type) => {
 }
 
 const triggerInWatchers = (changedPaths, type) => {
-  _.consoleGroup('reacting', 'Reacting to model changes', 'Type: ' + type + ', paths:', changedPaths)
+  _.logStart('reacting', 'Reacting to model changes', 'Type: ' + type + ', paths:', changedPaths)
   _.each(wu._private.model.watchers, (watcher) => {
     if (triggerIsValidWatcher(watcher, type) &&
       triggerPathsMatch(changedPaths, watcher.paths) &&
@@ -121,7 +121,7 @@ const triggerInWatchers = (changedPaths, type) => {
       _.each(watcher.fns, (fn) => fn())
     }
   })
-  _.consoleGroupEnd()
+  _.logEnd()
 }
 
 const triggerIsValidWatcher = (watcher, type) => {
@@ -162,7 +162,7 @@ const set = (path, newValue, options = {}) => {
   if (_.isString(path) && !_.isEqual(currentValue, newValue)) {
     _.set(wu._private.model.data, path, _.cloneDeep(newValue))
     triggerDebounced(path, options)
-    _.consoleLog('model', 'Model: set ' + typeof newValue, path, '=', newValue)
+    _.log('model', 'Model: set ' + typeof newValue, path, '=', newValue)
   }
 }
 
@@ -176,11 +176,11 @@ export default {
 
   watch: (paths, fns, validators, _options) => {
     if (!areValidPaths(paths)) {
-      _.consoleError('Invalid paths in wu.model.watch(' + paths + ', ' + fns + ', ' + validators + '). Paths should be a string or an arrays of strings.')
+      _.logError('Invalid paths in wu.model.watch(' + paths + ', ' + fns + ', ' + validators + '). Paths should be a string or an arrays of strings.')
     } else if (!areValidFns(fns)) {
-      _.consoleError('Invalid fns in wu.model.watch(' + paths + ', ' + fns + ', ' + validators + '). Functions should be a function or an arrays of functions.')
+      _.logError('Invalid fns in wu.model.watch(' + paths + ', ' + fns + ', ' + validators + '). Functions should be a function or an arrays of functions.')
     } else if (!areValidValidators(validators)) {
-      _.consoleError('Invalid validators in wu.model.watch(' + paths + ', ' + fns + ', ' + validators + '). Validators should be an object like:\n{\n\t\'path.of.model\': validatorFunction,\n\t\'other.path.of.model\': [_.isNotEmpty, _.isString]\n}')
+      _.logError('Invalid validators in wu.model.watch(' + paths + ', ' + fns + ', ' + validators + '). Validators should be an object like:\n{\n\t\'path.of.model\': validatorFunction,\n\t\'other.path.of.model\': [_.isNotEmpty, _.isString]\n}')
     } else {
       const key = getWatcherKey()
       wu._private.model.watchers[key] = parseWatcher(paths, fns, validators, _options)

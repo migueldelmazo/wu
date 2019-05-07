@@ -18,15 +18,14 @@ export default {
 
   runHandlers: (request) => {
     const handlers = getHandlers(request)
-    const options = getOptions(request)
     _.each(handlers, (handler) => {
       const definitions = _.get(request.onResponse, handler)
       if (definitions) {
-        _.consoleGroup('api', 'API: run handlers.' + handler, definitions)
+        _.logStart('api', 'API: run handlers.' + handler, definitions)
         _.each(_.parseArray(definitions), (definition) => {
           setInModel(definition, runFn(definition, request.response.raw, request.request, getOptions(request)))
         })
-        _.consoleGroupEnd()
+        _.logEnd()
       }
     })
   }

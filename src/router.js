@@ -27,9 +27,9 @@ const run = () => {
       isActive: _.matchRouteParams(router.pathname, definition.urlPattern),
       params: _.getRouteParams(router.pathname, definition.urlPattern)
     }
-    _.consoleGroup('router', 'Router: set ' + name, 'Result:', result)
+    _.logStart('router', 'Router: set ' + name, 'Result:', result)
     setInModel(definition, result)
-    _.consoleGroupEnd()
+    _.logEnd()
   })
 }
 

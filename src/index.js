@@ -43,11 +43,11 @@ wu.setter = setter.setter
 wu.model = model
 
 wu.start = () => {
-  _.consoleGroup('wu', 'Starting Wu')
+  _.logStart('wu', 'Starting Wu')
   api.start()
   router.start()
   wu.model.set('app.ready', true)
-  _.consoleGroupEnd()
+  _.logEnd()
 }
 
 wu.reset = () => {

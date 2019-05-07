@@ -1,5 +1,11 @@
 import _ from 'lodash'
-import 'lodash-utils'
+import 'lodash-utils/pkg/console'
+import 'lodash-utils/pkg/error'
+import 'lodash-utils/pkg/iterators'
+import 'lodash-utils/pkg/log'
+import 'lodash-utils/pkg/parser'
+import 'lodash-utils/pkg/url'
+import 'lodash-utils/pkg/validator'
 
 const common = 'border-radius: 3px; padding: 2px 0px 2px 6px;'
 
@@ -17,3 +23,11 @@ _.consoleConfig({
     wu: 'background: #000; color: white;' + common
   }
 })
+
+_.logConfig({
+  console: {
+    show: process.env.NODE_ENV === 'development'
+  }
+})
+
+_.listenWindowError()

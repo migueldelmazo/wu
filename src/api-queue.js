@@ -25,7 +25,7 @@ export default {
     if (!itemFound) {
       request.state = 'added'
       wu._private.api.queue.push(request)
-      _.consoleLog('api', 'API: added ' + request.name, 'Path:', request.request.path, 'Request:', request)
+      _.log('api', 'API: added ' + request.name, 'Path:', request.request.path, 'Request:', request)
     }
   },
 

@@ -4,9 +4,9 @@ import { getDefinition, setDefinition } from './definition'
 
 const run = (name) => {
   const definition = getDefinition('watcher', name)
-  _.consoleGroup('watcher', 'Watcher: run ' + name)
+  _.logStart('watcher', 'Watcher: run ' + name)
   runFn(definition)
-  _.consoleGroupEnd()
+  _.logEnd()
 }
 
 export default {

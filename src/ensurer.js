@@ -5,9 +5,9 @@ import { getDefinition, setDefinition } from './definition'
 const run = (name) => {
   const definition = getDefinition('ensurer', name)
   const result = runFn(definition)
-  _.consoleGroup('ensurer', 'Ensurer: run ' + name, 'Result:', result)
+  _.logStart('ensurer', 'Ensurer: run ' + name, 'Result:', result)
   setInModel(definition, result)
-  _.consoleGroupEnd()
+  _.logEnd()
 }
 
 export default {

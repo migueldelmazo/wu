@@ -16,11 +16,11 @@ export default {
     const definition = getDefinition('setter', name)
     if (definition) {
       const result = runFn(definition, ...args)
-      _.consoleGroup('setter', 'Setter: run ' + name, 'Result:', result)
+      _.logStart('setter', 'Setter: run ' + name, 'Result:', result)
       setInModel(definition, result)
-      _.consoleGroupEnd()
+      _.logEnd()
     } else {
-      _.consoleError('Invalid wu.setter name: ' + name)
+      _.logError('Invalid wu.setter name: ' + name)
     }
   }
 
