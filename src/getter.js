@@ -17,8 +17,6 @@ export default {
       const result = runFn(definition, ...args)
       _.log('getter', 'Getter: run ' + name, 'Result:', result)
       return result
-    } else {
-      _.logError('Invalid wu.getter name: ' + name)
     }
   }
 

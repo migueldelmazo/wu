@@ -19,8 +19,6 @@ export default {
       _.logStart('setter', 'Setter: run ' + name, 'Result:', result)
       setInModel(definition, result)
       _.logEnd()
-    } else {
-      _.logError('Invalid wu.setter name: ' + name)
     }
   }
 
