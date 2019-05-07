@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import wu from '../index'
 
 describe('Check wu.create("getter") method', () => {
@@ -40,6 +41,13 @@ describe('Check wu.create("getter") method', () => {
     })
     expect(wu.model.get('data')).toBe('value')
     expect(wu.getter('getter-name', 'changed')).toBe('value-changed')
+    expect(spy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Check non existent getter: should log an error', () => {
+    _.logError = (...args) => {}
+    const spy = jest.spyOn(_, 'logError')
+    wu.getter('non-existent-getter')
     expect(spy).toHaveBeenCalledTimes(1)
   })
 

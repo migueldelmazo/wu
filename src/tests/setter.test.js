@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import wu from '../index'
 
 describe('Check wu.create("setter") method', () => {
@@ -60,6 +61,13 @@ describe('Check wu.create("setter") method', () => {
     })
     wu.setter('setter-name', 'changed')
     expect(wu.model.get('data-changed')).toBe('changed')
+    expect(spy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Check non existent setter: should log an error', () => {
+    _.logError = (...args) => {}
+    const spy = jest.spyOn(_, 'logError')
+    wu.setter('non-existent-setter')
     expect(spy).toHaveBeenCalledTimes(1)
   })
 
