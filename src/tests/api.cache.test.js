@@ -4,7 +4,7 @@ import common from './common'
 describe('Check wu.create("api") method', () => {
 
   beforeEach(wu.reset)
-  
+
   test('Check cacheable option: should be true by default', (done) => {
     common.mockFetch({
       onChange: 'app.ready',
@@ -23,7 +23,7 @@ describe('Check wu.create("api") method', () => {
     })
     wu.start()
   })
-  
+
   test('Check cacheable option: should be false', (done) => {
     common.mockFetch({
       onChange: 'app.ready',
@@ -45,7 +45,7 @@ describe('Check wu.create("api") method', () => {
     })
     wu.start()
   })
-  
+
   test('Check cache: second request should response from server because options.cacheable is false', (done) => {
     common.mockFetch({
       onChange: ['app.ready', 'secondRequestSent'],
@@ -77,7 +77,7 @@ describe('Check wu.create("api") method', () => {
     }, '{"one":1}')
     wu.start()
   })
-  
+
   test('Check cache: second request should response from server because response status is 404', (done) => {
     common.mockFetch({
       onChange: ['app.ready', 'secondRequestSent'],
@@ -106,7 +106,7 @@ describe('Check wu.create("api") method', () => {
     }, '{"one":1}', {}, 404)
     wu.start()
   })
-  
+
   test('Check cache: second request should response from server because method is not GET', (done) => {
     common.mockFetch({
       onChange: ['app.ready', 'secondRequestSent'],
@@ -136,7 +136,7 @@ describe('Check wu.create("api") method', () => {
     }, '{"one":1}')
     wu.start()
   })
-  
+
   test('Check cache: second request should response from server because response has an error', (done) => {
     common.mockFetch({
       onChange: ['app.ready', 'secondRequestSent'],
@@ -163,7 +163,7 @@ describe('Check wu.create("api") method', () => {
     }, 'error response')
     wu.start()
   })
-  
+
   test('Check cache: second request should response from cache', (done) => {
     common.mockFetch({
       onChange: ['app.ready', 'secondRequestSent'],
@@ -192,5 +192,5 @@ describe('Check wu.create("api") method', () => {
     }, '{"one":1}')
     wu.start()
   })
-      
+
 })

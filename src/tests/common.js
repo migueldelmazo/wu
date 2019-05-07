@@ -1,7 +1,7 @@
 import wu from '../index'
 
 export default {
-  
+
   mockFetch: (definition, response = '{}', responseHeaders = {}, responseStatus = 200) => {
     const mockFetchPromise = Promise.resolve({
       headers: responseHeaders,
@@ -17,5 +17,5 @@ export default {
     jest.spyOn(global, 'fetch').mockImplementation(() => mockFetchPromise)
     wu.create('api', 'api-name', definition)
   }
-  
+
 }

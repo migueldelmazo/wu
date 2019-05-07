@@ -4,7 +4,7 @@ import common from './common'
 describe('Check wu.create("api") method', () => {
 
   beforeEach(wu.reset)
-  
+
   test('Check flags: should set ok flags', (done) => {
     common.mockFetch({
       onChange: 'app.ready',
@@ -46,7 +46,7 @@ describe('Check wu.create("api") method', () => {
     })
     wu.start()
   })
-  
+
   test('Check flags: should set error flags', (done) => {
     common.mockFetch({
       onChange: 'app.ready',
@@ -88,5 +88,5 @@ describe('Check wu.create("api") method', () => {
     }, 'error response', {}, 404)
     wu.start()
   })
-    
+
 })

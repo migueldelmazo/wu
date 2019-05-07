@@ -4,7 +4,7 @@ import common from './common'
 describe('Check wu.create("api") method', () => {
 
   beforeEach(wu.reset)
-  
+
   test('Check response arguments: should run actions with "response" and "request" arguments', (done) => {
     common.mockFetch({
       onChange: 'app.ready',
@@ -14,20 +14,26 @@ describe('Check wu.create("api") method', () => {
       onResponse: {
         complete: {
           run: (response, request) => {
-            expect(response.body).toStrictEqual({ one: 1 })
+            expect(response.body).toStrictEqual({
+              one: 1
+            })
             expect(response.error).toBe(false)
             expect(response.errorMessage).toBe('')
-            expect(response.headers).toStrictEqual({ two: 2 })
+            expect(response.headers).toStrictEqual({
+              two: 2
+            })
             expect(response.status).toBe(201)
             global.fetch.mockClear()
             done()
           }
         }
       }
-    }, '{"one":1}', { two: 2 }, 201)
+    }, '{"one":1}', {
+      two: 2
+    }, 201)
     wu.start()
   })
-  
+
   test('Check response arguments: should run actions with "response" and "request" arguments (with error)', (done) => {
     common.mockFetch({
       onChange: 'app.ready',
@@ -40,17 +46,21 @@ describe('Check wu.create("api") method', () => {
             expect(response.body).toStrictEqual({})
             expect(response.error).toBe(true)
             expect(response.errorMessage).toBe('Unexpected token s in JSON at position 0')
-            expect(response.headers).toStrictEqual({ two: 2 })
+            expect(response.headers).toStrictEqual({
+              two: 2
+            })
             expect(response.status).toBe(503)
             global.fetch.mockClear()
             done()
           }
         }
       }
-    }, 'server error', { two: 2 }, 503)
+    }, 'server error', {
+      two: 2
+    }, 503)
     wu.start()
   })
-  
+
   test('Check response handlers order: should run success handler', (done) => {
     const responses = []
     common.mockFetch({
@@ -87,7 +97,7 @@ describe('Check wu.create("api") method', () => {
     })
     wu.start()
   })
-  
+
   test('Check response handlers order: should run error handler', (done) => {
     const responses = []
     common.mockFetch({
@@ -124,7 +134,7 @@ describe('Check wu.create("api") method', () => {
     }, 'error response')
     wu.start()
   })
-  
+
   test('Check response handlers order: should run custom handler', (done) => {
     const responses = []
     common.mockFetch({
@@ -169,7 +179,7 @@ describe('Check wu.create("api") method', () => {
     })
     wu.start()
   })
-  
+
   test('Check invalid custom handler: should run default handler', (done) => {
     const responses = []
     common.mockFetch({
@@ -234,7 +244,7 @@ describe('Check wu.create("api") method', () => {
     })
     wu.start()
   })
-  
+
   test('Check response handlers order: should run several actions (with array)', (done) => {
     const responses = []
     common.mockFetch({
@@ -265,7 +275,7 @@ describe('Check wu.create("api") method', () => {
     })
     wu.start()
   })
-  
+
   test('Check response: should concat arguments and response body', (done) => {
     const responses = []
     common.mockFetch({
@@ -291,5 +301,5 @@ describe('Check wu.create("api") method', () => {
     wu.model.set('data', 'from-model')
     wu.start()
   })
-        
+
 })

@@ -4,7 +4,7 @@ import common from './common'
 describe('Check wu.create("api") method', () => {
 
   beforeEach(wu.reset)
-  
+
   test('Check context: although the context has 2 items it must be called only once because the second call is ignored because it is the same as the first', (done) => {
     common.mockFetch({
       onChange: 'app.ready',

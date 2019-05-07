@@ -4,7 +4,7 @@ import common from './common'
 describe('Check wu.create("api") method', () => {
 
   beforeEach(wu.reset)
-  
+
   test('Check implicit request data: should fetch a request', (done) => {
     common.mockFetch({
       onChange: 'app.ready',
@@ -38,7 +38,9 @@ describe('Check wu.create("api") method', () => {
               }
             })
             expect(global.fetch).toHaveBeenCalledWith('https://server.com?one=1', {
-              body: JSON.stringify({ two: 2 }),
+              body: JSON.stringify({
+                two: 2
+              }),
               headers: {
                 three: 3
               },
@@ -53,7 +55,7 @@ describe('Check wu.create("api") method', () => {
     })
     wu.start()
   })
-    
+
   test('Check definition request data: should fetch a request', (done) => {
     common.mockFetch({
       onChange: 'app.ready',
@@ -68,10 +70,14 @@ describe('Check wu.create("api") method', () => {
           args: 'custom.query'
         },
         body: {
-          run: () => ({ two: 2 })
+          run: () => ({
+            two: 2
+          })
         },
         headers: {
-          run: () => ({ three: 3 })
+          run: () => ({
+            three: 3
+          })
         }
       },
       onResponse: {
@@ -91,7 +97,9 @@ describe('Check wu.create("api") method', () => {
               }
             })
             expect(global.fetch).toHaveBeenCalledWith('https://server.com?one=1', {
-              body: JSON.stringify({ two: 2 }),
+              body: JSON.stringify({
+                two: 2
+              }),
               headers: {
                 three: 3
               },
@@ -105,8 +113,10 @@ describe('Check wu.create("api") method', () => {
       }
     })
     wu.model.set('custom.method', 'post')
-    wu.model.set('custom.query', { one: 1 })
+    wu.model.set('custom.query', {
+      one: 1
+    })
     wu.start()
   })
-  
+
 })

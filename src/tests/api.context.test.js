@@ -4,14 +4,14 @@ import common from './common'
 describe('Check wu.create("api") method', () => {
 
   beforeEach(wu.reset)
-  
+
   test('Check context: shold send 3 calls because context is [1, 2, 3]', (done) => {
     const contexts = []
     common.mockFetch({
       onChange: 'app.ready',
       request: {
         path: {
-          run: (context) =>{
+          run: (context) => {
             contexts.push(context)
             return 'https://server.com/' + context
           }
@@ -34,7 +34,7 @@ describe('Check wu.create("api") method', () => {
         }
       }
     })
-    
+
     // watcher to wait until call finish
     wu.create('watcher', 'wait 3 calls', {
       onChange: 'result',
@@ -49,11 +49,11 @@ describe('Check wu.create("api") method', () => {
         }
       }
     })
-    
+
     wu.model.set('items', [1, 2, 3])
     wu.start()
   })
-  
+
   test('Check context: shold send 0 calls because context is []', (done) => {
     common.mockFetch({
       onChange: 'app.ready',
@@ -72,5 +72,5 @@ describe('Check wu.create("api") method', () => {
       done()
     }, 100)
   })
-        
+
 })
