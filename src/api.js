@@ -159,7 +159,9 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('api', name)
-    wu.model.watch(definition.onChange, add.bind(null, name), definition.when)
+    if (definition) {
+      wu.model.watch(definition.onChange, add.bind(null, name), definition.when)
+    }
   },
 
   start: () => {

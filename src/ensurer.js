@@ -24,9 +24,11 @@ export default {
 
   watch: (name) => {
     const definition = getDefinition('ensurer', name)
-    wu.model.watch(definition.onChange, run.bind(null, name), definition.when, {
-      type: 'ensurer'
-    })
+    if (definition) {
+      wu.model.watch(definition.onChange, run.bind(null, name), definition.when, {
+        type: 'ensurer'
+      })
+    }
   }
 
 }
