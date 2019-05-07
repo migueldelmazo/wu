@@ -7,7 +7,7 @@ import 'lodash-utils/pkg/parser'
 import 'lodash-utils/pkg/url'
 import 'lodash-utils/pkg/validator'
 
-const common = 'border-radius: 3px; padding: 2px 0px 2px 6px;'
+const common = 'border-radius: 3px; padding: 2px 6px;'
 
 _.consoleConfig({
   styles: {
