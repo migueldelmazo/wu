@@ -32,7 +32,6 @@ const checkDefinitionType = (type, name) => {
   if (validTypes.indexOf(type) < 0) {
     return showError('Invalid type in', type, name, '{...}', 'Type should be api, ensurer, getter, router, setter or watcher.')
   }
-  return true
 }
 
 const checkDefinitionName = (type, name) => {
