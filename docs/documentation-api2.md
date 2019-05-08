@@ -2,5 +2,5 @@
 [`onChange`](./documentation-properties.md#onchange) and [`when`](./documentation-properties.md#when) properties.
 * **When the path changes** in the data model, Wu executes the API item:
   * **Get all your [`request`](#request-property) data:** `method`, `path`, `query`, `body`, `headers` and [`context`](#optionscontext).
-    * Welcome to the wu wiki!
+  * **Add the API item to a call [`queue`](#queue).**
 * Welcome to the wu wiki!
