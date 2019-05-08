@@ -58,7 +58,7 @@ sendLoginData () {
 
 // when 'sendLoginData' is executed 'user.login.data' will have { email: 'email@email.com', password: '12345678' }
 ```
-### Example: without 'run'  function
+### Example: without `run`  function
 ```javascript
 // file user.js
 wu.create('setter', 'userSendLoginData', { // name of the setter item
