@@ -3,4 +3,5 @@
 * **When the path changes** in the data model, Wu executes the API item:
   * **Get all your [`request`](#request-property) data:** `method`, `path`, `query`, `body`, `headers` and [`context`](#optionscontext).
   * **Add the API item to a call [`queue`](#queue).**
-* Welcome to the wu wiki!
+  * When the call is ready to be sent:
+    * **Start the [`flags`](#optionsflags).**
