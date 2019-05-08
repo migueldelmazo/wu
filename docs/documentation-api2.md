@@ -7,3 +7,11 @@
     * Start the [`flags`](#optionsflags).
     * Check if the call can be returned from [`cache`](#optionscacheable) or
     * **Send the request to the server** and wait for the response.
+* When the server response arrives:
+  * Run the [`onResponse`](#onresponse-property) handlers:
+    * Run the `onResponse.init` handler.
+    * Run the custom handler: `onResponse.status200`, `onResponse.status404`, `onResponse.status500`...
+    * Run the handler `onResponse.success` or `onResponse.error` (depending on the answer).
+    * Run the `onResponse.complete` handler.
+  * **Finish the [`flags`](#optionsflags)**.
+  * **Add the call to the [`cache`](#optionscacheable)** (if applicable).
