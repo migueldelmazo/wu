@@ -61,9 +61,6 @@ wu.create('router', 'userLoginRoute', { // name of the router item
 // when browser URL is not '/user/asdf1234/detail' 'user.detail.route' is { isActive: false, params: {} }
 ```
 
-Also, in order for you to be able to get the URL data and watch the changes, when the browser URL changes,
-the path of the data model **'app.route'** is updated. More info in [router documentation](./docs/documentation-router.md).
-
 ### [Getter:](./docs/documentation-getter.md)
 **Getter** allows you to define an interface to get data from the data model outside of Wu.
 
@@ -79,6 +76,7 @@ wu.create('getter', 'userGreeting', { // name of the getter item
     else return 'Hola ' + name
   }
 })
+
 // file userGreeting.template.js
 render () {
   return (
@@ -105,6 +103,7 @@ wu.create('setter', 'userSendLoginData', { // name of the setter item
   // path of the data model where to save the result of 'run'
   update: 'user.login.data'
 })
+
 // file userLogin.template.js
 sendLoginData () {
   wu.setter('userSendLoginData', 'email@email.com', '12345678')
