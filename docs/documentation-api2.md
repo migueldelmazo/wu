@@ -4,6 +4,3 @@
   - Get all your [`request`](#request-property) data:** `method`, `path`, `query`, `body`, `headers` and [`context`](#optionscontext).
   - Add the API item to a call [`queue`](#queue).**
   - When the call is ready to be sent:
-    - **Start the [`flags`](#optionsflags).**
-    - Check if the call **can be returned from [`cache`](#optionscacheable)** or
-    - **Send the request to the server** and wait for the response.
