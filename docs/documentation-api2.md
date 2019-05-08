@@ -5,4 +5,4 @@
   * **Add the API item to a call [`queue`](#queue).**
   * When the call is ready to be sent:
     * Start the [`flags`](#optionsflags).
-    * Check if the call can be returned from [`cache`](#optionscacheable) or
+    * Check if the call can be returned from [`cache`](#optionscacheable) or
