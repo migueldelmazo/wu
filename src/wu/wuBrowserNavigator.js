@@ -1,4 +1,4 @@
-import { wuSet } from './wuSet'
+import { wuSet } from '.'
 
 export const setBrowserNavitagor = () => wuSet({ 'wu.browser.navigator.onLine': navigator.onLine })
 

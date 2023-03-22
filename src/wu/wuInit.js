@@ -1,7 +1,7 @@
 import { setBrowserLocation } from './wuBrowserRouter'
 import { setBrowserNavitagor } from './wuBrowserNavigator'
 import { setBrowserStorage } from './wuBrowserStorage'
-import { wuSet } from './wuSet'
+import { wuSet } from '.'
 
 export const wuInit = () => {
   setBrowserLocation()

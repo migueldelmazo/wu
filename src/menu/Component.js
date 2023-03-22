@@ -1,11 +1,11 @@
 import '.'
-import WuLink from '../wu/WuLink'
-import WuBackLink from '../wu/WuBackLink'
+import { WuBackLink, WuLink } from '../wu'
 
 const Menu = () => {
   return (
     <>
       <h2 className="title is-4">Router</h2>
+
       <ul>
         <li>
           <WuLink className="button is-small" href="/" type="button">
@@ -30,6 +30,7 @@ const Menu = () => {
           <WuBackLink>WuLink Go back</WuBackLink>
         </li>
       </ul>
+
       <hr />
     </>
   )
