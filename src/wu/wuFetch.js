@@ -79,6 +79,7 @@ const parseRequest = (req = {}, wuType) => {
       statusCode: 0
     },
     statusPath: req.statusPath,
+    onInit: req.onInit,
     onComplete: req.onComplete,
     onError: req.onError,
     onSuccess: req.onSuccess,
@@ -96,6 +97,10 @@ const manageRequests = () => {
 
 const manageRequest = req => {
   logFetchStart(`${req.wuType} request`, req)
+  // run callback
+  const callbacksSubState = {}
+  runCallbacks(callbacksSubState, req, 'onInit', {})
+  set(callbacksSubState, `${req.wuType} onInit`)
   // set request status
   req.request.status = 'loading'
   // set status in Wu
