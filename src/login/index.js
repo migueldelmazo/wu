@@ -5,7 +5,7 @@ export const sendLogin = wuFetch((email, password) => {
     url: '//localhost:3000/api/user-login.json',
     method: 'get',
     body: { email, password },
-    statusPath: 'user.loginRequest',
+    statusPath: 'user.requests.login',
     onSuccess: data => ({ 'user.token': data.userToken })
   }
 })

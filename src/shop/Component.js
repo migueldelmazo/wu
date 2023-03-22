@@ -2,7 +2,7 @@ import '.'
 import { useWuGet } from '../wu'
 
 const Shop = () => {
-  const isLoading = useWuGet('shop.productsRequest.isLoading')
+  const isLoading = useWuGet('shop.requests.products.isLoading')
   const products = useWuGet('shop.products')
 
   return (

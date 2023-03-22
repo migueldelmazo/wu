@@ -1,17 +1,19 @@
 import { wuSet } from '.'
 
+// setBrowserStorage
+
 export const setBrowserStorage = () => {
   wuSet({
     'wu.browser.storage': {
-      local: getStorage(localStorage),
-      session: getStorage(sessionStorage)
+      local: getBrowserStorage(localStorage),
+      session: getBrowserStorage(sessionStorage)
     }
   })
 }
 
 window.addEventListener('storage', setBrowserStorage)
 
-const getStorage = storage => {
+const getBrowserStorage = storage => {
   const result = {}
   for (const key in storage) {
     if (Object.hasOwnProperty.call(storage, key)) {

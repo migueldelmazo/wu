@@ -2,7 +2,7 @@ import { sendLogin } from '.'
 import { useWuGet } from '../wu'
 
 const Login = () => {
-  const isLoading = useWuGet('user.loginRequest.isLoading')
+  const isLoading = useWuGet('user.requests.login.isLoading')
 
   return (
     <>

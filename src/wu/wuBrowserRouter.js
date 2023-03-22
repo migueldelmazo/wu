@@ -1,7 +1,7 @@
 import { wuSet } from '.'
 import { get, listen, set } from './wuState'
 
-// init
+// set browser location on init
 
 export const setBrowserLocation = (historyState = {}) => {
   const validProps = ['hash', 'host', 'hostname', 'href', 'origin', 'pathname', 'port', 'protocol']
@@ -23,9 +23,11 @@ window.addEventListener('popstate', ev => {
 export const wuRouter = (route, destinationPath) => {
   const router = () => {
     const pathname = get('wu.browser.location.pathname')
-    const isExact = isExactRoute(pathname, route)
-    const isValid = isValidRoute(pathname, route)
-    const routeParams = getRouteParams(pathname, route)
+    const pathnameParts = pathname.substring(1).split('/')
+    const routeParts = route.substring(1).split('/')
+    const isExact = isExactRoute(pathnameParts, routeParts)
+    const isValid = isValidRoute(pathnameParts, routeParts)
+    const routeParams = getRouteParams(pathnameParts, routeParts)
     set({ [destinationPath]: { isExact, isValid, routeParams } }, 'wuReact')
   }
   router.wuDeps = ['wu.browser.location.pathname']
@@ -36,21 +38,17 @@ export const wuRouter = (route, destinationPath) => {
 
 // wuRouter helpers
 
-const isExactRoute = (pathname, route) => {
-  return isValidRoute(pathname, route) && pathname.split('/').length === route.split('/').length
+const isExactRoute = (pathnameParts, routeParts) => {
+  return isValidRoute(pathnameParts, routeParts) && pathnameParts.length === routeParts.length
 }
 
-const isValidRoute = (pathname, route) => {
-  const pathnameParts = pathname.substring(1).split('/')
-  const routeParts = route.substring(1).split('/')
+const isValidRoute = (pathnameParts, routeParts) => {
   return routeParts.every(
     (routePart, index) => routePart === pathnameParts[index] || routePart.startsWith(':')
   )
 }
 
-const getRouteParams = (pathname, route) => {
-  const pathnameParts = pathname.substring(1).split('/')
-  const routeParts = route.substring(1).split('/')
+const getRouteParams = (pathnameParts, routeParts) => {
   return routeParts.reduce((result, routePart, index) => {
     if (routePart.startsWith(':') && pathnameParts[index]) {
       const key = routePart.substring(1)

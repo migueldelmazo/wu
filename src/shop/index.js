@@ -8,7 +8,7 @@ wuReactiveFetch(
       return {
         url: `//localhost:3000/api/shop-products.json?token=${userToken}`,
         method: 'get',
-        statusPath: 'shop.productsRequest',
+        statusPath: 'shop.requests.products',
         onSuccess: data => ({ 'shop.products': data.products })
       }
     }
