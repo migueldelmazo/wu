@@ -34,7 +34,7 @@
   "devDependencies": {
     "esformatter": "^0.10.0",
     "lodash": "^4.17.11",
-    "react-scripts": "^3.0.0"
+    "react-scripts": "^3.4.4"
   },
   "jest": {
     "collectCoverageFrom": [
