@@ -8,6 +8,7 @@ const App = () => {
   return (
     <div className="section">
       <h1 className="title">Wu</h1>
+      <hr />
       <ToDoList />
       <Login />
       <Shop />

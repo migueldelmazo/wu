@@ -8,7 +8,7 @@ const Menu = () => {
 
       <ul>
         <li>
-          <WuLink className="button is-small" href="/" type="button">
+          <WuLink className="button is-small is-info" href="/" type="button">
             WuLink Home
           </WuLink>
         </li>

@@ -37,7 +37,7 @@ const Login = () => {
 
           <div className="column">
             <label className="label">Actions</label>
-            <input className="button" type="submit" value="Login" disabled={isLoading} />
+            <input className="button is-info" type="submit" value="Login" disabled={isLoading} />
           </div>
         </div>
       </form>

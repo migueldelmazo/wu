@@ -74,7 +74,7 @@ const ToDoList = () => {
           <div className="column">
             <label className="label">Actions</label>
             <input
-              className="button"
+              className="button is-info"
               type="button"
               value="Delete all"
               onClick={() => wuSet({ 'todo.items': [] })}
