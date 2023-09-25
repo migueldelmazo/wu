@@ -20,6 +20,10 @@ export const set = (subState, logMethod) => {
   if (!isValidSubState(subState)) {
     logError('subState must be an object:', subState)
   }
+
+  // save previous state to log
+  const prevState = _.cloneDeep(state)
+
   // set subState in state
   for (const path in subState) {
     if (!_.isEqual(_.get(state, path), subState[path])) {
@@ -28,7 +32,7 @@ export const set = (subState, logMethod) => {
     }
   }
   // log
-  logSet(logMethod, subState, state, changedPaths)
+  logSet(logMethod, prevState, subState, state, changedPaths)
 }
 
 export const listen = fn => {

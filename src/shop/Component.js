@@ -1,4 +1,4 @@
-import { addProductToCart, getCartProducts } from '.'
+import { addProductToCart, getCartProducts, setUnitsProductToCart } from '.'
 import { useWuGet } from '../wu'
 
 const Shop = () => {
@@ -52,7 +52,13 @@ const Shop = () => {
                 <tr key={cartProduct.id}>
                   <td>{cartProduct.name}</td>
                   <td>{cartProduct.price} &euro;</td>
-                  <td>{cartProduct.units}</td>
+                  <td>
+                    <input
+                      type="number"
+                      value={cartProduct.units}
+                      onChange={ev => setUnitsProductToCart(cartProduct.id, ev.target.value)}
+                    />
+                  </td>
                   <td>{cartProduct.totalPrice} &euro;</td>
                 </tr>
               ))}

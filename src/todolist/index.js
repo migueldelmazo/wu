@@ -3,8 +3,8 @@ import { wuGet, wuReact, wuSet } from '../wu'
 wuReact(() => ({ 'todo.items': [] }), ['wu.isReady'])
 
 export const addToDoItem = wuSet(
-  (items, newToDo) => {
-    items.push({ text: newToDo, completed: false })
+  (items, newToDoText) => {
+    items.push({ text: newToDoText, completed: false })
     return { 'todo.items': items }
   },
   ['todo.items']

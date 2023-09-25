@@ -18,6 +18,17 @@ export const addProductToCart = wuSet(
   ['shop.cartProducts']
 )
 
+export const setUnitsProductToCart = wuSet(
+  (cartProducts, productId, units = 0) => {
+    const cartProduct = cartProducts.find(({ id }) => id === productId)
+    if (cartProduct) {
+      cartProduct.units = parseInt(units, 10) || 0
+    }
+    return { 'shop.cartProducts': cartProducts }
+  },
+  ['shop.cartProducts']
+)
+
 // wu get
 
 export const getCartProducts = wuGet(

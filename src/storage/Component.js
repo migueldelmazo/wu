@@ -7,12 +7,12 @@ const Storage = () => {
   return (
     <>
       <h2 className="title is-4">Storage</h2>
-      <p>
-        <strong>Local storage:</strong> {JSON.stringify(local)}
-      </p>
-      <p>
-        <strong>Session storage:</strong> {JSON.stringify(session)}
-      </p>
+      <pre>
+        <strong>Local storage:</strong> {JSON.stringify(local, null, 2)}
+      </pre>
+      <pre>
+        <strong>Session storage:</strong> {JSON.stringify(session, null, 2)}
+      </pre>
       <hr />
     </>
   )

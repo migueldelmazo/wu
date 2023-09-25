@@ -1,5 +1,6 @@
 import Login from '../login/Component'
 import Menu from '../menu/Component'
+import Navigator from '../navigator/Component'
 import Shop from '../shop/Component'
 import Storage from '../storage/Component'
 import ToDoList from '../todolist/Component'
@@ -13,6 +14,7 @@ const App = () => {
       <Login />
       <Shop />
       <Menu />
+      <Navigator />
       <Storage />
     </div>
   )

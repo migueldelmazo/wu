@@ -45,13 +45,14 @@ export const logReactionsEnd = state => {
 
 // set
 
-export const logSet = (logMethod, subState, newState, changes) => {
+export const logSet = (logMethod, prevState, subState, newState, changes) => {
   console.groupCollapsed(
     `%c${logMethod}%c ${valueToString(subState)}`,
     getBgStyles('00A1F1'),
     getBgStyles('FFF')
   )
-  console.log('Sub state:', _.cloneDeep(subState))
+  console.log('Prev state:', prevState)
+  console.log('New subState:', _.cloneDeep(subState))
   console.log('Final state:', _.cloneDeep(newState))
   console.log('Pending reactions:', _.cloneDeep(changes))
   console.groupCollapsed('%cCall stack', getBgStyles('FFF'))

@@ -1,7 +1,8 @@
-import '.'
-import { WuBackLink, WuLink } from '../wu'
+import { WuBackLink, WuLink, useWuGet } from '../wu'
 
 const Menu = () => {
+  const userRoutes = useWuGet('user.routes')
+
   return (
     <>
       <h2 className="title is-4">Router</h2>
@@ -31,6 +32,7 @@ const Menu = () => {
         </li>
       </ul>
 
+      <pre>user.routes: {JSON.stringify(userRoutes, null, 2)}</pre>
       <hr />
     </>
   )
