@@ -1,4 +1,5 @@
 import { WuBackLink, WuLink, useWuGet } from '../wu'
+import './index'
 
 const Menu = () => {
   const userRoutes = useWuGet('user.routes')

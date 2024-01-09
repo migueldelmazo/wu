@@ -28,7 +28,11 @@ export const wuRouter = (route, destinationPath) => {
     const isExact = isExactRoute(pathnameParts, routeParts)
     const isValid = isValidRoute(pathnameParts, routeParts)
     const routeParams = getRouteParams(pathnameParts, routeParts)
-    set({ [destinationPath]: { isExact, isValid, routeParams } }, 'wuReact')
+    if (isValid) {
+      set({ [destinationPath]: { isExact, isValid, routeParams } }, 'wuReact')
+    } else {
+      set({ [destinationPath]: { isExact: false, isValid: false, routeParams: {} } }, 'wuReact')
+    }
   }
   router.wuDeps = ['wu.browser.location.pathname']
   router.wuType = 'wuRouter'
@@ -43,9 +47,7 @@ const isExactRoute = (pathnameParts, routeParts) => {
 }
 
 const isValidRoute = (pathnameParts, routeParts) => {
-  return routeParts.every(
-    (routePart, index) => routePart === pathnameParts[index] || routePart.startsWith(':')
-  )
+  return routeParts.every((routePart, index) => routePart === pathnameParts[index] || routePart.startsWith(':'))
 }
 
 const getRouteParams = (pathnameParts, routeParts) => {
