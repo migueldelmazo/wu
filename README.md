@@ -49,6 +49,6 @@ Wu displays all data model state changes in the console. **Open DevTools > Conso
 - Data synchronization:
   - Wu keeps the browser's storage (`localStorage` and `sessionStorage`) synchronized with the Wu data model.
   - Wu keeps the browser's online status (`navigator.onLine`) synchronized with the Wu data model.
-- Components:
+- React components:
   - `WuLink`: paint a link or button to navigate using Wu.
   - `WuBakcLink`: paint a link or button to navigate back using Wu.
