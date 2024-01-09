@@ -21,7 +21,7 @@ That is, we don't want to think about the flow of the application, but rather ab
 
 The following drawing compares the conventional function flow that is always used with Wu's data flow proposal.
 
-[![](./coventional-vs-data-flow.svg)Example of a login flow](https://raw.githubusercontent.com/migueldelmazo/wu/v2/coventional-vs-data-flow.svg)
+[![](./resources/coventional-vs-data-flow.svg)Example of a login flow](https://raw.githubusercontent.com/migueldelmazo/wu/v2/resources/coventional-vs-data-flow.svg)
 
 The main idea is to **work with a main data model and a set of small functions** that modify and react to changes in the data model.
 
