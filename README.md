@@ -19,7 +19,7 @@ That is, we don't want to think about the flow of the application, but rather ab
 
 **Every small data change is saved in the data model and it triggers reactions for other pieces of code** to paint data in the view, call an endpoint, or **change other data in the model causing another chain reaction**.
 
-[![](./coventional-vs-data-flow.svg)Example of a login flow](sdf)
+[![](./coventional-vs-data-flow.svg)Example of a login flow](./coventional-vs-data-flow.svg)
 
 The main idea is to **work with a main data model and a set of small functions** that modify and react to changes in the data model.
 
