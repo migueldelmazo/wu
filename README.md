@@ -41,7 +41,7 @@ Wu displays all data model state changes in the console. **Open DevTools > Conso
   - `wuReactiveFetch`: Model change > Fetch API > Update model.
   - `wuRouter`: Route change > Update model.
 - Getter methods:
-  - `wuGet`: get model data
+  - `wuGet`: get model data.
   - `useWuGet`: React hook to get model data.
 
 ### Other info:
